@@ -12,11 +12,13 @@ class Controller {
 
 	// serve index page
 	index(req, res) {
-		res.status(200).render('index');
+
 	}
 
 	// on 404 errors
-	err(req, res) { res.status(200).render('404'); }
+	err(req, res) { 
+
+	}
 
 }
 
