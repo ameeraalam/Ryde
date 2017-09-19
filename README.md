@@ -1,2 +1,2 @@
-# COMP-3004
-Building a mobile app for course COMP-3004 with Olga Baysal
+# Ryde
+A ride sharing app that makes life easier for drivers and passengers of the service
