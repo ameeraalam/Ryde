@@ -14,9 +14,6 @@ module.exports = function() {
 	/* Express object created */
 	var app = express();
 
-	/* Middleware bindings */
-	app.set('views', './views');
-	app.set('view engine', 'pug');
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -30,6 +27,8 @@ module.exports = function() {
 	app.get('/', function(req, res) { CONTROLLER.index(req, res); });
 
 	app.get('*', function(req, res) { CONTROLLER.err(req, res); });
+
+	app.post("/login", function(req, res) { CONTROLLER.login(req, res); });
 
 	app.listen(3000, CONTROLLER.intro());
 

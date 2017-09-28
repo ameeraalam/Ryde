@@ -1,22 +1,12 @@
 import React, { Component } from "react";
-import {
-	AppRegistry,
-	Text,
-	View
-} from "react-native";
+import { Scene, Router } from "react-native-router-flux";
 
-class Main extends Component {
-	render() {
-		return (
-			<View>
-				<Text>
-					Ryde!!!
-				</Text>
-			</View>
-		);
-	}
-}
+import Login from "../Login/Login";
 
-module.exports = Main;
-
-AppRegistry.registerComponent("Main", () => Main);
+export default () => (
+	<Router>
+		<Scene key = "root">
+			<Scene key = "login" component = {Login} title = "																						Ryde"/>
+		</Scene>
+	</Router>
+);

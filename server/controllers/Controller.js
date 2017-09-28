@@ -10,14 +10,8 @@ class Controller {
 		console.log('Server is listening on port 3000...');
 	}
 
-	// serve index page
-	index(req, res) {
-
-	}
-
-	// on 404 errors
-	err(req, res) { 
-
+	login(req, res) {
+		res.sendStatus(200);
 	}
 
 }
