@@ -6,34 +6,40 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity
-} from "react-native"
+} from "react-native";
+
+import { Actions } from "react-native-router-flux";
+
 import styles from "./styles"
 
 class Login extends Component {
 
 	constructor(props) {
 		super(props);
+		this.baseUrl = "http://192.168.0.10:3000/";
 		this.state = {
-			textEmail: "email",
-			textPass: "password"
+			textEmail: "Email",
+			textPass: "Password"
 		}
 	}
 
 	submitButton() {
-		fetch("http://192.168.0.23:3000/login", {
+		let reqObj = {
+			email: this.state.textEmail,
+			password: this.state.textPass
+		}
+		fetch(this.baseUrl + "login", {
 			method: "POST",
 			headers: {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({
-				param: "hello world!"
-			})
+			body: JSON.stringify(reqObj)
 		});
 	}
 
 	registerButton() {
-		alert("Registering!");
+		Actions.register({});
 	}
 
 	render() {
@@ -51,7 +57,7 @@ class Login extends Component {
 					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
-				<TouchableOpacity onPress = {this.submitButton} style = {{width: 200, height: 200}}>
+				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 200, height: 200}}>
 					<Image
 						style = {styles.submitButton}
 						source = {require("./images/button.png")}
@@ -63,7 +69,7 @@ class Login extends Component {
 				</View>
 
 			</View>
-		)
+		);
 	}
 }
 

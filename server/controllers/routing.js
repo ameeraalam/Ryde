@@ -30,6 +30,8 @@ module.exports = function() {
 
 	app.post("/login", function(req, res) { CONTROLLER.login(req, res); });
 
+	app.post("/register", function(req, res) { CONTROLLER.register(req, res); });
+
 	app.listen(3000, CONTROLLER.intro());
 
 }

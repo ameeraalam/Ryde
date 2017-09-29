@@ -18,7 +18,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.baseUrl = "http://192.168.0.10:3000/";
+		this.baseUrl = "http://172.17.72.143:3000/";
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
