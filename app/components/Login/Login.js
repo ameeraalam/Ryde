@@ -16,7 +16,8 @@ class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.baseUrl = "http://192.168.0.10:3000/";
+		this.address = "10.164.192.166";
+		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			textEmail: "Email",
 			textPass: "Password"

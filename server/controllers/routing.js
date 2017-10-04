@@ -1,8 +1,8 @@
+"use strict";
+
 var Controller = require('./Controller.js');
 
 module.exports = function() {
-	'use strict';
-
 	/* Routing dependencies */
 	var express = require('express');
 	var bodyParser = require('body-parser');

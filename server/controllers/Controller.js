@@ -16,13 +16,17 @@ class Controller {
 
 	// contains the logic for the login feature of the app
 	login(req, res) {
-		console.log(req.body);
-		res.sendStatus(200);
+
+
 	}
 
 	// contains the logic for the register feature of the app
 	register(req, res) {
-		this.modelUsers.insert(req.body);
+
+		console.log(req.body);
+
+		res.sendStatus(200);
+
 	}
 
 }
