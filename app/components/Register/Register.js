@@ -18,7 +18,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "172.17.73.16";
+		this.address = "192.168.0.13";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
@@ -152,6 +152,20 @@ class Register extends Component {
 		return true;
 	}
 
+	firstNameChecker() {
+		if (this.state.firstName.length === 0) {
+			return false;
+		}
+		return true;
+	}
+
+	lastNameChecker() {
+		if (this.state.lastName.length === 0) {
+			return false;
+		}
+		return true;
+	}
+
 	submitButton() {
 		let errors = [];
 
@@ -173,6 +187,20 @@ class Register extends Component {
 			this.setState({phoneS: {color: "black"}});
 		}
 
+		if (this.firstNameChecker() === false) {
+			this.setState({firstNameS: {color: "red"}});
+			errors.push("firstName");
+		} else {
+			this.setState({firstNameS: {color: "black"}})
+		}
+
+		if (this.lastNameChecker() == false) {
+			this.setState({lastNameS: {color: "red"}});
+			errors.push("lastName");
+		} else {
+			this.setState({lastNameS: {color: "black"}});
+		}
+
 		let reqObj = {
 			firstName: this.state.firstName,
 			lastName: this.state.lastName,
@@ -184,7 +212,7 @@ class Register extends Component {
 			plate: this.state.plate,
 			liscense: this.state.liscence,
 			car: this.state.car,
-			allInfoFilled: this.driverFieldsChecker()
+			allInfoFilled: this.driverFieldsCheck()
 		}
 
 		// I want to send the object only if there are no errors
@@ -198,15 +226,12 @@ class Register extends Component {
 				body: JSON.stringify(reqObj)
 			}).then((res) => {
 				if (res.status === 200) {
-
-
-					// if successful take them to the login page
-
-
+					// change alert later
+					alert("Registration complete");
+					Actions.login({});
 				} else {
 					alert("Error");
 				}
-				
 			}, (err) => {
 				alert("Registration error...");
 			});
