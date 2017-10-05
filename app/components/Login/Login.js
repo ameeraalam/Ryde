@@ -16,7 +16,7 @@ class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "10.164.192.166";
+		this.address = "172.17.85.47";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			textEmail: "Email",
@@ -36,6 +36,17 @@ class Login extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 200) {
+				Actions.choice({});
+			} else {
+ 				
+				alert("Wrong password")
+
+			}
+
+		}, (err) => {
+			alert("Server error")
 		});
 	}
 

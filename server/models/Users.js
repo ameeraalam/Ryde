@@ -60,7 +60,7 @@ class Users {
 			if (err) {
 				console.log("Failed to connect to the Ryde database...");
 			} else {
-				db.collection(this.colelction).findOne({"email": email}, (err, doc) => {
+				db.collection(this.collection).findOne({"email": email}, (err, doc) => {
 					if (err) {
 						console.log("Error in finding the name in the Ryde database...");
 						// we check if a failureCallBack is provided by the scope which is using this
@@ -78,7 +78,7 @@ class Users {
 								failureCallBack();
 							}
 						} else {
-							if (sucessCallBack) {
+							if (successCallBack) {
 								// the successCallBack will take the mongodb doc object as a param
 								// and this param will get supplied to the function and the logic with
 								// what the function will do with the object will be provided by the scope

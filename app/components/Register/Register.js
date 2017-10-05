@@ -18,7 +18,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.13";
+		this.address = "172.17.85.47";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
@@ -233,7 +233,7 @@ class Register extends Component {
 					alert("Error");
 				}
 			}, (err) => {
-				alert("Registration error...");
+				alert("Server error");
 			});
 		}
 	}
