@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-import {
-	AppRegistry,
-	Text,
-	View
-} from "react-native";
+import { Scene, Router } from "react-native-router-flux";
 
 import Login from "../Login/Login";
 import Register from "../Register/Register";
