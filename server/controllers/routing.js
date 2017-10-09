@@ -32,6 +32,8 @@ module.exports = function() {
 
 	app.post("/register", function(req, res) { CONTROLLER.register(req, res); });
 
+	app.post("/emailCheck", function(req, res) { CONTROLLER.emailCheck(req, res); });
+
 	app.listen(3000, CONTROLLER.intro());
 
 }

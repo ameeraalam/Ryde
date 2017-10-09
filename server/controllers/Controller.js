@@ -1,8 +1,9 @@
 'use strict'
 
-let bcrypt = require("bcrypt");
-let Users = require("./../models/Users.js")
-let IdGenerator = require("./../helpers/IdGenerator.js");
+/* Imports */
+let bcrypt = require("bcrypt"); // encryption module
+let Users = require("./../models/Users.js") // Users database model
+let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -34,7 +35,19 @@ class Controller {
 				} else {
 					// if result is true it means that both the passwords match
 					if (result === true) {
-						res.sendStatus(200)
+						// creating a response object to send back to the client
+						let resObj = {};
+						resObj.firstName = doc.firstName;
+						resObj.lastName = doc.lastName;
+						resObj.email = doc.email;
+						resObj.dob = doc.dob;
+						resObj.phone = doc.phone;
+						resObj.gender = doc.gender;
+						resObj.plate = doc.plate;
+						resObj.car = doc.car;
+						resObj.allInfoFilled = doc.allInfoFilled;
+						resObj.id = doc.id;
+						res.status(200).send(resObj);
 					} else {
 						res.sendStatus(404);
 					}
@@ -63,6 +76,22 @@ class Controller {
 				})
 			}
 		})
+	}
+
+	emailCheck(req, res) {
+
+		this.modelUsers.query(req.body.email, (doc) => {
+			// if doc returned by mongo db isn't null we know
+			// that the email provided by the user already exists
+			res.sendStatus(404);
+		}, () => {
+			// on failure call back mongo db will return the doc as null
+			// if its null it means the email is unique
+			res.sendStatus(200);
+		});
+
+
+
 	}
 }
 
