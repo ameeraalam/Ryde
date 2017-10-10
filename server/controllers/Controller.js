@@ -79,7 +79,6 @@ class Controller {
 	}
 
 	emailCheck(req, res) {
-
 		this.modelUsers.query(req.body.email, (doc) => {
 			// if doc returned by mongo db isn't null we know
 			// that the email provided by the user already exists
@@ -89,10 +88,17 @@ class Controller {
 			// if its null it means the email is unique
 			res.sendStatus(200);
 		});
-
-
-
 	}
+
+	driverInfo(req, res) {
+		console.log(req.body);
+		this.modelUsers.update(req.body.email, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
 }
 
 module.exports = Controller;

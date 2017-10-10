@@ -10,13 +10,13 @@ import {
 
 import { Actions } from "react-native-router-flux";
 
-import styles from "./styles"
+import styles from "./styles";
 
 class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "172.17.85.47";
+		this.address = "192.168.0.13";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			textEmail: "Email",
@@ -38,15 +38,22 @@ class Login extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				Actions.choice({});
+				// The response object returned contains the object being sent
+				// from the server, we need to call the function res.json() which will
+				// return the json object being sent by the server.
+				resObjPromise = res.json(); // returns a promise and is asynchronous
+				// promise value is extracted using the .then function and the object
+				// returned by the promise is used
+				resObjPromise.then(function(resObj) {
+					// We then pass the resObj as a property for the choise page
+					Actions.choice({resObj});
+				})
 			} else {
- 				
-				alert("Wrong password")
-
+				alert("Wrong username or password");
 			}
 
 		}, (err) => {
-			alert("Server error")
+			alert(err)
 		});
 	}
 

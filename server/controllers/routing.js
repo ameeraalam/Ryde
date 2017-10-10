@@ -34,6 +34,8 @@ module.exports = function() {
 
 	app.post("/emailCheck", function(req, res) { CONTROLLER.emailCheck(req, res); });
 
+	app.post("/driverInfo", function(req, res) { CONTROLLER.driverInfo(req, res); })
+
 	app.listen(3000, CONTROLLER.intro());
 
 }

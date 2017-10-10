@@ -55,6 +55,33 @@ class Users {
 		})
 	}
 
+	// updated fields is an object containing all the partial updated attributes
+	update(email, updatedFields, successCallBack, failureCallBack) {
+		MongoClient.connect(this.db, (err, db) => {
+			if (err) {
+				console.log("Failed to connect to the Ryde database...");
+			} else {
+				db.collection(this.collection).update({"email": email}, {$set: updatedFields}, (err, result) => {
+					if (err) {
+						console.log("Error in updating the item in the Ryde database...");
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						if (failureCallBack) {
+							failureCallBack();
+						}
+					} else {
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						if (successCallBack) {
+							successCallBack();
+						}
+					}
+					db.close();
+				});
+			}
+		})
+	}
+
 	query(email, successCallBack, failureCallBack) {
 		MongoClient.connect(this.db, (err, db) => {
 			if (err) {
@@ -96,6 +123,7 @@ class Users {
 			}
 		});
 	}
+
 }
 
 module.exports = Users;

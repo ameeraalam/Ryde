@@ -18,7 +18,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "172.17.85.47";
+		this.address = "192.168.0.13";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
@@ -76,7 +76,7 @@ class Register extends Component {
 
 	emailCheck() {
 		let emailCheck = false;
-		let checkObj = {at: false, dot: false};
+		let checkObj = {at: false, dot: false, database: false};
 
 		for (let i = 0; i < this.state.email.length; ++i) {
 			// all the expression need to be true in order for the entire expression
@@ -94,8 +94,35 @@ class Register extends Component {
 
 		}
 
-		if (checkObj.at && checkObj.dot) {
-			emailCheck = true;
+		let emailObj = {email: this.state.email};
+
+		// The fetch function call will return a promise and takes in two parameter
+		// first is the url with which it makes a request and second parameter
+		// is an object specifying the method details and the object that will
+		// get sent. The promise being returned, gives back two call back functions
+		// first contains one parameter which is the response object and the second
+		// function contains one parameter which is the err.
+		fetch(this.baseUrl + "emailCheck", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(emailObj)
+		}).then((res) => {
+			if (res.status === 200) {
+				checkObj.email = true;
+			} else {
+				alert("A user with the email is already registered")
+			}
+		}, (err) => {
+			alert(err)
+		});
+
+		if (checkObj.at && checkObj.dot && checkObj.email) {
+			// Initially emailCheck is false, not email check will result in
+			// emailCheck being true
+			emailCheck = !emailCheck;
 		}
 
 		return emailCheck;
@@ -217,6 +244,12 @@ class Register extends Component {
 
 		// I want to send the object only if there are no errors
 		if (errors.length === 0) {
+			// The fetch function call will return a promise and takes in two parameter
+			// first is the url with which it makes a request and second parameter
+			// is an object specifying the method details and the object that will
+			// get sent. The promise being returned, gives back two call back functions
+			// first contains one parameter which is the response object and the second
+			// function contains one parameter which is the err.
 			fetch(this.baseUrl + "register", {
 				method: "POST",
 				headers: {
