@@ -19,20 +19,12 @@ class Choice extends Component {
 		super(props);
 	}
 
-	submitDriver() {
-	
-	}
-
-	submitPassenger() {
-
-	}
-
 	render() {
 		return (
 			<View>
-				<Button title = "Driver" onPress = {this.submitDriver}/>
+				<Button title = "Driver" onPress = {Actions.driverview}/>
 				<Text></Text>
-				<Button title = "Passenger" onPress = {this.submitPassenger}/>
+				<Button title = "Passenger" onPress = {Actions.passengerview}/>
 			</View>
 		)
 	}

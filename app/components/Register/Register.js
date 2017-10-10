@@ -23,7 +23,7 @@ class Register extends Component {
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
-			email: "Email",	
+			email: "Email",
 			password: "password",
 			dob: "Date of birth",
 			phone: "Mobile phone number",
@@ -67,7 +67,7 @@ class Register extends Component {
 			liscenseS: {
 				color: "black"
 			},
-			
+
 			carS: {
 				color: "black"
 			}
@@ -105,7 +105,7 @@ class Register extends Component {
 		let phoneCheck = true;
 
 		for (let i = 0; i < this.state.phone.length; ++i) {
-			// Either of these expression being true will result in the statement eing true, 
+			// Either of these expression being true will result in the statement eing true,
 			// only if both the statements are false then the first half of the expression will be false.
 			// Both the expression in the outer expresion need to be true in order for the entire expression to be true,
 			// one of the expression being false will result in the entire statement being false.
@@ -184,7 +184,7 @@ class Register extends Component {
 			plate: this.state.plate,
 			liscense: this.state.liscence,
 			car: this.state.car,
-			allInfoFilled: this.driverFieldsChecker()
+			allInfoFilled: this.driverFieldsCheck()
 		}
 
 		// I want to send the object only if there are no errors
@@ -206,7 +206,7 @@ class Register extends Component {
 				} else {
 					alert("Error");
 				}
-				
+
 			}, (err) => {
 				alert("Registration error...");
 			});
@@ -237,7 +237,7 @@ class Register extends Component {
 					value = {this.state.email}
 					onChangeText = {(text) => this.setState({email: text, emailS: {color: "black"}})}
 
-				/>	
+				/>
 
 				<TextInput
 					style = {this.state.passwordS}
@@ -252,7 +252,7 @@ class Register extends Component {
 					value = {this.state.dob}
 					onChangeText = {(text) => this.setState({dob: text, dobS: {color: "black"}})}
 
-				/>	
+				/>
 
 
 				<TextInput
@@ -261,7 +261,7 @@ class Register extends Component {
 					onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "black"}})}
 
 
-				/>		
+				/>
 
 				<TextInput
 

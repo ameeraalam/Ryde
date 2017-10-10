@@ -35,7 +35,7 @@ import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab,
         <Content/>
         <Footer>
           <FooterTab>
-                    <Button active vertical onPress={() => Actions.available({})}>
+                    <Button active vertical default onPress={() => Actions.available({})}>
                            <Icon active name="check-circle" color='white' size={24} />
                            <Text style={styles.text}> Available </Text>
                         </Button>
