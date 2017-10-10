@@ -36,6 +36,8 @@ module.exports = function() {
 
 	app.post("/driverInfo", function(req, res) { CONTROLLER.driverInfo(req, res); })
 
+	app.post("/:rideId/chat", function(req, res) { CONTROLLER.chat(req, res); })
+
 	app.listen(3000, CONTROLLER.intro());
 
 }

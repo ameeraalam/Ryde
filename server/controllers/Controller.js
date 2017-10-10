@@ -91,7 +91,6 @@ class Controller {
 	}
 
 	driverInfo(req, res) {
-		console.log(req.body);
 		this.modelUsers.update(req.body.email, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
 			res.sendStatus(200);
 		}, () => {
