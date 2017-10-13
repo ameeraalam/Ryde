@@ -98,6 +98,22 @@ class Controller {
 		});
 	}
 
+
+	polling(req, res) {
+		setTimeout(() => {
+			res.sendStatus(200);
+		}, 30000);
+	}
+
+	anotherRequest(req, res) {
+		res.sendStatus(200);
+	}
+
+	err(req, res) {
+		console.log("Processing error....");
+		res.sendStatus(404);
+	}
+
 }
 
 module.exports = Controller;
