@@ -4,6 +4,7 @@
 let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
+let Chat = require("./../models/Chat.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -13,6 +14,7 @@ class Controller {
 	constructor() {
 		this.modelUsers = new Users();
 		this.idGen = new IdGenerator();
+		this.modelChat = new Chat();
 	}
 
 	intro() {
@@ -24,7 +26,7 @@ class Controller {
 		// First thing we have to do is query mongodb and find the object
 		// using the email, after finding the object we have to compare
 		// the password hash provided by the user and the password hash in the database 
-		this.modelUsers.query(req.body.email, (doc) => {
+		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// bcrypt.compare will compare the password attribute of the object provided
 			// by the user with the document object's password field in mongodb
 			// bcrypt.compare(), takes two 3 arguments, the password in strings, the 
@@ -79,7 +81,7 @@ class Controller {
 	}
 
 	emailCheck(req, res) {
-		this.modelUsers.query(req.body.email, (doc) => {
+		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// if doc returned by mongo db isn't null we know
 			// that the email provided by the user already exists
 			res.sendStatus(404);
@@ -91,7 +93,7 @@ class Controller {
 	}
 
 	driverInfo(req, res) {
-		this.modelUsers.update(req.body.email, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
+		this.modelUsers.update({"email": req.body.email}, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
 			res.sendStatus(200);
 		}, () => {
 			res.sendStatus(404);

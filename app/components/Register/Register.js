@@ -18,7 +18,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.13";
+		this.address = "192.168.2.22";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
@@ -76,7 +76,7 @@ class Register extends Component {
 
 	emailCheck() {
 		let emailCheck = false;
-		let checkObj = {at: false, dot: false, database: false};
+		let checkObj = {at: false, dot: false, email: false};
 
 		for (let i = 0; i < this.state.email.length; ++i) {
 			// all the expression need to be true in order for the entire expression
@@ -102,7 +102,10 @@ class Register extends Component {
 		// get sent. The promise being returned, gives back two call back functions
 		// first contains one parameter which is the response object and the second
 		// function contains one parameter which is the err.
-		fetch(this.baseUrl + "emailCheck", {
+
+		// the promise returned by the fetch function will be the return of the
+		// .then function, so we are returning a promise
+		return fetch(this.baseUrl + "emailCheck", {
 			method: "POST",
 			headers: {
 				"Accept": "application/json",
@@ -110,22 +113,28 @@ class Register extends Component {
 			},
 			body: JSON.stringify(emailObj)
 		}).then((res) => {
+			// Since fetch is asynchronous that returns a promise, we want to do
+			// all the checks after this async function returns the promise and so
+			// we use the .then function and then do all the checks, because any check
+			// outside the .then function will execute first before the async function
+			// finishes
 			if (res.status === 200) {
 				checkObj.email = true;
+				if (checkObj.at && checkObj.dot && checkObj.email) {
+					// Initially emailCheck is false, not email check will result in
+					// emailCheck being true
+					emailCheck = !emailCheck;
+					console.log("From then function!");
+					return emailCheck;
+				}
 			} else {
-				alert("A user with the email is already registered")
+				alert("A user with the email is already registered");
+				return emailCheck;
 			}
 		}, (err) => {
 			alert(err)
+			return emailCheck;
 		});
-
-		if (checkObj.at && checkObj.dot && checkObj.email) {
-			// Initially emailCheck is false, not email check will result in
-			// emailCheck being true
-			emailCheck = !emailCheck;
-		}
-
-		return emailCheck;
 	}
 
 	phoneCheck() {
@@ -198,77 +207,82 @@ class Register extends Component {
 
 		let emailCheck = this.emailCheck();
 
-		if (emailCheck === false) {
-			this.setState({emailS: {color: "red"}});
-			errors.push("email");
-		} else {
-			this.setState({emailS: {color: "black"}});
-		}
+		emailCheck.then((val) => {
+			
+			if (emailCheck === false) {
+				this.setState({emailS: {color: "red"}});
+				errors.push("email");
+			} else {
+				this.setState({emailS: {color: "black"}});
+			}
 
-		let phoneCheck = this.phoneCheck();
+			let phoneCheck = this.phoneCheck();
 
-		if (phoneCheck === false) {
-			this.setState({phoneS: {color: "red"}})
-			errors.push("phone");
-		} else {
-			this.setState({phoneS: {color: "black"}});
-		}
+			if (phoneCheck === false) {
+				this.setState({phoneS: {color: "red"}})
+				errors.push("phone");
+			} else {
+				this.setState({phoneS: {color: "black"}});
+			}
 
-		if (this.firstNameChecker() === false) {
-			this.setState({firstNameS: {color: "red"}});
-			errors.push("firstName");
-		} else {
-			this.setState({firstNameS: {color: "black"}})
-		}
+			if (this.firstNameChecker() === false) {
+				this.setState({firstNameS: {color: "red"}});
+				errors.push("firstName");
+			} else {
+				this.setState({firstNameS: {color: "black"}})
+			}
 
-		if (this.lastNameChecker() == false) {
-			this.setState({lastNameS: {color: "red"}});
-			errors.push("lastName");
-		} else {
-			this.setState({lastNameS: {color: "black"}});
-		}
+			if (this.lastNameChecker() == false) {
+				this.setState({lastNameS: {color: "red"}});
+				errors.push("lastName");
+			} else {
+				this.setState({lastNameS: {color: "black"}});
+			}
 
-		let reqObj = {
-			firstName: this.state.firstName,
-			lastName: this.state.lastName,
-			email: this.state.email,
-			password: this.state.password,
-			dob: this.state.dob,
-			phone: this.state.phone,
-			gender: this.state.gender,
-			plate: this.state.plate,
-			liscense: this.state.liscence,
-			car: this.state.car,
-			allInfoFilled: this.driverFieldsCheck()
-		}
+			let reqObj = {
+				firstName: this.state.firstName,
+				lastName: this.state.lastName,
+				email: this.state.email,
+				password: this.state.password,
+				dob: this.state.dob,
+				phone: this.state.phone,
+				gender: this.state.gender,
+				plate: this.state.plate,
+				liscense: this.state.liscence,
+				car: this.state.car,
+				allInfoFilled: this.driverFieldsCheck()
+			}
 
-		// I want to send the object only if there are no errors
-		if (errors.length === 0) {
-			// The fetch function call will return a promise and takes in two parameter
-			// first is the url with which it makes a request and second parameter
-			// is an object specifying the method details and the object that will
-			// get sent. The promise being returned, gives back two call back functions
-			// first contains one parameter which is the response object and the second
-			// function contains one parameter which is the err.
-			fetch(this.baseUrl + "register", {
-				method: "POST",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(reqObj)
-			}).then((res) => {
-				if (res.status === 200) {
-					// change alert later
-					alert("Registration complete");
-					Actions.login({});
-				} else {
-					alert("Error");
-				}
-			}, (err) => {
-				alert("Server error");
-			});
-		}
+			// I want to send the object only if there are no errors
+			if (errors.length === 0) {
+				// The fetch function call will return a promise and takes in two parameter
+				// first is the url with which it makes a request and second parameter
+				// is an object specifying the method details and the object that will
+				// get sent. The promise being returned, gives back two call back functions
+				// first contains one parameter which is the response object and the second
+				// function contains one parameter which is the err.
+				fetch(this.baseUrl + "register", {
+					method: "POST",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(reqObj)
+				}).then((res) => {
+					if (res.status === 200) {
+						// change alert later
+						alert("Registration complete");
+						Actions.login({});
+					} else {
+						alert("Error");
+					}
+				}, (err) => {
+					alert("Server error");
+				});
+			}
+
+		})
+
 	}
 
 
