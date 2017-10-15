@@ -38,7 +38,8 @@ module.exports = function() {
 
 	app.get("/polling", (req, res) => { CONTROLLER.polling(req, res); });
 
-	app.get("/anotherRequest", (req, res) => { CONTROLLER.anotherRequest(req, res); });
+	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
+
 
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 

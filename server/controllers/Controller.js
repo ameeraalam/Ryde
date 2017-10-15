@@ -107,9 +107,15 @@ class Controller {
 		}, 30000);
 	}
 
-	anotherRequest(req, res) {
-		res.sendStatus(200);
+
+	storeChat(req, res) {
+
+
+
+
 	}
+
+
 
 	err(req, res) {
 		console.log("Processing error....");
