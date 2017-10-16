@@ -19,7 +19,11 @@ class Chat extends Component {
 	constructor(props) {
 		super(props);
 		this.userName = "Tanvir";
-		this.address = "172.17.77.31";
+		// for now rydeObject's id is just a random float, but this id will be
+		// the id attribute of an object that gets passed on from another page
+		// as the rydeObject will be this.props.rydeObject
+		this.rydeObject = {rydeId: Math.random()};
+		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			currentText: "",
@@ -50,8 +54,23 @@ class Chat extends Component {
 		this.setState({texts: updatedTexts});
 
 		let reqObj = {
-			texts = this.state.texts
+			rydeId: this.rydeObject.rydeId,
+			texts: []
 		};
+
+		// the reason texts is an empty array inside reqObj instead of being
+		// texts: this.state.texts is because when we assign reqObj.texts to
+		// this.state.texts both the variables are now pointing to the same
+		// address in memory which is an array, to prevent we use a for loop
+		// to iterate over the array object in memory and break it down into
+		// two seperate array objects
+
+		// what this for loop does is it goes over each content in the texts
+		// array and simply converts the content to a JSON string from an object
+		// this is done to prevent an error of insertion in mongodb
+		for (let i = 0; i < reqObj.texts.length; ++i) {
+			reqObj.texts[i] = JSON.stringify(this.state.texts[i]);
+		}
 
 		// now we have to communicate with the server by sending each chat messages
 		// and storing the objects 
@@ -63,19 +82,7 @@ class Chat extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
-		}).then((res) => {
-			if (res.status === 200) {
-
-			} else {
-
-
-			}
-		}, (err) => {
-
-			alert("Error in communicating with Ryde server");
-
-
-		});
+		})
 	}
 
 	render() {
