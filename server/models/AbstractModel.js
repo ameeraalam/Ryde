@@ -34,6 +34,7 @@ class AbstractModel {
 				db.collection(this.collection).insert(query, (err, doc) => {
 					if (err) {
 						console.log("Error in inserting the object in the Ryde database...")
+						console.log(err);
 						// this if statement is needed because we need to make sure that
 						// we invoke the callback function only if the call back function is provided
 						if (failureCallBack) {
@@ -67,6 +68,7 @@ class AbstractModel {
 				db.collection(this.collection).update(query, {$set: updatedFields}, (err, result) => {
 					if (err) {
 						console.log("Error in updating the item in the Ryde database...");
+						console.log(err);
 						// check to see if a function is provided before calling it to prevent
 						// calling an undefined variable
 						if (failureCallBack) {
@@ -93,6 +95,7 @@ class AbstractModel {
 				db.collection(this.collection).remove(query, (err, doc) => {
 					if (err) {
 						console.log("Error in deleting item in the Ryde database");
+						console.log(err);
 						// undefined parameter variable check
 						if (failureCallBack) {
 							failureCallBack();
@@ -116,6 +119,7 @@ class AbstractModel {
 				db.collection(this.collection).findOne(query, (err, doc) => {
 					if (err) {
 						console.log("Error in finding the item in the Ryde database...");
+						console.log(err);
 						// we check if a failureCallBack is provided by the scope which is using this
 						// object's function, if it is we invoke the function
 						if (failureCallBack) {

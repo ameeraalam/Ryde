@@ -110,12 +110,28 @@ class Controller {
 
 	storeChat(req, res) {
 
+		this.modelChat.query({"rydeId": req.body.rydeId}, (doc) => {
+			// if we find the object we then update it
+			this.modelChat.update({"rydeId": req.body.rydeId}, {rydeId: req.body.rydeId, texts: req.body.texts}, () => {
+				// success in updating the object
+				res.sendStatus(200);
+			}, () => {
+				// failure to update the object
+				res.sendStatus(404);
+			});
+		}, () => {
+			// if we can't find the object we insert the object
 
-
+			this.modelChat.insert(req.body, () => {
+				// success in inserting the document
+				res.sendStatus(200);
+			}, () => {
+				// failure to insert the document
+				res.sendStatus(404);
+			});
+		});
 
 	}
-
-
 
 	err(req, res) {
 		console.log("Processing error....");
