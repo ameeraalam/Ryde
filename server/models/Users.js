@@ -2,13 +2,13 @@
 
 let MongoClient = require("mongodb").MongoClient;
 
-/*	
+/*
 	NOTE** - The reason that the successCallBack and failureCallBack will work and can
 	successfully access the variables is because the class Users has a composition relationship
 	with the Controller, this means that because of lexical scoping the Users class can access
 	the variables scoped within the Controller class. I am specifying this to remind you that
 	the function that invokes has to supply all the variables and resources for the function being
-	passed on to do the job!		
+	passed on to do the job!
 
 */
 
@@ -60,7 +60,7 @@ class Users {
 			if (err) {
 				console.log("Failed to connect to the Ryde database...");
 			} else {
-				db.collection(this.colelction).findOne({"email": email}, (err, doc) => {
+				db.collection(this.collection).findOne({"email": email}, (err, doc) => {
 					if (err) {
 						console.log("Error in finding the name in the Ryde database...");
 						// we check if a failureCallBack is provided by the scope which is using this
