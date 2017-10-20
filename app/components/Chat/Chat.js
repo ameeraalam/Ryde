@@ -22,12 +22,16 @@ class Chat extends Component {
 		// for now rydeObject's id is just a random float, but this id will be
 		// the id attribute of an object that gets passed on from another page
 		// as the rydeObject will be this.props.rydeObject
-		this.rydeObject = {rydeId: Math.random()};
+		this.rydeObject = {rydeId: 4};
 		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
+			// textValue is the value that will be used as a placeholder in
+			// the TextInput to type in things
+			textValue: "",
 			currentText: "",
-			texts: []
+			texts: [],
+			lastEntryAt: 0
 		};
 		this.initMessages();
 	}
@@ -36,6 +40,26 @@ class Chat extends Component {
 	// the state's text attribute to the object retrieved from mongo db.
 	// This function is called only when the page is displayed
 	initMessages() {
+
+		fetch(this.baseUrl + this.rydeObject.rydeId + "/getMesseges", {
+			method: "GET"
+		}).then((req) => {
+			if (req.status === 200) {
+				return req.json();
+			} else {
+				return false;
+			}
+		}).then((reqObj) => {
+			if (reqObj) {
+				for (let i = 0; i < reqObj.texts.length; ++i) {
+					reqObj.texts[i] = JSON.parse(reqObj.texts[i]);
+					console.log(reqObj.texts[i])
+				}
+			} else {
+				console.log("Nothing to add...");
+			}
+		});
+
 
 		// let ts = this.state.texts;
 
@@ -55,7 +79,8 @@ class Chat extends Component {
 
 		let reqObj = {
 			rydeId: this.rydeObject.rydeId,
-			texts: []
+			texts: [],
+			lastEntryAt: this.state.lastEntryAt
 		};
 
 		// the reason texts is an empty array inside reqObj instead of being
@@ -68,8 +93,8 @@ class Chat extends Component {
 		// what this for loop does is it goes over each content in the texts
 		// array and simply converts the content to a JSON string from an object
 		// this is done to prevent an error of insertion in mongodb
-		for (let i = 0; i < reqObj.texts.length; ++i) {
-			reqObj.texts[i] = JSON.stringify(this.state.texts[i]);
+		for (let i = 0; i < this.state.texts.length; ++i) {
+			reqObj.texts.push(JSON.stringify(this.state.texts[i]));
 		}
 
 		// now we have to communicate with the server by sending each chat messages
@@ -82,6 +107,10 @@ class Chat extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
+		}).then(() => {
+			// after the asynchronous post request is finished we increase
+			// the lastEntryAt counter indicating that 1 message has been sent!
+			this.setState({lastEntryAt: ++this.state.lastEntryAt});
 		})
 	}
 
@@ -93,7 +122,12 @@ class Chat extends Component {
 		// arrow function because this object becomes unknown inside the buttonPress
 		// function if not done so. This is because the buttonPress function cannot
 		// access the scope of the this object and the this object is something else
-		// when assigned to the onPress variable.
+		// when assigned to the onPress variable. We also set the placeholder value
+		// for the TextInput to whatever is being typed everytime the text changes
+
+		// On focus we empty out the placeholder value which is the textValue variable
+		// in the react components state. This allows the box to refresh out for another
+		// input
 		return (
 			<ScrollView>
 				<View>
@@ -102,9 +136,14 @@ class Chat extends Component {
 
 				<View style = {styles.textBoxContainer}>
 					<TextInput
+						value = {this.state.textValue}
 						onChangeText = {(text) => {
 							let newText = this.userName + ": " + text;
-							this.setState({currentText: newText})
+							this.setState({currentText: newText});
+							this.setState({textValue: text});
+						}}
+						onFocus = {() => {
+							this.setState({textValue: ""});
 						}}
 					></TextInput>	
 					<Button
