@@ -14,6 +14,7 @@ import Choice from "../Choice/Choice";
 
 import styles from "./styles";
 
+
 class Register extends Component {
 
 	constructor(props) {
@@ -124,9 +125,8 @@ class Register extends Component {
 					// Initially emailCheck is false, not email check will result in
 					// emailCheck being true
 					emailCheck = !emailCheck;
-					console.log("From then function!");
-					return emailCheck;
 				}
+				return emailCheck;
 			} else {
 				alert("A user with the email is already registered");
 				return emailCheck;
@@ -209,7 +209,7 @@ class Register extends Component {
 
 		emailCheck.then((val) => {
 			
-			if (emailCheck === false) {
+			if (val === false) {
 				this.setState({emailS: {color: "red"}});
 				errors.push("email");
 			} else {
