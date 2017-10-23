@@ -10,9 +10,51 @@ import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Body, Button, Title, Footer, FooterTab, Content, List, ListItem} from 'native-base';
 
 export default class Pending extends Component {
+
+  constructor(props){
+  super(props);
+  //change ip address
+  this.address = "192.186.0.1";
+  this.baseUrl = "http://" + this.address + ":3000/";
+  this.state = {
+    fromLocation: "From:",
+    toLocation: "To:",
+    travelDate: "Date: (DD/MM)",
+    numPassengers: "Passenger Spots:",
+    numLuggage: "Luggage Space:"
+    //will need to add a hidden field or boolean that sets the object to pending or requested according to drivers acceptance
+    }
+  }
+
+  retrievePendingPosts(){
+
+    let reqObj = {
+      from: this.state.fromLocation,
+      to: this.state.toLocation,
+      date: this.state.travelDate,
+      passengers: this.state.numPassengers,
+      luggage: this.state.numLuggage
+    }
+
+    fetch(this.baseUrl + "", {
+      method: "GET",
+      headers: {
+        "Accept:": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify
+    });
+
+    if(reqObj != null) {
+      let lists = [];
+      lists.push(reqObj);
+    }
+    else {
+      alert("Error loading db");
+    }
+
+  }
   render() {
-    //i will change this list later to contain array of objects from the db. it will consist of all the rides the user has requested to join in. for now, there is harcoded random data.
-    var lists = ['Ride #1 Pending', 'Ride #2', 'Ride #3'];
     return (
       <Container>
       <Header>
@@ -36,7 +78,7 @@ export default class Pending extends Component {
         </Right>
       </Header>
       <Content>
-        <List dataArray={lists}
+        <List dataArray={this.retrievePendingPosts({})}
           renderRow={(list) =>
             <ListItem onPress={() => Actions.pendingProfile({})}>
               <Text>{list}</Text>
