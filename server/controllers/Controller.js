@@ -100,19 +100,16 @@ class Controller {
 		});
 	}
 
-
-	polling(req, res) {
-		setTimeout(() => {
-			res.sendStatus(200);
-		}, 30000);
-	}
-
-
 	storeChat(req, res) {
-
 		this.modelChat.query({"rydeId": req.body.rydeId}, (doc) => {
+			// we update the text array in the database by adding the new messages to it
+			// from the request objects body containing the array of texts
+			// we just need to loop over it and add to our mongodb doc's texts
+			for (let i = req.body.lastEntryAt; i < req.body.texts.length; ++i) {
+				doc.texts.push(req.body.texts[i]);
+			}
 			// if we find the object we then update it
-			this.modelChat.update({"rydeId": req.body.rydeId}, {rydeId: req.body.rydeId, texts: req.body.texts}, () => {
+			this.modelChat.update({"rydeId": req.body.rydeId}, {rydeId: req.body.rydeId, texts: doc.texts, chatChange: true}, () => {
 				// success in updating the object
 				res.sendStatus(200);
 			}, () => {
@@ -121,8 +118,13 @@ class Controller {
 			});
 		}, () => {
 			// if we can't find the object we insert the object
+			let dbObj = {
+				rydeId: req.body.rydeId,
+				texts: req.body.texts,
+				chatChange: true
+			}
 
-			this.modelChat.insert(req.body, () => {
+			this.modelChat.insert(dbObj, () => {
 				// success in inserting the document
 				res.sendStatus(200);
 			}, () => {
@@ -130,13 +132,36 @@ class Controller {
 				res.sendStatus(404);
 			});
 		});
+	}
 
+	getMesseges(req, res) {
+		let rydeId = Number(req.params.rydeId);
+		this.modelChat.query({"rydeId": rydeId}, (doc) => {
+			res.status(200).send(doc);
+		}, () => {
+			res.sendStatus(404);
+		});
 	}
 
 	err(req, res) {
 		console.log("Processing error....");
 		res.sendStatus(404);
 	}
+
+
+	socketIntro() {
+		console.log("Socket is open on port 4000...");
+	}
+
+
+	connection(socket) {
+		console.log("Connection received from", socket.id);
+	}
+
+	idEnquiry(data) {
+		console.log("Id is enquired...");
+	}
+
 
 }
 

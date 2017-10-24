@@ -14,6 +14,8 @@ import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
 
+import clientIO from "socket.io-client";
+
 class Chat extends Component {
 
 	constructor(props) {
@@ -25,6 +27,8 @@ class Chat extends Component {
 		this.rydeObject = {rydeId: 4};
 		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
+		// creating the socket object specific to this client
+		this.socket = clientIO("http://" + this.address + ":4000/");
 		this.state = {
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
@@ -33,14 +37,15 @@ class Chat extends Component {
 			texts: [],
 			lastEntryAt: 0
 		};
+		// initiates message on page load and keep polling for new messages
 		this.initMessages();
 	}
+
 
 	// Retrieves all the messages from the mongodb database and changes
 	// the state's text attribute to the object retrieved from mongo db.
 	// This function is called only when the page is displayed
 	initMessages() {
-
 		fetch(this.baseUrl + this.rydeObject.rydeId + "/getMesseges", {
 			method: "GET"
 		}).then((req) => {
@@ -51,23 +56,25 @@ class Chat extends Component {
 			}
 		}).then((reqObj) => {
 			if (reqObj) {
+				let oldTexts = [];
 				for (let i = 0; i < reqObj.texts.length; ++i) {
 					reqObj.texts[i] = JSON.parse(reqObj.texts[i]);
-					console.log(reqObj.texts[i])
+					// props.children gives access to the parse text directly inside the
+					// react component's text attribute
+					// the parsed texts from components reaturned by mongodb gets stored
+					// in the oldTexts array where we create new text components and use
+					// the mongodb texts components parsed texts
+					// this is done so because React Native can't render Text components
+					// returned by mongodb
+					oldTexts.push(<Text>{reqObj.texts[i].props.children}</Text>)
 				}
+				this.setState({texts: oldTexts});
 			} else {
 				console.log("Nothing to add...");
 			}
 		});
 
-
-		// let ts = this.state.texts;
-
-		// for (let i = 0; i < 10; ++i) {
-		// 	ts.push(<Text>hello</Text>);
-		// }
-
-		// this.setState({texts: ts});
+		this.socket.emit("idEnquiry");
 
 	}
 

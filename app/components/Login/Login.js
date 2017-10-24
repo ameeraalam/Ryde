@@ -16,7 +16,7 @@ class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.2.22";
+		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			textEmail: "Email",
@@ -66,25 +66,23 @@ class Login extends Component {
 			<View style = {styles.container}>
 				<TextInput
 					style = {styles.inputBox}
-					value = {this.state.textEmail}
+					placeholder = "Email"
+         			underlineColorAndroid = "transparent"
 					onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
-					value = {this.state.textPass}
+					placeholder = "Password"
 					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
-				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 200, height: 200}}>
-					<Image
-						style = {styles.submitButton}
-						source = {require("./images/button.png")}
-					/>
+				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>
+					<Text style = {styles.submitButtonOnLogin}> Login </Text>
 				</TouchableOpacity>
 
 				<View style = {styles.registerContainer}>
-					<Text>If not signed up then <Text onPress = {this.registerButton} style = {{color: "blue"}}>Register</Text></Text>
+					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
 				</View>
 
 			</View>

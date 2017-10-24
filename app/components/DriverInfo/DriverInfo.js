@@ -12,12 +12,11 @@ import {
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
-
 class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.2.22";
+		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			plate: "Car plate number",

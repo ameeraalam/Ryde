@@ -8,11 +8,19 @@ module.exports = function() {
 	var bodyParser = require('body-parser');
 	var Controller = require('./Controller.js');
 
+	/* Socket.IO dependencies */
+	var http = require("http");
+	var socketio = require("socket.io");
+
 	const CONTROLLER = new Controller();
 	const ROOT = './';
 
 	/* Express object created */
 	var app = express();
+
+	/* Socket io configured */
+	var server = http.Server(app);
+	var websocket = socketio(server); 
 
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
@@ -36,9 +44,9 @@ module.exports = function() {
 
 	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
 
-	app.get("/polling", (req, res) => { CONTROLLER.polling(req, res); });
-
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
+
+	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
 
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
@@ -46,6 +54,18 @@ module.exports = function() {
 	app.get('*', (req, res) => { CONTROLLER.err(req, res); });
 
 	app.post("*", (req, res) => { CONTROLLER.err(req, res); });
+
+
+	/* Socket Routing */
+
+	websocket.on("connection", (socket) => {
+		CONTROLLER.connection(socket);
+
+		socket.on("idEnquiry", (data) => {
+			CONTROLLER.idEnquiry(data);
+		})
+
+	});
 
 
 	// The compiler probably uses a queue datastructure to handle the functions responsible
@@ -58,5 +78,7 @@ module.exports = function() {
 	// Functions like setTimeout pushes the funciton down the function execution queue.
 	
 	app.listen(3000, CONTROLLER.intro());
+
+	server.listen(4000, CONTROLLER.socketIntro());
 
 }

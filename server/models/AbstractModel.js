@@ -77,6 +77,7 @@ class AbstractModel {
 					} else {
 						// check to see if a function is provided before calling it to prevent
 						// calling an undefined variable
+						console.log("Item is successfully updated in the Ryde database...");
 						if (successCallBack) {
 							successCallBack();
 						}
