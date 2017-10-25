@@ -18,7 +18,7 @@ class Choice extends Component {
 	constructor(props) {
 		super(props);
 	}
-
+  
 	submitDriver() {
 		// Takes you to driver's home page, if all infos are filled.
 		// Otherwise a page will pop up asking for incomplete driver fields to be completed
@@ -29,14 +29,13 @@ class Choice extends Component {
 			Actions.driverInfo({resObj});
 		} else {
 			// take to the driver's home page
-			alert("Link me to driver's homepage");
+      Actions.driverview({})
 		}
 	}
 
 	submitPassenger() {
 		// takes you to passenger's home page
-
-		alert("Link me to passenger's homepage");
+    Actions.passengerview({})
 	}
 
 	render() {
@@ -44,7 +43,7 @@ class Choice extends Component {
 			<View>
 				<Button title = "Driver" onPress = {() => {this.submitDriver()}}/>
 				<Text></Text>
-				<Button title = "Passenger" onPress = {this.submitPassenger}/>
+				<Button title = "Passenger" onPress = {() => {this.submitPassenger()}}/>
 			</View>
 		)
 	}
