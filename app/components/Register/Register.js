@@ -5,8 +5,17 @@ import {
 	View,
 	TextInput,
 	Image,
-	TouchableOpacity
+	ScrollView,
+	TouchableOpacity,
 } from "react-native";
+
+import {
+	Form,
+	Item,
+	Label,
+	Input,
+	ListItem
+} from "native-base";
 
 import { Actions } from "react-native-router-flux";
 
@@ -14,16 +23,17 @@ import Choice from "../Choice/Choice";
 
 import styles from "./styles";
 
+
 class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "172.17.73.16";
+		this.address = "192.168.0.19";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
-			email: "Email",
+			email: "Email",	
 			password: "password",
 			dob: "Date of birth",
 			phone: "Mobile phone number",
@@ -32,51 +42,50 @@ class Register extends Component {
 			liscense: "Driver's liscense number",
 			car: "Car model number",
 			firstNameS: {
-				borderColor: 'red',
-				color: "black"
+				color: "grey"
 			},
 
 			lastNameS: {
-				color: "black"
+				color: "grey"
 			},
 
 			emailS: {
-				color: "black"
+				color: "grey"
 			},
 
 			passwordS: {
-				color: "black"
+				color: "grey"
 			},
 
 			dobS: {
-				color: "black"
+				color: "grey"
 			},
 
 			phoneS: {
-				color: "black"
+				color: "grey"
 			},
 
 			genderS: {
-				color: "black"
+				color: "grey"
 			},
 
 			plateS: {
-				color: "black"
+				color: "grey"
 			},
 
 			liscenseS: {
-				color: "black"
+				color: "grey"
 			},
-
+			
 			carS: {
-				color: "black"
+				color: "grey"
 			}
 		}
 	}
 
 	emailCheck() {
 		let emailCheck = false;
-		let checkObj = {at: false, dot: false};
+		let checkObj = {at: false, dot: false, email: false};
 
 		for (let i = 0; i < this.state.email.length; ++i) {
 			// all the expression need to be true in order for the entire expression
@@ -94,18 +103,53 @@ class Register extends Component {
 
 		}
 
-		if (checkObj.at && checkObj.dot) {
-			emailCheck = true;
-		}
+		let emailObj = {email: this.state.email};
 
-		return emailCheck;
+		// The fetch function call will return a promise and takes in two parameter
+		// first is the url with which it makes a request and second parameter
+		// is an object specifying the method details and the object that will
+		// get sent. The promise being returned, gives back two call back functions
+		// first contains one parameter which is the response object and the second
+		// function contains one parameter which is the err.
+
+		// the promise returned by the fetch function will be the return of the
+		// .then function, so we are returning a promise
+		return fetch(this.baseUrl + "emailCheck", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(emailObj)
+		}).then((res) => {
+			// Since fetch is asynchronous that returns a promise, we want to do
+			// all the checks after this async function returns the promise and so
+			// we use the .then function and then do all the checks, because any check
+			// outside the .then function will execute first before the async function
+			// finishes
+			if (res.status === 200) {
+				checkObj.email = true;
+				if (checkObj.at && checkObj.dot && checkObj.email) {
+					// Initially emailCheck is false, not email check will result in
+					// emailCheck being true
+					emailCheck = !emailCheck;
+				}
+				return emailCheck;
+			} else {
+				alert("A user with the email is already registered");
+				return emailCheck;
+			}
+		}, (err) => {
+			alert(err)
+			return emailCheck;
+		});
 	}
 
 	phoneCheck() {
 		let phoneCheck = true;
 
 		for (let i = 0; i < this.state.phone.length; ++i) {
-			// Either of these expression being true will result in the statement eing true,
+			// Either of these expression being true will result in the statement eing true, 
 			// only if both the statements are false then the first half of the expression will be false.
 			// Both the expression in the outer expresion need to be true in order for the entire expression to be true,
 			// one of the expression being false will result in the entire statement being false.
@@ -152,154 +196,211 @@ class Register extends Component {
 		return true;
 	}
 
+	firstNameChecker() {
+		if (this.state.firstName.length === 0) {
+			return false;
+		}
+		return true;
+	}
+
+	lastNameChecker() {
+		if (this.state.lastName.length === 0) {
+			return false;
+		}
+		return true;
+	}
+
 	submitButton() {
 		let errors = [];
 
 		let emailCheck = this.emailCheck();
 
-		if (emailCheck === false) {
-			this.setState({emailS: {color: "red"}});
-			errors.push("email");
-		} else {
-			this.setState({emailS: {color: "black"}});
-		}
+		emailCheck.then((val) => {
+			
+			if (val === false) {
+				this.setState({emailS: {color: "red"}});
+				errors.push("email");
+			} else {
+				this.setState({emailS: {color: "grey"}});
+			}
 
-		let phoneCheck = this.phoneCheck();
+			let phoneCheck = this.phoneCheck();
 
-		if (phoneCheck === false) {
-			this.setState({phoneS: {color: "red"}})
-			errors.push("phone");
-		} else {
-			this.setState({phoneS: {color: "black"}});
-		}
+			if (phoneCheck === false) {
+				this.setState({phoneS: {color: "red"}})
+				errors.push("phone");
+			} else {
+				this.setState({phoneS: {color: "grey"}});
+			}
 
-		let reqObj = {
-			firstName: this.state.firstName,
-			lastName: this.state.lastName,
-			email: this.state.email,
-			password: this.state.password,
-			dob: this.state.dob,
-			phone: this.state.phone,
-			gender: this.state.gender,
-			plate: this.state.plate,
-			liscense: this.state.liscence,
-			car: this.state.car,
-			allInfoFilled: this.driverFieldsCheck()
-		}
+			if (this.firstNameChecker() === false) {
+				this.setState({firstNameS: {color: "red"}});
+				errors.push("firstName");
+			} else {
+				this.setState({firstNameS: {color: "grey"}})
+			}
 
-		// I want to send the object only if there are no errors
-		if (errors.length === 0) {
-			fetch(this.baseUrl + "register", {
-				method: "POST",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(reqObj)
-			}).then((res) => {
-				if (res.status === 200) {
+			if (this.lastNameChecker() == false) {
+				this.setState({lastNameS: {color: "red"}});
+				errors.push("lastName");
+			} else {
+				this.setState({lastNameS: {color: "grey"}});
+			}
 
+			let reqObj = {
+				firstName: this.state.firstName,
+				lastName: this.state.lastName,
+				email: this.state.email,
+				password: this.state.password,
+				dob: this.state.dob,
+				phone: this.state.phone,
+				gender: this.state.gender,
+				plate: this.state.plate,
+				liscense: this.state.liscence,
+				car: this.state.car,
+				allInfoFilled: this.driverFieldsCheck()
+			}
 
-					// if successful take them to the login page
+			// I want to send the object only if there are no errors
+			if (errors.length === 0) {
+				// The fetch function call will return a promise and takes in two parameter
+				// first is the url with which it makes a request and second parameter
+				// is an object specifying the method details and the object that will
+				// get sent. The promise being returned, gives back two call back functions
+				// first contains one parameter which is the response object and the second
+				// function contains one parameter which is the err.
+				fetch(this.baseUrl + "register", {
+					method: "POST",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(reqObj)
+				}).then((res) => {
+					if (res.status === 200) {
+						// change alert later
+						alert("Registration complete");
+						Actions.login({});
+					} else {
+						alert("Error");
+					}
+				}, (err) => {
+					alert("Server error");
+				});
+			}
 
+		})
 
-				} else {
-					alert("Error");
-				}
-
-			}, (err) => {
-				alert("Registration error...");
-			});
-		}
 	}
 
 
 	render() {
 		return (
-			<View>
-				<TextInput
-					style = {this.state.firstNameS}
-					value = {this.state.firstName}
-					onChangeText = {(text) => this.setState({firstName: text, firstNameS: {color: "black"}})}
+			<ScrollView>
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.firstNameS}>First name</Label>
+						<Input
+							onChangeText = {(text) => this.setState({firstName: text, firstNameS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
-				/>
-
-				<TextInput
-					style = {this.state.lastNameS}
-					value = {this.state.lastName}
-					onChangeText = {(text) => this.setState({lastName: text, lastNameS: {color: "black"}})}
-
-
-				/>
-
-				<TextInput
-					style = {this.state.emailS}
-					value = {this.state.email}
-					onChangeText = {(text) => this.setState({email: text, emailS: {color: "black"}})}
-
-				/>
-
-				<TextInput
-					style = {this.state.passwordS}
-					value = {this.state.password}
-					secureTextEntry = {true}
-					onChangeText = {(text) => this.setState({password: text, passwordS: {color: "black"}})}
-
-				/>
-
-				<TextInput
-					style = {this.state.dobS}
-					value = {this.state.dob}
-					onChangeText = {(text) => this.setState({dob: text, dobS: {color: "black"}})}
-
-				/>
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.lastNameS}>Last name</Label>
+						<Input
+							onChangeText = {(text) => this.setState({lastName: text, lastNameS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
 
-				<TextInput
-					style = {this.state.phoneS}
-					value = {this.state.phone}
-					onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "black"}})}
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.emailS}>Email</Label>
+						<Input
+							onChangeText = {(text) => this.setState({email: text, emailS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.passwordS}>Password</Label>
+						<Input
+							secureTextEntry = {true}
+							onChangeText = {(text) => this.setState({password: text, passwordS: {color: "grey"}})}
+
+						/>
+					</Item>
+				</Form>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.dobS}>Date of birth</Label>
+						<Input
+							onChangeText = {(text) => this.setState({dob: text, dobS: {color: "grey"}})}
+						/>	
+					</Item>
+				</Form>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.phoneS}>Phone number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "grey"}})}
+						/>		
+					</Item>
+				</Form>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.genderS}>Gender</Label>
+						<Input
+							onChangeText = {(text) => this.setState({gender: text, genderS: {color: "grey"}})}
+						/>
+	
+					</Item>
+				</Form>
+
+				<Text>  </Text>
+
+				<ListItem itemHeader>
+					<Text>OPTIONAL</Text>
+				</ListItem>
 
 
-				/>
-
-				<TextInput
-
-					style = {this.state.genderS}
-					value = {this.state.gender}
-					onChangeText = {(text) => this.setState({gender: text, genderS: {color: "black"}})}
-
-
-				/>
-
-				<Text></Text>
-				<Text>Optional</Text>
-				<Text></Text>
-
-				<TextInput
-
-					style = {this.state.plateS}
-					value = {this.state.plate}
-					onChangeText = {(text) => this.setState({plate: text, plateS: {color: "black"}})}
-
-				/>
-
-				<TextInput
-
-					style = {this.state.liscenseS}
-					value = {this.state.liscense}
-					onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "black"}})}
-
-				/>
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.plateS}>Plate number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
 
-				<TextInput
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.liscenseS}>Liscense number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
-					style = {this.state.carS}
-					value = {this.state.car}
-					onChangeText = {(text) => this.setState({car: text, car: {color: "black"}})}
 
-				/>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.carS}>Car Model</Label>
+						<Input
+							onChangeText = {(text) => this.setState({car: text, car: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
+
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}}>
 					<Image
@@ -308,7 +409,7 @@ class Register extends Component {
 					/>
 				</TouchableOpacity>
 
-			</View>
+			</ScrollView>
 
 
 		);
