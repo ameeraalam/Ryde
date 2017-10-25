@@ -18,13 +18,32 @@ class Choice extends Component {
 	constructor(props) {
 		super(props);
 	}
+  
+	submitDriver() {
+		// Takes you to driver's home page, if all infos are filled.
+		// Otherwise a page will pop up asking for incomplete driver fields to be completed
+		if (!this.props.resObj.allInfoFilled) {
+			let resObj = this.props.resObj
+			// the resObj that gets passed on to Choice component will be
+			// passed to the DriverInfo component 
+			Actions.driverInfo({resObj});
+		} else {
+			// take to the driver's home page
+      Actions.driverview({})
+		}
+	}
+
+	submitPassenger() {
+		// takes you to passenger's home page
+    Actions.passengerview({})
+	}
 
 	render() {
 		return (
 			<View>
-				<Button title = "Driver" onPress = {Actions.driverview}/>
+				<Button title = "Driver" onPress = {() => {this.submitDriver()}}/>
 				<Text></Text>
-				<Button title = "Passenger" onPress = {Actions.passengerview}/>
+				<Button title = "Passenger" onPress = {() => {this.submitPassenger()}}/>
 			</View>
 		)
 	}
