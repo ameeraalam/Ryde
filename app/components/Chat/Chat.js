@@ -34,91 +34,79 @@ class Chat extends Component {
 			// the TextInput to type in things
 			textValue: "",
 			currentText: "",
-			texts: [],
-			lastEntryAt: 0
+			texts: []
 		};
+
 		// initiates message on page load and keep polling for new messages
 		this.initMessages();
+
+		// registers all the necessary socket events
+		this.registerSocketEvents();
 	}
 
+	registerSocketEvents() {
+		/* Registering all the socket events */
+
+		// socket event for receiving messages broadcasted by the server socket
+		this.socket.on(this.rydeObject.rydeId.toString() + "/broadcast", (resObj) => {
+			let textComponents = []
+			for (let i = 0; i < resObj.texts.length; ++i) {
+				// variable names are placed inside {}
+				textComponents.push(<Text>{resObj.texts[i]}</Text>);
+			}
+			this.setState({texts: textComponents});
+		});
+
+		// socket event for success of a server job
+		this.socket.on(this.rydeObject.rydeId.toString() + "/success", () => {
+			console.log("Server socket sent success");
+		});
+
+		// socket event for failure of a server job
+		this.socket.on(this.rydeObject.rydeId.toString() + "/failure", () => {
+			console.log("Server socket sent failure...");
+		});
+
+	}
 
 	// Retrieves all the messages from the mongodb database and changes
 	// the state's text attribute to the object retrieved from mongo db.
 	// This function is called only when the page is displayed
 	initMessages() {
-		fetch(this.baseUrl + this.rydeObject.rydeId + "/getMesseges", {
-			method: "GET"
-		}).then((req) => {
-			if (req.status === 200) {
-				return req.json();
-			} else {
-				return false;
-			}
-		}).then((reqObj) => {
-			if (reqObj) {
-				let oldTexts = [];
-				for (let i = 0; i < reqObj.texts.length; ++i) {
-					reqObj.texts[i] = JSON.parse(reqObj.texts[i]);
-					// props.children gives access to the parse text directly inside the
-					// react component's text attribute
-					// the parsed texts from components reaturned by mongodb gets stored
-					// in the oldTexts array where we create new text components and use
-					// the mongodb texts components parsed texts
-					// this is done so because React Native can't render Text components
-					// returned by mongodb
-					oldTexts.push(<Text>{reqObj.texts[i].props.children}</Text>)
-				}
-				this.setState({texts: oldTexts});
-			} else {
-				console.log("Nothing to add...");
-			}
-		});
+	
+		// socket emission to send the ryde id to the sever
+		// we need to tell the server what id we are and what ryde chat room
+		// we belong to
+		this.socket.emit("idEnquiry", this.rydeObject.rydeId);
 
-		this.socket.emit("idEnquiry");
+
+		// this event listener catches the path through which the socket from the
+		// server will send the all the messages related to the ride from the database
+		this.socket.on(this.rydeObject.rydeId.toString() + "/initMessages", (resObj) => {
+		
+			let initMsgs = []; 
+
+			for (let i = 0; i < resObj.texts.length; ++i) {
+				initMsgs.push(<Text>{resObj.texts[i]}</Text>);
+			}		
+
+			this.setState({texts: initMsgs});
+
+		});		
 
 	}
 
 
 	sendMessage() {
-		let updatedTexts = this.state.texts;
-		updatedTexts.push(<Text>{this.state.currentText}</Text>);
-		this.setState({texts: updatedTexts});
-
 		let reqObj = {
 			rydeId: this.rydeObject.rydeId,
-			texts: [],
-			lastEntryAt: this.state.lastEntryAt
+			text: this.state.currentText,
 		};
 
-		// the reason texts is an empty array inside reqObj instead of being
-		// texts: this.state.texts is because when we assign reqObj.texts to
-		// this.state.texts both the variables are now pointing to the same
-		// address in memory which is an array, to prevent we use a for loop
-		// to iterate over the array object in memory and break it down into
-		// two seperate array objects
-
-		// what this for loop does is it goes over each content in the texts
-		// array and simply converts the content to a JSON string from an object
-		// this is done to prevent an error of insertion in mongodb
-		for (let i = 0; i < this.state.texts.length; ++i) {
-			reqObj.texts.push(JSON.stringify(this.state.texts[i]));
-		}
-
 		// now we have to communicate with the server by sending each chat messages
-		// and storing the objects 
-
-		fetch(this.baseUrl + "storeChat", {
-			method: "POST",
-			headers: {
-				"Accept": "application/json",
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(reqObj)
-		}).then(() => {
-			// after the asynchronous post request is finished we increase
-			// the lastEntryAt counter indicating that 1 message has been sent!
-			this.setState({lastEntryAt: ++this.state.lastEntryAt});
-		})
+		// and storing the objects in the database
+		// socket.emit because we are sending somthing to the server
+		this.socket.emit(this.rydeObject.rydeId.toString() + "/storeChat", reqObj);
 	}
 
 	render() {

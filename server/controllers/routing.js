@@ -20,7 +20,7 @@ module.exports = function() {
 
 	/* Socket io configured */
 	var server = http.Server(app);
-	var websocket = socketio(server); 
+	var io = socketio(server); 
 
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
@@ -58,12 +58,16 @@ module.exports = function() {
 
 	/* Socket Routing */
 
-	websocket.on("connection", (socket) => {
+	io.on("connection", (socket) => {
 		CONTROLLER.connection(socket);
+		
+		// CONTROLLER.idEnquiry returns a promise that we need to resolve
+		CONTROLLER.idEnquiry(socket).then((id) => {
 
-		socket.on("idEnquiry", (data) => {
-			CONTROLLER.idEnquiry(data);
-		})
+			CONTROLLER.initMessages(socket, id);
+
+			CONTROLLER.storeChat(io, socket, id);
+		});
 
 	});
 

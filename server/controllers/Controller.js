@@ -100,49 +100,6 @@ class Controller {
 		});
 	}
 
-	storeChat(req, res) {
-		this.modelChat.query({"rydeId": req.body.rydeId}, (doc) => {
-			// we update the text array in the database by adding the new messages to it
-			// from the request objects body containing the array of texts
-			// we just need to loop over it and add to our mongodb doc's texts
-			for (let i = req.body.lastEntryAt; i < req.body.texts.length; ++i) {
-				doc.texts.push(req.body.texts[i]);
-			}
-			// if we find the object we then update it
-			this.modelChat.update({"rydeId": req.body.rydeId}, {rydeId: req.body.rydeId, texts: doc.texts, chatChange: true}, () => {
-				// success in updating the object
-				res.sendStatus(200);
-			}, () => {
-				// failure to update the object
-				res.sendStatus(404);
-			});
-		}, () => {
-			// if we can't find the object we insert the object
-			let dbObj = {
-				rydeId: req.body.rydeId,
-				texts: req.body.texts,
-				chatChange: true
-			}
-
-			this.modelChat.insert(dbObj, () => {
-				// success in inserting the document
-				res.sendStatus(200);
-			}, () => {
-				// failure to insert the document
-				res.sendStatus(404);
-			});
-		});
-	}
-
-	getMesseges(req, res) {
-		let rydeId = Number(req.params.rydeId);
-		this.modelChat.query({"rydeId": rydeId}, (doc) => {
-			res.status(200).send(doc);
-		}, () => {
-			res.sendStatus(404);
-		});
-	}
-
 	err(req, res) {
 		console.log("Processing error....");
 		res.sendStatus(404);
@@ -155,14 +112,89 @@ class Controller {
 
 
 	connection(socket) {
-		console.log("Connection received from", socket.id);
+		console.log("Connection received from " +  socket.id + "...");
 	}
 
-	idEnquiry(data) {
-		console.log("Id is enquired...");
+	idEnquiry(socket) {
+		console.log("Id has been sent by the socket...");
+		// creating a promise for the async socket event
+		return new Promise((resolve, reject) => {
+			socket.on("idEnquiry", (id) => {
+				console.log("Socket request " + id +  "...");
+				socket.join(id);
+				resolve(id);
+			})
+		});
+	}
+	
+	initMessages(socket, id) {
+		this.modelChat.query({"rydeId": id}, (doc) => {
+
+			// successful in finding the object from mongodb
+			console.log("Success emission...");
+			socket.emit(id + "/success");
+
+			console.log(id + "/initMessages" + " emission...");
+			socket.emit(id + "/initMessages", doc);
+
+		}, () => {
+
+			// failure in finding the object in mongodb
+			console.log("Failure emission...");
+			socket.emit(id + "/failure");
+		});
 	}
 
 
+	storeChat(io, socket, id) {
+		socket.on(id + "/storeChat", (reqObj) => {
+			console.log("Socket request " + id + "/storeChat...");
+			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
+				// we update the text array in the database by adding the new messages to it
+				// from the request objects body containing the new text
+				doc.texts.push(reqObj.text);
+				// if we find the object we then update it
+				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, () => {
+					// sending socket connection for success in the job
+					console.log("Success emission...");
+					socket.emit(id + "/success");
+
+					// now to broadcast the message to everyone in the chat room
+					console.log("Broadcasting message from room-" + id + " emission");
+					io.to(id).emit(id + "/broadcast", doc);
+
+				}, () => {
+					// sending socket connection for failure in the job
+					console.log("Failure emission...");
+					socket.emit(id + "/failure");
+				});
+			}, () => {
+				// if we can't find the object we insert the object
+				let dbObj = {
+					rydeId: reqObj.rydeId,
+					texts: []
+				}
+				// pushing the message received to the db object's texts attribute
+				// which is an array
+				dbObj.texts.push(reqObj.text);
+				this.modelChat.insert(dbObj, () => {
+					// sending socket connection for success in the job
+					console.log("Success emission...");
+					socket.emit(id + "/success");
+
+					// now we broadcast the message to everyone in the chat room
+					console.log("Broadcasting message from room-" + id + " emission");
+					io.to(id).emit(id + "/broadcast", dbObj);
+
+				}, () => {
+					// sending socket connection for failure in the job
+					console.log("Failure emission...");
+					socket.emit(id + "/failure");
+				});
+
+			});
+		});
+	}
 }
 
 module.exports = Controller;
