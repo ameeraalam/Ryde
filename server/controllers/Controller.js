@@ -152,9 +152,9 @@ class Controller {
 			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
 				// we update the text array in the database by adding the new messages to it
 				// from the request objects body containing the new text
-				doc.texts.push(reqObj.text);
+				doc.texts.push({username: reqObj.username, text: reqObj.text});
 				// if we find the object we then update it
-				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, () => {
+				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, (doc) => {
 					// sending socket connection for success in the job
 					console.log("Success emission...");
 					socket.emit(id + "/success");
@@ -176,7 +176,7 @@ class Controller {
 				}
 				// pushing the message received to the db object's texts attribute
 				// which is an array
-				dbObj.texts.push(reqObj.text);
+				dbObj.texts.push({username: reqObj.username, text: reqObj.text});
 				this.modelChat.insert(dbObj, () => {
 					// sending socket connection for success in the job
 					console.log("Success emission...");
