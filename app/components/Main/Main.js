@@ -14,7 +14,6 @@ export default () => (
 			<Scene key = "login" component = {Login} title = "																						Ryde"/>
 			<Scene key = "register" component = {Register} title = "															Ryde"/>
 			<Scene key = "choice" component = {Choice} title = "															Ryde"/>
-			
 			<Scene key = "ridePosting" component = {RidePosting} title = "                                  Ryde"/>
 		</Scene>
 	</Router>
