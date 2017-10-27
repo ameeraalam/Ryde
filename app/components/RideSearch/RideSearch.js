@@ -1,3 +1,4 @@
+// Imports required for this page
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -14,6 +15,7 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
+// Main class
 class RideSearch extends Component{
 
 	constructor(props){
@@ -29,6 +31,7 @@ class RideSearch extends Component{
 		}
 	}
 
+	// Code for functionality of the Find button on the app page
 	findButton(){
 
 		let reqObj = {
@@ -54,46 +57,54 @@ class RideSearch extends Component{
 		Actions.rydeBrowser({});
 	}
 
+	// App visuals
 	render(){
 
 		return(
 
 			<View style = {styles.mainStyle}>
 				
+				{/*Instruction Text*/}
 				<Text style = {styles.welcome}>
 					Find a Ryde
 				</Text>
 
+				{/*Input box for the from location*/}
 				<TextInput 
 					style = {styles.inputBox}
 					placeholder = {this.state.fromLocation}
 					onChangeText = {(text) => this.setState({fromLocation: text})}
 				/>
 
+				{/*Input box for the to location*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.toLocation}
 					onChangeText = {(text) => this.setState({toLocation: text})}
 				/>
 
+				{/*Input box for the travel date*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.travelDate}
 					onChangeText = {(text) => this.setState({travelDate: text})}
 				/>
 
+				{/*Input box for the number of passengers*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numPassengers}
 					onChangeText = {(text) => this.setState({numPassengers: text})}
 				/>
 
+				{/*Input box for the amount of luggage*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numLuggage}
 					onChangeText = {(text) => this.setState({numLuggage: text})}
 				/>
 
+				{/*Button to use the findButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.findButton()}}>
 					<Image
 						style = {styles.myImage}
@@ -106,6 +117,7 @@ class RideSearch extends Component{
 	}
 }
 
+// Styling
 const styles = StyleSheet.create({
   	
   	mainStyle: {

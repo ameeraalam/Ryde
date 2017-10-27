@@ -1,3 +1,4 @@
+// Imports required for this page
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -14,8 +15,10 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
-let rideID = 0;
+// Unique static ID that will be assigned to a Ryde each time one is created
+var rideID = 0;
 
+// Main class
 class RidePosting extends Component{
 
 	constructor(props){
@@ -31,9 +34,12 @@ class RidePosting extends Component{
 		} 
 	}
 
+	// Code for functionality of the Post button on the app page
 	postButton(){
 		
+		// Should only increment this if the request was a success
 		rideID++;
+		
 		// need to pass Ryde ID here
 		let reqObj = {
 			from: this.state.fromLocation,
@@ -53,49 +59,59 @@ class RidePosting extends Component{
 
 		});
 
+		// If 200, alert saying 'Ryde Posted!' & switch to Ameeras page, else alert Server Error
+
 		Actions.driverProfile({});
 	}
 
+	// App visuals
 	render(){
 		
 		return(
 			
 			<View style = {styles.mainStyle}>
 				
+				{/*Instruction Text*/}
 				<Text style = {styles.welcome}>
 					Post Your Ryde
 				</Text>
 
+				{/*Input box for the from location*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.fromLocation}
 					onChangeText = {(text) => this.setState({fromLocation: text})}
 				/>
 				
+				{/*Input box for the to location*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.toLocation}
 					onChangeText = {(text) => this.setState({toLocation: text})}
 				/>
 				
+				{/*Input box for the travel date*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.travelDate}
 					onChangeText = {(text) => this.setState({travelDate: text})}
 				/>
 				
+				{/*Input box for the number of passengers*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numPassengers}
 					onChangeText = {(text) => this.setState({numPassengers: text})}
 				/>
 				
+				{/*Input box for the amount of luggage*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numLuggage}
 					onChangeText = {(text) => this.setState({numLuggage: text})}
 				/>
 				
+				{/*Button to use the postButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.postButton()}}>
 					<Image
 						source = {require("./images/postImage.jpg")}
@@ -107,6 +123,8 @@ class RidePosting extends Component{
 	}
 }
 
+
+// Styling
 const styles = StyleSheet.create({
   	
   	mainStyle: {
