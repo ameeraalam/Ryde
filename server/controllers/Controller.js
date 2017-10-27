@@ -15,7 +15,6 @@ class Controller {
 	constructor() {
 		this.modelUsers = new Users();
 		this.modelRydes = new Rydes();
-		this.modelRydes = new RydesInfo();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 	}
