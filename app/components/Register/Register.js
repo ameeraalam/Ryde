@@ -28,12 +28,12 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.19";
+		this.address = "192.168.2.76";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
-			email: "Email",	
+			email: "Email",
 			password: "password",
 			dob: "Date of birth",
 			phone: "Mobile phone number",
@@ -76,7 +76,7 @@ class Register extends Component {
 			liscenseS: {
 				color: "grey"
 			},
-			
+
 			carS: {
 				color: "grey"
 			}
@@ -149,7 +149,7 @@ class Register extends Component {
 		let phoneCheck = true;
 
 		for (let i = 0; i < this.state.phone.length; ++i) {
-			// Either of these expression being true will result in the statement eing true, 
+			// Either of these expression being true will result in the statement eing true,
 			// only if both the statements are false then the first half of the expression will be false.
 			// Both the expression in the outer expresion need to be true in order for the entire expression to be true,
 			// one of the expression being false will result in the entire statement being false.
@@ -216,7 +216,7 @@ class Register extends Component {
 		let emailCheck = this.emailCheck();
 
 		emailCheck.then((val) => {
-			
+
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
 				errors.push("email");
@@ -341,7 +341,7 @@ class Register extends Component {
 						<Label style = {this.state.dobS}>Date of birth</Label>
 						<Input
 							onChangeText = {(text) => this.setState({dob: text, dobS: {color: "grey"}})}
-						/>	
+						/>
 					</Item>
 				</Form>
 
@@ -350,7 +350,7 @@ class Register extends Component {
 						<Label style = {this.state.phoneS}>Phone number</Label>
 						<Input
 							onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "grey"}})}
-						/>		
+						/>
 					</Item>
 				</Form>
 
@@ -360,7 +360,7 @@ class Register extends Component {
 						<Input
 							onChangeText = {(text) => this.setState({gender: text, genderS: {color: "grey"}})}
 						/>
-	
+
 					</Item>
 				</Form>
 

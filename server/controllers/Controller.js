@@ -3,6 +3,7 @@
 /* Imports */
 let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
+let Rydes = require("./../models/Rydes.js")
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
 
@@ -13,6 +14,8 @@ class Controller {
 
 	constructor() {
 		this.modelUsers = new Users();
+		this.modelRydes = new Rydes();
+		this.modelRydes = new RydesInfo();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 	}
@@ -25,11 +28,11 @@ class Controller {
 	login(req, res) {
 		// First thing we have to do is query mongodb and find the object
 		// using the email, after finding the object we have to compare
-		// the password hash provided by the user and the password hash in the database 
+		// the password hash provided by the user and the password hash in the database
 		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// bcrypt.compare will compare the password attribute of the object provided
 			// by the user with the document object's password field in mongodb
-			// bcrypt.compare(), takes two 3 arguments, the password in strings, the 
+			// bcrypt.compare(), takes two 3 arguments, the password in strings, the
 			// hashed password and the callback function
 			bcrypt.compare(req.body.password, doc.password, (err, result) => {
 				if (err) {
@@ -126,75 +129,38 @@ class Controller {
 			})
 		});
 	}
-	
+
 	initMessages(socket, id) {
-		this.modelChat.query({"rydeId": id}, (doc) => {
+		this.modelChat.query({"rydeId": i ad}, (doc) => {
 
-			// successful in finding the object from mongodb
-			console.log("Success emission...");
-			socket.emit(id + "/success");
-
-			console.log(id + "/initMessages" + " emission...");
-			socket.emit(id + "/initMessages", doc);
-
+	driverview(req,res){
+		this.modelRydes.query({"driver": req.body.email}, () => {
+			res.sendStatus(200);
 		}, () => {
+			res.sendStatus(404);
+		})
+	}
 
-			// failure in finding the object in mongodb
-			console.log("Failure emission...");
-			socket.emit(id + "/failure");
-		});
+	//pending passenger and current passenger should be an array. need to figure out how will i loop through them here
+
+	pending(req,res){
+		this.modelRydes.query({"pendingPassenger": req.body.email}, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	available(req, res) {
+		this.modelRydes.query({"currentPassenger": req.body.email}, () => {
+			res.sendStatus(200);
+		}, () => {
+			pending(req, res);
+		})
 	}
 
 
-	storeChat(io, socket, id) {
-		socket.on(id + "/storeChat", (reqObj) => {
-			console.log("Socket request " + id + "/storeChat...");
-			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
-				// we update the text array in the database by adding the new messages to it
-				// from the request objects body containing the new text
-				doc.texts.push({username: reqObj.username, text: reqObj.text});
-				// if we find the object we then update it
-				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, (doc) => {
-					// sending socket connection for success in the job
-					console.log("Success emission...");
-					socket.emit(id + "/success");
 
-					// now to broadcast the message to everyone in the chat room
-					console.log("Broadcasting message from room-" + id + " emission");
-					io.to(id).emit(id + "/broadcast", doc);
-
-				}, () => {
-					// sending socket connection for failure in the job
-					console.log("Failure emission...");
-					socket.emit(id + "/failure");
-				});
-			}, () => {
-				// if we can't find the object we insert the object
-				let dbObj = {
-					rydeId: reqObj.rydeId,
-					texts: []
-				}
-				// pushing the message received to the db object's texts attribute
-				// which is an array
-				dbObj.texts.push({username: reqObj.username, text: reqObj.text});
-				this.modelChat.insert(dbObj, () => {
-					// sending socket connection for success in the job
-					console.log("Success emission...");
-					socket.emit(id + "/success");
-
-					// now we broadcast the message to everyone in the chat room
-					console.log("Broadcasting message from room-" + id + " emission");
-					io.to(id).emit(id + "/broadcast", dbObj);
-
-				}, () => {
-					// sending socket connection for failure in the job
-					console.log("Failure emission...");
-					socket.emit(id + "/failure");
-				});
-
-			});
-		});
-	}
 }
 
 module.exports = Controller;

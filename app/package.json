@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "expo": "^21.0.2",
     "native-base": "^2.3.3",
     "react": "16.0.0-beta.5",

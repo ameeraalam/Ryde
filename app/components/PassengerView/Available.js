@@ -13,14 +13,14 @@ export default class Available extends Component {
   constructor(props){
   super(props);
   //change ip address
-  this.address = "192.186.0.1";
+  this.address = "192.168.2.76";
   this.baseUrl = "http://" + this.address + ":3000/";
   this.state = {
-    fromLocation: "From:",
-    toLocation: "To:",
-    travelDate: "Date: (DD/MM)",
-    numPassengers: "Passenger Spots:",
-    numLuggage: "Luggage Space:"
+    fromLocation: "From",
+    toLocation: "To",
+    travelDate: "Date",
+    numPassengers: "Passenger Spots",
+    numLuggage: "Luggage Space"
     //will need to add a hidden field or boolean that sets the object to pending or requested according to drivers acceptance
     }
   }
@@ -28,6 +28,7 @@ export default class Available extends Component {
   retrieveAvailablePosts(){
 
     let reqObj = {
+      email: this.props.resObj.email,
       from: this.state.fromLocation,
       to: this.state.toLocation,
       date: this.state.travelDate,
@@ -44,13 +45,15 @@ export default class Available extends Component {
       body: JSON.stringify
     });
 
+    let lists = [];
     if(reqObj != null) {
-      let lists = [];
       lists.push(reqObj);
     }
     else {
       alert("Error loading db");
     }
+
+    return lists;
 
   }
   render() {

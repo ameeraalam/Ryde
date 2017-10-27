@@ -17,18 +17,18 @@ export default class Pending extends Component {
   this.address = "192.186.0.1";
   this.baseUrl = "http://" + this.address + ":3000/";
   this.state = {
-    fromLocation: "From:",
-    toLocation: "To:",
-    travelDate: "Date: (DD/MM)",
-    numPassengers: "Passenger Spots:",
-    numLuggage: "Luggage Space:"
-    //will need to add a hidden field or boolean that sets the object to pending or requested according to drivers acceptance
+    fromLocation: "From",
+    toLocation: "To",
+    travelDate: "Date",
+    numPassengers: "Passenger Spots",
+    numLuggage: "Luggage Space"
     }
   }
 
   retrievePendingPosts(){
 
     let reqObj = {
+      email: this.props.resObj.email,
       from: this.state.fromLocation,
       to: this.state.toLocation,
       date: this.state.travelDate,
@@ -45,13 +45,16 @@ export default class Pending extends Component {
       body: JSON.stringify
     });
 
+    let lists = [];
+
     if(reqObj != null) {
-      let lists = [];
       lists.push(reqObj);
     }
     else {
       alert("Error loading db");
     }
+
+    return lists;
 
   }
   render() {

@@ -18,6 +18,21 @@ export default class DriverRideProfile extends Component {
 
   //}
   //need to add logic on when it should be disabled, etc.
+  constructor(props){
+	super(props);
+	//change ip address
+	this.address = "192.168.2.76";
+	this.baseUrl = "http://" + this.address + ":3000/";
+	this.state = {
+    firstName: "First name",
+    lastName: "Last name",
+		fromLocation: "From",
+		toLocation: "To",
+		travelDate: "Date",
+		numPassengers: "Passenger Spots",
+		numLuggage: "Luggage Space"
+		}
+	}
 
   render() {
     return (
