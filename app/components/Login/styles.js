@@ -8,21 +8,36 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 	},
 	inputBox: {
-		height: 40, 
-		width: 100, 
-		borderColor: 'black', 
-		borderWidth: 1
+		height: 50,
+		width: 300,
+		borderColor: 'rgb(72, 110, 255)',
+		borderWidth: 1,
+		marginBottom:20,
+		textAlign:'center',
+		fontFamily: 'sans-serif'
+
 	},
 	submitButton: {
-		position: "relative", 
-		bottom: -20, 
-		left: 50, 
-		width: 100, 
+		position: "relative",
+		bottom: -20,
+		left: 50,
+		width: 100,
 		height: 25
 	},
 	registerContainer: {
-		position: "relative",
-		bottom: 120,
+		flexDirection:'row',
+		flexWrap:'wrap',
+		marginTop:10
+	},
+	submitButtonOnLogin: {
+		backgroundColor:'rgb(72, 110, 255)',
+		textAlign:'center',
+		height:54,
+		color:'#fff',
+		fontSize:18,
+		paddingTop:14,
+		marginTop:10,
+		fontFamily: 'sans-serif'
 	}
 });
 
