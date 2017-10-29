@@ -102,6 +102,22 @@ class Controller {
 		});
 	}
 
+
+	driverView(req, res){
+		this.modelRydes.query({"driver": req.body.email}, (doc) => {
+			let obj = {};
+			obj.from = doc.from;
+			obj.to = doc.to;
+			obj.date = doc.date;
+			obj.passengers = doc.passengers;
+			obj.luggage = doc.luggage;
+			obj.id = doc.id;
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
 	err(req, res) {
 		console.log("Processing error....");
 		res.sendStatus(404);
@@ -129,16 +145,9 @@ class Controller {
 		});
 	}
 
-	initMessages(socket, id) {
-		this.modelChat.query({"rydeId": i ad}, (doc) => {
+	//initMessages(socket, id) {
+		//this.modelChat.query({"rydeId": i ad}, (doc) => {
 
-	driverview(req,res){
-		this.modelRydes.query({"driver": req.body.email}, () => {
-			res.sendStatus(200);
-		}, () => {
-			res.sendStatus(404);
-		})
-	}
 
 	//pending passenger and current passenger should be an array. need to figure out how will i loop through them here
 

@@ -22,14 +22,15 @@ export default () => (
 			<Scene key = "driverInfo" component = {DriverInfo} title = "Ryde"/>
 			<Scene key = "register" component = {Register} title = "Ryde"/>
 			<Scene key = "choice" component = {Choice} title = "Ryde"/>
-			<Scene key = "chat" component = {Chat} title = "Ryde"/>
-		  	<Scene key = "driverview" component = {DriverView} hideNavBar />
-		  	<Scene key = "driverProfile" component = {DriverProfile} hideNavBar />
+			<Scene key = "driverview" component = {DriverView} hideNavBar />
+			<Scene key = "driverProfile" component = {DriverProfile} hideNavBar />
 			<Scene key = "passengerview" component = {PassengerView} hideNavBar/>
 		 	<Scene key = "available" component = {Available} hideNavBar/>
 			<Scene key = "availableProfile" component = {AvailableProfile} hideNavBar/>
-			<Scene key = "pendingProfile" component = {PendingProfile} hideNavBar/>
 			<Scene key = "pending" component = {Pending} hideNavBar/>
+			<Scene key = "pendingProfile" component = {PendingProfile} hideNavBar/>
+			<Scene key = "chat" component = {Chat} title = "Ryde"/>
+
 		</Scene>
 	</Router>
 );

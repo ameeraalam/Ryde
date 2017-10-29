@@ -4,61 +4,54 @@ import {
 	AppRegistry,
 	StyleSheet,
 	Text,
-	View
+	View,
+	FlatList
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import test from '../DriverView/test.js' ;
 export default class DriverView extends Component {
 
 	constructor(props){
 	super(props);
-	//change ip address
 	this.address = "192.168.2.76";
 	this.baseUrl = "http://" + this.address + ":3000/";
 	this.state = {
-		fromLocation: "From",
-		toLocation: "To",
-		travelDate: "Date",
-		numPassengers: "Passenger Spots",
-		numLuggage: "Luggage Space"
+			from: []
 		}
 	}
 
 	retrievePosts(){
 
-		let reqObj = {
-			email: this.props.resObj.email,
-			from: this.state.fromLocation,
-			to: this.state.toLocation,
-			date: this.state.travelDate,
-			passengers: this.state.numPassengers,
-			luggage: this.state.numLuggage
-		}
+    return fetch(this.baseUrl + 'driverView')
+      .then((response) => {
+				if(response.status === 200){
+					response.json()
+				}
+				else {
+					alert(Error);
+				}})
+      .then((responseJson) => {
 
-		fetch(this.baseUrl + "", {
-			method: "GET",
-			headers: {
-				"Accept:": "application/json",
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify
-		});
+				if(typeof responseJson === 'undefined'){
+					console.log('undefined')
+				}
+				else{
+        this.setState({from: responseJson.from});
+			}
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
-		let lists = [];
-		if(reqObj != null) {
-			lists.push(reqObj);
-		}
-		else {
-			alert("Error loading db");
-		}
-
-		return lists;
-
+  componentDidMount(){
+		this.retrievePosts();
 	}
 
   render() {
 		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
-
+		//console.log("Rovers: ", this.state.rovers);
     return (
       <Container>
         <Header>
@@ -81,14 +74,16 @@ export default class DriverView extends Component {
             </Button>
           </Right>
         </Header>
-				<Content>
-					<List dataArray={this.retrievePosts({})}
-						renderRow={(list) =>
-							<ListItem onPress={() => Actions.driverProfile({})}>
-								<Text>{list}</Text>
-							</ListItem>
-						}>
-					</List>
+				<Content style={styles.flatlist}>
+				<FlatList
+					data={this.state.from}
+					keyExtractor={(x,i) => i}
+					renderItem={({item}) =>
+						<Text>
+							{item}
+						</Text>}
+				>
+				</FlatList>
 				</Content>
       </Container>
     );
@@ -99,7 +94,12 @@ const styles = StyleSheet.create({
      text: {
         color: 'white',
         fontSize: 16,
-     }
+     },
+
+		 flatlist: {
+			 marginTop: 25,
+			 flex: 1
+		 }
 });
 
 
