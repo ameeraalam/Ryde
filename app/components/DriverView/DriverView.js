@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
-import test from '../DriverView/test.js' ;
 export default class DriverView extends Component {
 
 	constructor(props){
 	super(props);
-	this.address = "192.168.2.76";
+	this.address = "192.168.0.15";
 	this.baseUrl = "http://" + this.address + ":3000/";
 	this.state = {
 			from: []
@@ -27,10 +26,14 @@ export default class DriverView extends Component {
       .then((response) => {
 				if(response.status === 200){
 					response.json()
+					console.log(response.json());
 				}
 				else {
-					alert(Error);
-				}})
+					alert(Error)
+					console.log(response.json);
+				}}, (err) =>
+					alert(err)
+			)
       .then((responseJson) => {
 
 				if(typeof responseJson === 'undefined'){
@@ -39,7 +42,9 @@ export default class DriverView extends Component {
 				else{
         this.setState({from: responseJson.from});
 			}
-      })
+		}, err =>
+			alert(err)
+	)
       .catch((error) => {
         console.error(error);
       });
