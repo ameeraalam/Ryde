@@ -16,14 +16,15 @@ import {
 } from 'react-native-router-flux';
 
 // Unique static ID that will be assigned to a Ryde each time one is created
-var rideID = 0;
+var rideID = 1;
+var emptyArray = [];
 
 // Main class
 class RidePosting extends Component{
 
 	constructor(props){
 		super(props);
-		this.address = "192.186.0.1";
+		this.address = "172.17.137.0";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			fromLocation: "From:",
@@ -37,31 +38,46 @@ class RidePosting extends Component{
 	// Code for functionality of the Post button on the app page
 	postButton(){
 		
-		// Should only increment this if the request was a success
-		rideID++;
-		
 		// need to pass Ryde ID here
+		// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
 		let reqObj = {
+			driver: "this@email.com", // this.props.resObj.email, 
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
-			passengers: this.state.numPassengers,
-			luggage: this.state.numLuggage
+			numPassengers: this.state.numPassengers,
+			numLuggage: this.state.numLuggage,
+			rideNum: rideID,
+			pending: emptyArray,
+			members: emptyArray,
+			currentPassengerCount: 0,
+			currentLuggageCount: 0
 		}
 
-		fetch(this.baseUrl + "",{
+		fetch(this.baseUrl + "postRyde",{
 			method: "POST",
 			headers: {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify
+			body: JSON.stringify(reqObj)
 
+		}).then((res) => {
+			
+			if (res.status === 200){
+
+				rideID++;
+				alert("Ryde Posted!");
+				// Need to pass user Obj here
+				Actions.driverView({});
+			} else {
+				
+				alert("Server Error!");
+			}
+		}, (err) => {
+
+			alert("Server Error!");
 		});
-
-		// If 200, alert saying 'Ryde Posted!' & switch to Ameeras page, else alert Server Error
-
-		Actions.driverProfile({});
 	}
 
 	// App visuals

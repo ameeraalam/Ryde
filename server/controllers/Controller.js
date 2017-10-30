@@ -5,6 +5,7 @@ let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
+let Rydes = require("./../models/Rydes.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -15,6 +16,8 @@ class Controller {
 		this.modelUsers = new Users();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
+		this.modelRydes = new Rydes();
+
 	}
 
 	intro() {
@@ -89,6 +92,14 @@ class Controller {
 			// on failure call back mongo db will return the doc as null
 			// if its null it means the email is unique
 			res.sendStatus(200);
+		});
+	}
+
+	postRyde(req, res){
+		this.modelRydes.insert(req.body, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
 		});
 	}
 

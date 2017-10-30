@@ -46,8 +46,9 @@ module.exports = function() {
 
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
 
-	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
+	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); });
 
+	app.post("/postRyde", (req, res) => { CONTROLLER.postRyde(req, res); });
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used

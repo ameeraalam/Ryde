@@ -15,7 +15,7 @@ class AbstractModel {
 	constructor() {
 		this.MongoClient = require("mongodb").MongoClient;
 		// this variable holds the mongodb database address
-		this.db = "mongodb://localhost:27017/Ryde";
+		this.db = "mongodb://admin:ryde1234@ds141175.mlab.com:41175/ryde";
 		// the class extending this abstract class will define their own collection
 		this.collection = "";
 
