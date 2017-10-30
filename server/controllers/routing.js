@@ -8,20 +8,13 @@ module.exports = function() {
 	var bodyParser = require('body-parser');
 	var Controller = require('./Controller.js');
 
-	/* Socket.IO dependencies */
-	var http = require("http");
-	var socketio = require("socket.io");
-
 	const CONTROLLER = new Controller();
 	const ROOT = './';
 
 	/* Express object created */
 	var app = express();
 
-	/* Socket io configured */
-	var server = http.Server(app);
-	var io = socketio(server); 
-
+	app.set("port", (process.env.PORT || 3000));
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -29,6 +22,10 @@ module.exports = function() {
 		console.log(req.method + ' request for: ' + req.url);
 		next(); // next without parameter simply invokes the next route in the file
 	});
+
+	/* Socket io configuration */
+	let server = require("http").createServer(app)
+	var io = require("socket.io")(server); 
 
 	/* Routings */
 
@@ -81,8 +78,8 @@ module.exports = function() {
 
 	// Functions like setTimeout pushes the funciton down the function execution queue.
 	
-	app.listen(3000, CONTROLLER.intro());
+	server.listen(app.get("port"), CONTROLLER.intro());
 
-	server.listen(4000, CONTROLLER.socketIntro());
+//	server.listen(4000, CONTROLLER.socketIntro());
 
 }
