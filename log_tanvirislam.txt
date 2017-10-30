@@ -1,4 +1,35 @@
+Week 1
+------
+- set server up in repository
+- configured React Native Client side on Github
+
+Week 2
+------
+- worked on D1
+- D1 Submitted
+
 Week 3
 ------
-- server setup complete
-- react-native environment setup complete
+- server setup complete on repository
+- react-native environment setup complete on repository
+
+Week 4
+------
+- started work on login component
+- configuration of the routes needed for the client to communicate with the server when logging in
+
+week 5
+------
+- started work on registration component
+- configuration of the routes needed for the client to communicate with the server when registering
+
+week 6
+------
+- login an registration of the app completed
+- started work on the group chat component in the ride share
+
+week 7
+------
+- changed the design of how the chat system will work
+- changed the communication of the chat system from http requests to socket
+- completed chat component
