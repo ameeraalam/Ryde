@@ -16,7 +16,7 @@
   },
   "author": "MATB",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.15.5",

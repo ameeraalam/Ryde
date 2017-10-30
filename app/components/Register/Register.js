@@ -28,7 +28,7 @@ class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.19";
+		this.address = "172.17.85.172";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
@@ -280,7 +280,25 @@ class Register extends Component {
 					if (res.status === 200) {
 						// change alert later
 						alert("Registration complete");
-						Actions.login({});
+						// on completing the registration we create the personal rydes object which
+						// every user will have
+						// we send the email address using the query string
+						fetch(this.baseUrl + this.state.email + "/createPersonalRyde", {
+							method: "GET"
+						// res means response object
+						}).then((res) => {
+							if (res.status === 200) {
+								alert("Registration complete");
+								// on completing the registration we switch to the login page
+								Actions.login({});
+							} else {
+								alert("Error");
+							}
+						// err means the error returned from the promise
+						}, (err) => {
+							alert("Server error")
+
+						});
 					} else {
 						alert("Error");
 					}

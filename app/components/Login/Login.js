@@ -13,11 +13,11 @@ import { Actions } from "react-native-router-flux";
 import styles from "./styles";
 
 class Login extends Component {
-
-	constructor(props) {
+ constructor(props) {
 		super(props);
-		this.address = "192.168.0.19";
+		this.address = "172.17.85.172";
 		this.baseUrl = "http://" + this.address + ":3000/";
+		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
 		this.state = {
 			textEmail: "Email",
 			textPass: "Password"
