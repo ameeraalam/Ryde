@@ -29,8 +29,6 @@ module.exports = function() {
 
 	/* Routings */
 
-	app.get("/", (req, res) => { CONTROLLER.index(req, res); });
-
 	app.post("/login", (req, res) => { CONTROLLER.login(req, res); });
 
 	app.post("/register", (req, res) => { CONTROLLER.register(req, res); });
@@ -39,11 +37,9 @@ module.exports = function() {
 
 	app.post("/driverInfo", (req, res) => { CONTROLLER.driverInfo(req, res); });
 
-	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
-
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
-
-	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
+					
+	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
 
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
@@ -51,7 +47,6 @@ module.exports = function() {
 	app.get('*', (req, res) => { CONTROLLER.err(req, res); });
 
 	app.post("*", (req, res) => { CONTROLLER.err(req, res); });
-
 
 	/* Socket Routing */
 

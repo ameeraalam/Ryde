@@ -5,6 +5,7 @@ let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
+let PersonalRydes = require("./../models/PersonalRydes.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -15,6 +16,7 @@ class Controller {
 		this.modelUsers = new Users();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
+		this.modelPersonalRydes = new PersonalRydes();
 	}
 
 	intro() {
@@ -94,6 +96,14 @@ class Controller {
 
 	driverInfo(req, res) {
 		this.modelUsers.update({"email": req.body.email}, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	createPersonalRyde(req, res) {
+		this.modelPersonalRydes.insert({"email": req.params.email, "rydesPosted": [], "rydesApplied": []}, () => {
 			res.sendStatus(200);
 		}, () => {
 			res.sendStatus(404);
