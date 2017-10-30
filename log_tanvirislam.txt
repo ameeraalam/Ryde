@@ -1,6 +1,6 @@
 Week 1
 ------
-- set server up in repository
+- set server up and database in repository
 - configured React Native Client side on Github
 
 Week 2
@@ -15,17 +15,18 @@ Week 3
 
 Week 4
 ------
-- started work on login component
-- configuration of the routes needed for the client to communicate with the server when logging in
-
-week 5
-------
 - started work on registration component
 - configuration of the routes needed for the client to communicate with the server when registering
 
+week 5
+------
+- started work on login component
+- configuration of the routes needed for the client to communicate with the server when logging in
+
 week 6
 ------
-- login an registration of the app completed
+- changed the database models structure, created Users model and Chat model
+- login and registration of the app completed
 - started work on the group chat component in the ride share
 
 week 7
@@ -33,3 +34,8 @@ week 7
 - changed the design of how the chat system will work
 - changed the communication of the chat system from http requests to socket
 - completed chat component
+
+Week 8
+------
+- Created Personal Rydes model
+
