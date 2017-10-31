@@ -6,6 +6,7 @@ let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
+let Ryde = require("./../models/Ryde.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -17,6 +18,7 @@ class Controller {
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
+		this.modelRyde = new Ryde();
 	}
 
 	intro() {
@@ -106,6 +108,29 @@ class Controller {
 		this.modelPersonalRydes.insert({"email": req.params.email, "rydesPosted": [], "rydesApplied": []}, () => {
 			res.sendStatus(200);
 		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	getPassengerRequests(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			// on successfully querying the data we sent the res object back
+			// the response object
+			let resObj = {};
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				// creates an attribute within the res object with the id name of the ryde
+				// which will hold values of arrays containing the requests to that ryde
+				resObj[doc.rydesPostedAsDriver[i].rydeId] = [];
+				for (let j = 0; j < doc.rydesPostedAsDriver[i].requests.length; ++j) {
+					resObj[doc.rydesPostedAsDriver[i].rydeId].push(doc.rydesPostedAsDriver[i].requests[j]);
+				}
+			}
+			// this for loop will generate a response object which will loop like this:
+			// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
+			// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
+			res.status(200).send(resObj);
+		}, () => {
+			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
 		});
 	}

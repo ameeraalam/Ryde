@@ -23,7 +23,7 @@ import Choice from "../Choice/Choice";
 
 import styles from "./styles";
 
-import config from "./../../config"
+import config from "./../../config";
 
 class Register extends Component {
 
@@ -427,10 +427,7 @@ class Register extends Component {
 						source = {require("./images/button.png")}
 					/>
 				</TouchableOpacity>
-
 			</ScrollView>
-
-
 		);
 	}
 }

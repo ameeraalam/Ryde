@@ -7,19 +7,21 @@ import Register from "../Register/Register";
 import Choice from "../Choice/Choice";
 import DriverInfo from "../DriverInfo/DriverInfo";
 import Chat from "../Chat/Chat";
-import PassengerView from "../PassengerView/PassengerView"
-import DriverView from "../DriverView/DriverView"
-import Available from "../PassengerView/Available"
-import Pending from "../PassengerView/Pending"
-import AvailableProfile from "../Profile/PassengerAvailableRideProfile"
-import PendingProfile from "../Profile/PassengerPendingRideProfile"
-import DriverProfile from "../Profile/DriverRideProfile"
+import PassengerView from "../PassengerView/PassengerView";
+import DriverView from "../DriverView/DriverView";
+import Available from "../PassengerView/Available";
+import Pending from "../PassengerView/Pending";
+import AvailableProfile from "../Profile/PassengerAvailableRideProfile";
+import PendingProfile from "../Profile/PassengerPendingRideProfile";
+import DriverProfile from "../Profile/DriverRideProfile";
+import RequestedRides from "../RequestedRides/RequestedRides";
 
 export default () => (
 	<Router navigationBarStyle={styles.navbarContainer} titleStyle={styles.navbarTitle}>
 		<Scene key = "root">
+			<Scene key = "requestedRides" component = {RequestedRides} title = "Ryde"/>
+			<Scene key = "login" component = {Login} title = "Ryde"/>
 			<Scene key = "chat" component = {Chat} title = "Ryde"/>
-			<Scene key = "login" component = {Login} title = "Ryde"/>	
 			<Scene key = "register" component = {Register} title = "Ryde"/>
 			<Scene key = "driverInfo" component = {DriverInfo} title = "Ryde"/>
 			<Scene key = "choice" component = {Choice} title = "Ryde"/>	

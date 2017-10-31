@@ -81,8 +81,6 @@ class Chat extends Component {
 					</ListItem>
 				);
 			}
-
-			console.log(resObj.texts.length);
 			this.setState({texts: textComponents});
 		});
 

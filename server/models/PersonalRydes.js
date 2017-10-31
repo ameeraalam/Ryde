@@ -1,6 +1,6 @@
 "use strict" // to enable ES6 syntax
 
-let AbstractModel = require("./AbstractModel.js")
+let AbstractModel = require("./AbstractModel.js");
 
 // This file will contain the blue print for the PersonalRydes model
 
