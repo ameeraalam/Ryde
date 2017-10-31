@@ -79,7 +79,7 @@ class AbstractModel {
 						// calling an undefined variable
 						console.log("Item is successfully updated in the Ryde database...");
 						if (successCallBack) {
-							successCallBack(result);
+							successCallBack(doc);
 						}
 					}
 					db.close();
