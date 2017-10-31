@@ -23,12 +23,13 @@ import Choice from "../Choice/Choice";
 
 import styles from "./styles";
 
+import config from "./../../config"
 
 class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "172.17.85.172";
+		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",

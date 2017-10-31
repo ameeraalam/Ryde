@@ -12,10 +12,12 @@ import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
 
+import config from "./../../config"
+
 class Login extends Component {
  constructor(props) {
 		super(props);
-		this.address = "172.17.85.172";
+		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
 		this.state = {
