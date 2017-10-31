@@ -38,3 +38,5 @@ week 7
 Week 8
 ------
 - Created Personal Rydes model
+- Started and finished RequestedRides component where the driver can view the lists of passengers that applied to
+  all the different ryde ads he posted to.
