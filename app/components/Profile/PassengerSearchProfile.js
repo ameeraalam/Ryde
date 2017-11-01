@@ -8,10 +8,54 @@ import {
   ScrollView
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
+import {Container, Header, Left, Right, Body, Button, Title, Content, Footer, Icon, CardItem} from 'native-base';
 
+//WIP
 //will most probably fill out profile details according to db
-class PassengerAvailableRideProfile extends Component {
+class PassengerSearchProfile extends Component {
+
+  //consist of values from the db. name of driver, luggae, spots, etc.
+  //state {
+
+  //}
+  //need to add logic on when it should be disabled, etc.
+  constructor(props){
+    super(props);
+    this.address = "192.168.0.30";
+		this.baseUrl = "http://" + this.address + ":3000/";
+  	this.state = {
+      data: []
+  		}
+  	}
+
+  requestButton(){
+    let reqObj = {
+
+      myRes: this.props.myRes,
+      driverRes: this.props.resO
+    }
+
+    fetch(this.baseUrl + "passengerSearch", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 200) {
+        //if request is succesfully sent then we alert the user
+				alert("Request succesfully sent.")
+
+			} else {
+				alert("Error");
+			}
+		}, (err) => {
+			if (err) {
+				alert(err);
+			}
+		});
+  }
 
   render() {
     return (
@@ -79,9 +123,9 @@ class PassengerAvailableRideProfile extends Component {
           </Content>
           </ScrollView>
       <View>
-      <Button large disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
+      <Button large style={styles.button}><Text style={styles.text} onPress={() => this.requestButton()}>Request</Text></Button>
       <Button large info style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-      <Button large info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
+      <Button large disabled info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
       </View>
 </Container>
     );
@@ -115,6 +159,6 @@ const styles = StyleSheet.create({
        right: 170
      }
 });
-module.exports = PassengerAvailableRideProfile;
+module.exports = PassengerSearchProfile;
 
-AppRegistry.registerComponent('PassengerAvailableRideProfile', () => PassengerAvailableRideProfile);
+AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);

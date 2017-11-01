@@ -28,17 +28,18 @@ class DriverView extends Component {
 					resObjPromise = response.json();
 
 					resObjPromise.then((resObj) => {
-						//alert(JSON.stringify(resObj));
 						dataSet = [];
 						for(let i=0;i<resObj.length; i++){
 							let resO = resObj[i];
+							let myRes = this.props.resObj;
 						dataSet.push(
-							<View>
-							<CardItem button onPress={() => Actions.driverProfile({resO})}>
+							<View key={i}>
+							<CardItem button onPress={() => Actions.driverProfile({resO,myRes})}>
 								<Body>
 									<Text>From: {resObj[i].from}</Text>
 									<Text>To: {resObj[i].to}</Text>
-									<Text style={{right: 15}}>Date: {resObj[i].date}</Text>
+									<Text>Date: {resObj[i].date}</Text>
+									<Text style={{left: 275}}>Price: ${resObj[i].price}</Text>
 								</Body>
 							</CardItem>
 							<Text> </Text>

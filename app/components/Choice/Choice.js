@@ -30,7 +30,7 @@ class Choice extends Component {
 			let resObj = this.props.resObj
 			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 			// take to the driver's home page
-			Actions.driverview({resObj});
+			Actions.driverView({resObj});
 		}
 	}
 

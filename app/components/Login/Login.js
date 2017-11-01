@@ -16,11 +16,11 @@ class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.2.76";
+		this.address = "192.168.0.30";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
-			textEmail: "Email",
-			textPass: "Password"
+			textEmail: "ameeraalam13@hotmail.com",
+			textPass: "password"
 		}
 	}
 
@@ -68,13 +68,13 @@ class Login extends Component {
 					style = {styles.inputBox}
 					placeholder = "Email"
          			underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textEmail: text})}
+					//onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
-					onChangeText = {(text) => this.setState({textPass: text})}
+					//onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>

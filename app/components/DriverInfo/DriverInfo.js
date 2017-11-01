@@ -24,7 +24,7 @@ class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.2.76";
+		this.address = "192.168.0.30";
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			plate: "Car plate number",
@@ -146,7 +146,8 @@ class DriverInfo extends Component {
 			if (res.status === 200) {
 
 				// if the info gets succesfully updated then we move to the driver's homepage
-				alert("Link me to Driver's homepage")
+				let resObj = this.props.resObj
+				Actions.driverView({resObj});
 
 			} else {
 				alert("Error");

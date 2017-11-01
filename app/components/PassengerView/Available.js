@@ -1,73 +1,82 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  FlatList
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Right, Body, Button, Title, Footer, FooterTab, Content, List, ListItem} from 'native-base';
+import {Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, CardItem} from 'native-base';
 
-export default class Available extends Component {
+class Available extends Component {
   constructor(props){
   super(props);
-  //change ip address
-  this.address = "192.168.2.76";
+  this.address = "192.168.0.30";
   this.baseUrl = "http://" + this.address + ":3000/";
   this.state = {
-    fromLocation: "From",
-    toLocation: "To",
-    travelDate: "Date",
-    numPassengers: "Passenger Spots",
-    numLuggage: "Luggage Space"
-    //will need to add a hidden field or boolean that sets the object to pending or requested according to drivers acceptance
+      data: []
     }
   }
 
   retrieveAvailablePosts(){
 
-    let reqObj = {
-      email: this.props.resObj.email,
-      from: this.state.fromLocation,
-      to: this.state.toLocation,
-      date: this.state.travelDate,
-      passengers: this.state.numPassengers,
-      luggage: this.state.numLuggage
-    }
+    return fetch(this.baseUrl + this.props.resObj.email + '/available', {
+      method: "GET"
+    })
+      .then((response) => {
+				if(response.status === 200) {
+					resObjPromise = response.json();
 
-    fetch(this.baseUrl + "", {
-      method: "GET",
-      headers: {
-        "Accept:": "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify
-    });
+					resObjPromise.then((resObj) => {
+						//alert(JSON.stringify(resObj));
+            dataSet = [];
+            for(let i=0;i<resObj.length;i++){
+              let resO = resObj[i];
+              let myRes = this.props.resObj;
+              dataSet.push(
+                <View key={i}>
+                  <CardItem button onPress={()=>
+                  Actions.availableProfile({resO, myRes})}>
+                    <Body>
+                    <Text>From: {resObj[i].from}</Text>
+                    <Text>To: {resObj[i].to}</Text>
+                    <Text>Date: {resObj[i].date}</Text>
+  									<Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
+                    </Body>
+                  </CardItem>
+                  <Text></Text>
+                </View>
+              )
+            }
+						this.setState({data: dataSet})
+					})
+				}
 
-    let lists = [];
-    if(reqObj != null) {
-      lists.push(reqObj);
-    }
-    else {
-      alert("Error loading db");
-    }
-
-    return lists;
-
+				else { alert('You do not have any available requests');
+			}
+			}, (err) => {
+				alert(err)
+			});
   }
+
+  componentDidMount(){
+		this.retrieveAvailablePosts();
+	}
+
   render() {
+    let resObj = this.props.resObj;
     return (
       <Container>
       <Header>
         <Left>
           <Button transparent>
-            <Icon name='bars' color='white' size={24} />
+            <Icon name='menu' />
           </Button>
         </Left>
         <Left>
           <Button transparent>
-              <Icon name='bell-o' color='white' size={24} />
+              <Icon name='notifications' />
           </Button>
         </Left>
         <Body>
@@ -75,27 +84,21 @@ export default class Available extends Component {
         </Body>
         <Right>
           <Button transparent>
-            <Icon name='search' color='white' size={24} />
+            <Icon name='search' />
           </Button>
         </Right>
       </Header>
       <Content>
-        <List dataArray={this.retrieveAvailablePosts({})}
-          renderRow={(list) =>
-            <ListItem onPress={() => Actions.availableProfile({})}>
-              <Text>{list}</Text>
-            </ListItem>
-          }>
-        </List>
+      {this.state.data}
       </Content>
       <Footer>
         <FooterTab>
-                  <Button active vertical onPress={() => Actions.available({})}>
-                         <Icon active name="check-circle" color='white' size={24} />
+                  <Button active vertical>
+                         <Icon active name="checkmark-circle" color='white' size={24} />
                          <Text style={styles.text}> Available </Text>
                       </Button>
-                      <Button vertical onPress={() => Actions.pending({})}>
-                         <Icon name="question-circle" color='white' size={24}  />
+                      <Button vertical onPress={() => Actions.pending({resObj})}>
+                         <Icon name="help" color='white' size={24}  />
                          <Text style={styles.text}> Pending </Text>
                       </Button>
                    </FooterTab>
@@ -109,7 +112,12 @@ const styles = StyleSheet.create({
      text: {
         color: 'white',
         fontSize: 16,
-     }
+     },
+
+     flatlist: {
+			 marginTop: 25,
+			 flex: 1
+		 }
 });
 
 module.exports = Available;

@@ -148,13 +148,46 @@ class Controller {
 	//update the ryde collection, requests [] with the passenger info
 	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
 	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
-	/*passengerSearch(req,res) {
-		this.modelPersonalRydes.update({"driver": req.body.email}, {pendingPassenger: {email: req.body.email}}, () => {
-			res.sendStatus(200);
+	passengerSearch(req,res) {
+		this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":req.body.driverRes} ,() => {
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"requests":req.body.myRes},() => {
+
+				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
+
+					let rydeToModify = undefined;
+					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
+					let indexModified = 0;
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						// we find the specific ryde from the array of rydes that the driver posted
+						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
+							rydeToModify = doc.rydesPostedAsDriver[i];
+							indexModified = i;
+						}
+					}
+
+					rydeToModify.requests.push(req.body.myRes);
+
+					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
+
+					this.modelPersonalRydes.update({"email": req.body.myRes.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+						res.sendStatus(200);
+					}, () => {
+						res.sendStatus(404);
+					});
+
+
+				}, () => {
+					res.sendStatus(404);
+				});
+
+
+			}, () => {
+				res.sendStatus(404);
+			});
 		}, () => {
 			res.sendStatus(404);
-		})
-	}*/
+		});
+	}
 
 	err(req, res) {
 		console.log("Processing error....");
