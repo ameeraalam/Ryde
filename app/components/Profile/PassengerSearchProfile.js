@@ -8,10 +8,44 @@ import {
   ScrollView
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
+import {Container, Header, Left, Right, Body, Button, Title, Content, Footer, Icon, CardItem} from 'native-base';
 
-//this is the page you will link to when you click on a ride you have been accepted in to as a passenger. make sure to send both ride obj and passenger obj
-class PassengerAvailableRideProfile extends Component {
+//page you will link to when you search for rides as a passenger and click on a ride you are interested in. make sure to send both the ride and passenger obj.
+class PassengerSearchProfile extends Component {
+  constructor(props){
+    super(props);
+    this.address = "192.168.0.30";
+		this.baseUrl = "http://" + this.address + ":3000/";
+  	}
+
+  requestButton(){
+    let reqObj = {
+
+      myRes: this.props.myRes,
+      driverRes: this.props.resO
+    }
+
+    fetch(this.baseUrl + "passengerSearch", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 200) {
+        //if request is succesfully sent then we alert the user
+				alert("Request succesfully sent.")
+
+			} else {
+				alert("Error");
+			}
+		}, (err) => {
+			if (err) {
+				alert(err);
+			}
+		});
+  }
 
   render() {
     return (
@@ -79,9 +113,9 @@ class PassengerAvailableRideProfile extends Component {
           </Content>
           </ScrollView>
       <View>
-      <Button large disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
+      <Button large style={styles.button}><Text style={styles.text} onPress={() => this.requestButton()}>Request</Text></Button>
       <Button large info style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-      <Button large info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
+      <Button large disabled info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
       </View>
 </Container>
     );
@@ -115,6 +149,6 @@ const styles = StyleSheet.create({
        right: 170
      }
 });
-module.exports = PassengerAvailableRideProfile;
+module.exports = PassengerSearchProfile;
 
-AppRegistry.registerComponent('PassengerAvailableRideProfile', () => PassengerAvailableRideProfile);
+AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);

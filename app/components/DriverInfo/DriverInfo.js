@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -9,24 +10,30 @@ import {
 	TouchableOpacity
 } from "react-native";
 
+import {
+	Form,
+	Item,
+	Label,
+	Input,
+	ListItem,
+} from "native-base";
+
 import { Actions } from "react-native-router-flux";
+
 import styles from "./styles";
-import Config from '../Config/Config';
-
-
 class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = Config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
+		this.address = "192.168.0.30";
+		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
 			car: "Car model number",
-			plateS: {color: "black"},
-			liscenseS: {color: "black"},
-			carS: {color: "black"}
+			plateS: {color: "grey"},
+			liscenseS: {color: "grey"},
+			carS: {color: "grey"}
 		}
 	}
 
@@ -140,7 +147,8 @@ class DriverInfo extends Component {
 			if (res.status === 200) {
 
 				// if the info gets succesfully updated then we move to the driver's homepage
-				alert("Link me to Driver's homepage")
+				let resObj = this.props.resObj
+				Actions.driverView({resObj});
 
 			} else {
 				alert("Error");
@@ -156,33 +164,37 @@ class DriverInfo extends Component {
 	render() {
 		return (
 			<View>
-				<Text></Text>
-				<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
-				<Text></Text>
-				<TextInput
+				<ListItem itemHeader>
+					<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
+				</ListItem>
 
-					style = {this.state.plateS}
-					value = {this.state.plate}
-					onChangeText = {(text) => this.setState({plate: text, plateS: {color: "black"}})}
-
-				/>
-
-				<TextInput
-
-					style = {this.state.liscenseS}
-					value = {this.state.liscense}
-					onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "black"}})}
-
-				/>
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.plateS}>Plate number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
 
-				<TextInput
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.liscenseS}>Liscense number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
-					style = {this.state.carS}
-					value = {this.state.car}
-					onChangeText = {(text) => this.setState({car: text, carS: {color: "black"}})}
-
-				/>
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.carS}>Car model</Label>
+						<Input
+							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}}>
 					<Image
@@ -198,3 +210,4 @@ class DriverInfo extends Component {
 }
 
 module.exports = DriverInfo;
+

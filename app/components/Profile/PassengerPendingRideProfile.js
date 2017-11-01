@@ -1,23 +1,17 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   AppRegistry,
   Text,
   View,
   Image,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Right, Body, Button, Title, Content, Footer} from 'native-base';
+import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
 
-//will most probably fill out profile details according to db
-export default class PassengerPendingRideProfile extends Component {
-
-  //consist of values from the db. name of driver, luggae, spots, etc.
-  //state {
-
-  //}
-  //need to add logic on when it should be disabled, etc.
+//this is the page you link to when you click on a ride you have requested to join as a passenger. make sure to send both the ride and passenger obj.
+class PassengerPendingRideProfile extends Component {
 
   render() {
     return (
@@ -25,12 +19,12 @@ export default class PassengerPendingRideProfile extends Component {
       <Header>
         <Left>
           <Button transparent>
-            <Icon name='bars' color='white' size={24} />
+            <Icon name='menu'  />
           </Button>
         </Left>
         <Left>
           <Button transparent>
-              <Icon name='bell-o' color='white' size={24} />
+              <Icon name='notifications' />
           </Button>
         </Left>
         <Body>
@@ -38,30 +32,52 @@ export default class PassengerPendingRideProfile extends Component {
         </Body>
         <Right>
           <Button transparent>
-            <Icon name='search' color='white' size={24} />
+            <Icon name='search' />
           </Button>
         </Right>
       </Header>
-      <Content>
-      <Image
-        style={{
-          flex: 1,
-          width: 160,
-          height: 160,
-          justifyContent: 'center',
-                alignItems: 'center',
-                }}
-        source={require('../Profile/Images/profilepic.png')}
-      />
-      <Text>Driver Name</Text>
-      <Text>Rating</Text>
-      <Text>Luggage</Text>
-      <Text>Passengers</Text>
-      <Text>Price</Text>
-      <Text>From</Text>
-      <Text>To</Text>
+      <ScrollView>
+          <Content>
+          <Image
+            style={{
+              width: 160,
+              borderRadius: 80,
+              height: 160,
+                    alignItems: 'center'
+                    }}
+            source={require('../Profile/Images/profilepic.jpg')}
+          />
 
-      </Content>
+          <CardItem>
+          <Text>Driver E-mail: {this.props.resO.driver}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Rating: {this.props.resO.rating}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Luggage: {this.props.resO.luggage} </Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Passengers: {this.props.resO.passengers}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Price: {this.props.resO.price}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>From: {this.props.resO.from}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>To: {this.props.resO.to}</Text>
+          </CardItem>
+          <Text></Text>
+          </Content>
+          </ScrollView>
       <View>
       <Button large info disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
       <Button large info disabled style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>

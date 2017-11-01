@@ -1,3 +1,5 @@
+
+
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -444,3 +446,4 @@ class Register extends Component {
 module.exports = Register;
 
 AppRegistry.registerComponent("Register", () => Register);
+

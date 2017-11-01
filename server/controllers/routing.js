@@ -1,3 +1,4 @@
+
 "use strict";
 
 var Controller = require('./Controller.js');
@@ -8,11 +9,19 @@ module.exports = function() {
 	var bodyParser = require('body-parser');
 	var Controller = require('./Controller.js');
 
+	/* Socket.IO dependencies */
+	var http = require("http");
+	var socketio = require("socket.io");
+
 	const CONTROLLER = new Controller();
 	const ROOT = './';
 
 	/* Express object created */
 	var app = express();
+
+	/* Socket io configured */
+	var server = http.Server(app);
+	var io = socketio(server);
 
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
@@ -34,20 +43,43 @@ module.exports = function() {
 
 	app.post("/driverInfo", (req, res) => { CONTROLLER.driverInfo(req, res); });
 
-	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
+	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
 
-	app.get("/polling", (req, res) => { CONTROLLER.polling(req, res); });
+	app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
+
+	app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
+
+	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
 
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
 
 	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
 
+	app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); })
+
+
 	// Error get request must always be processed at the very end after all options
-	// have been exhausting in resolving the request. This happens because of the 
+	// have been exhausting in resolving the request. This happens because of the
 	// next() middleware being used
 	app.get('*', (req, res) => { CONTROLLER.err(req, res); });
 
 	app.post("*", (req, res) => { CONTROLLER.err(req, res); });
+
+
+	/* Socket Routing */
+
+	io.on("connection", (socket) => {
+		CONTROLLER.connection(socket);
+
+		// CONTROLLER.idEnquiry returns a promise that we need to resolve
+		CONTROLLER.idEnquiry(socket).then((id) => {
+
+			CONTROLLER.initMessages(socket, id);
+
+			CONTROLLER.storeChat(io, socket, id);
+		});
+
+	});
 
 
 	// The compiler probably uses a queue datastructure to handle the functions responsible
@@ -58,7 +90,10 @@ module.exports = function() {
 	// always be the last thing to get invoked when non asynchronous functions are invoked.
 
 	// Functions like setTimeout pushes the funciton down the function execution queue.
-	
+
 	app.listen(3000, CONTROLLER.intro());
 
+	server.listen(4000, CONTROLLER.socketIntro());
+
 }
+
