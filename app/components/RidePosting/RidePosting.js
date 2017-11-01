@@ -16,6 +16,7 @@ import {
 } from 'react-native-router-flux';
 
 import config from "./../../config";
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
 // Unique static ID that will be assigned to a Ryde each time one is created
 var rideNum = 1;

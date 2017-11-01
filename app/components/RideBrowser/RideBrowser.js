@@ -13,7 +13,7 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
-
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 import config from "./../../config";
 
 class RideBrowser extends Component{
@@ -22,25 +22,43 @@ class RideBrowser extends Component{
         super(props);
         this.address = config.ip;
         this.baseUrl = "http://" + this.address + ":3000/";
+        this.state = {rydes: []}
     }
 
     componentDidMount(){
-        this.testCode();
+        this.loadRydes();
     }
 
-    testCode(){
+    loadRydes(){
 
-        alert(this.props.resObj.dest);
+        let allRydes = [];
+        let currentPassenger = this.props.passedResObj;
+        let currentRyde = null;
+
+        for (let i = 0; i < this.props.resObj.dest.length;  i++){
+
+            currentRyde = this.props.resObj.dest[i];
+
+            allRydes.push(
+                <View>
+                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, currentRyde})}>
+                    <Body>
+                    <Text>Driver Email: {currentRyde.driver}</Text>
+                    </Body>
+                    </CardItem>
+                </View>
+            );
+        }
+
+        this.setState({rydes: allRydes});
     }
 
 	render(){
 
 		return(
 
-			<View style = {styles.mainStyle}>
-				<Text style = {styles.welcome}>
-					Ryde Browser
-				</Text>
+		    <View>
+		        {this.state.rydes}
 			</View>
 		);
 	}

@@ -14,6 +14,7 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
 import config from "./../../config";
 
@@ -35,6 +36,8 @@ class RideSearch extends Component{
 
 	// Code for functionality of the Find button on the app page
 	findButton(){
+
+		let passedResObj = this.props.resObj;
 
 		let reqObj = {
 			from: this.state.fromLocation,
@@ -59,7 +62,7 @@ class RideSearch extends Component{
 
 				resObjPromise.then((resObj) => {
 					
-					Actions.rideBrowser({resObj})
+					Actions.rideBrowser({passedResObj, resObj})
 				})
 			} else {
 
