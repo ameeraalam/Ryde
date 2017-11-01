@@ -4,6 +4,7 @@
 let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let Rydes = require("./../models/Rydes.js")
+let PersonalRydes = require("./../models/PersonalRydes.js")
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
 
@@ -15,6 +16,7 @@ class Controller {
 	constructor() {
 		this.modelUsers = new Users();
 		this.modelRydes = new Rydes();
+		this.modelPersonalRydes = new PersonalRydes();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 	}
@@ -60,6 +62,7 @@ class Controller {
 		}, () => {
 			res.sendStatus(404);
 		});
+
 	}
 
 	// contains the logic for the register feature of the app
@@ -104,19 +107,54 @@ class Controller {
 
 
 	driverView(req, res){
-		this.modelRydes.query({"driver": req.body.email}, (doc) => {
-			let obj = {};
-			obj.from = doc.from;
-			obj.to = doc.to;
-			obj.date = doc.date;
-			obj.passengers = doc.passengers;
-			obj.luggage = doc.luggage;
-			obj.id = doc.id;
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
+				obj.push(doc.rydesPostedAsDriver[i])
+			}
 			res.status(200).send(obj);
 		}, () => {
 			res.sendStatus(404);
 		});
 	}
+
+	pending(req,res){
+		console.log(req.params.email);
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
+				obj.push(doc.rydesAppliedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	available(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesAcceptedToAsPassenger.length;i++){
+				obj.push(doc.rydesAcceptedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+  //need to figure out how will i get the driver's email as well.
+	//use updatePush for the request for passengers.
+	//update the ryde collection, requests [] with the passenger info
+	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
+	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
+	/*passengerSearch(req,res) {
+		this.modelPersonalRydes.update({"driver": req.body.email}, {pendingPassenger: {email: req.body.email}}, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}*/
 
 	err(req, res) {
 		console.log("Processing error....");
@@ -149,23 +187,9 @@ class Controller {
 		//this.modelChat.query({"rydeId": i ad}, (doc) => {
 
 
-	//pending passenger and current passenger should be an array. need to figure out how will i loop through them here
 
-	pending(req,res){
-		this.modelRydes.query({"pendingPassenger": req.body.email}, () => {
-			res.sendStatus(200);
-		}, () => {
-			res.sendStatus(404);
-		})
-	}
 
-	available(req, res) {
-		this.modelRydes.query({"currentPassenger": req.body.email}, () => {
-			res.sendStatus(200);
-		}, () => {
-			pending(req, res);
-		})
-	}
+
 
 
 

@@ -42,13 +42,19 @@ module.exports = function() {
 
 	app.post("/driverInfo", (req, res) => { CONTROLLER.driverInfo(req, res); });
 
-	app.get("/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
+	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
+
+	app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
+
+	app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
 
 	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
 
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
 
 	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
+
+	app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); })
 
 
 	// Error get request must always be processed at the very end after all options
