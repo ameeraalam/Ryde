@@ -4,12 +4,12 @@ let AbstractModel = require("./AbstractModel");
 
 // This file will contain the blue print for the Ryde model
 
-class Ryde extends AbstractModel {
+class Rydes extends AbstractModel {
 	constructor() {
 		super();
 		// This is the collection that this model will deal with
-		this.collection = "Ryde";
+		this.collection = "Rydes";
 	}
 }
 
-module.exports = Ryde;
+module.exports = Rydes;

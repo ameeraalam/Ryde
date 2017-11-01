@@ -33,7 +33,7 @@ class RequestedRides extends Component {
 		//this.user = this.props.resObj;
 		// database is queryed with the driver's email and the database that is
 		// queried is PersonalRydes database
-		this.user = {email: "ameeraalam13@hotmail.com"};
+		this.user = {email: "ameeraam13@hotmail.com"};
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.swipeOutButtons = [{
 			text: "Accept",
@@ -49,6 +49,20 @@ class RequestedRides extends Component {
 		}
 		this.passengerIndex = 0;
 		this.getPassengerRequests();
+
+		// THIS IS IMPORTANT
+		// this.acceptPassenger is our function within that class you can pass function logic from one 
+		// from one scope to another by passing it in as a prop
+		// when it is passed in as a prop the this variable inside the function changes to whatever
+		// scope you are passing the function to
+		// This is when .bing(this); comes into place, what .bind(this) does is whenever it is called it
+		// forever binds the scope where .bind(this) is called to the function for life. Now no matter how
+		// many times the function is passed around from and to different component, the this variable will
+		// always be the this of the scope where .bind(this) was called 
+		// Whenever you do .bind(this); the function this.acceptPassenger
+		this.acceptPassenger = this.acceptPassenger.bind(this);
+		this.rejectPassenger = this.rejectPassenger.bind(this);
+
 	}
 
 	// we query to get the passengers who have applied to our rydes
@@ -80,8 +94,7 @@ class RequestedRides extends Component {
 					// we loop over the requestsPerRydeObject array and append it to the state making a slidable card
 					for (let j = 0; j < requestsPerRydeObject.length; ++j) {
 						passengers.push(
-							// each card will get the latest index
-							<CardSlide cardIndex = {passengers.length - 1} getIndex = {this.getIndex} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} id = {rydeKeys[i]} firstName = {requestsPerRydeObject[j].firstName} lastName = {requestsPerRydeObject[j].lastName} rating = {requestsPerRydeObject[j].rating} />
+							<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} id = {rydeKeys[i]} firstName = {requestsPerRydeObject[j].firstName} lastName = {requestsPerRydeObject[j].lastName} email = {requestsPerRydeObject[j].email} rating = {requestsPerRydeObject[j].rating} />
 						);
 					}
 				}
@@ -97,20 +110,78 @@ class RequestedRides extends Component {
 		});
 	}
 
+	// self is the this of the child component
+	acceptPassenger(self) {
+		let passengers = this.state.pendingPassengers;
 
-	acceptPassenger() {
+		for (let i = 0; i < passengers.length; ++i) {
+			// we loop over the passengers array and check if one of the elements id
+			// actually matches the id of the component selected
+			if (passengers[i].props.id === self.props.id) {
+				// returns an array of elements that are being removed
+				var cardObjArr = passengers.splice(i, 1);
+			}
+		}
+		this.setState({pendingPassengers: passengers});
 
+		// now we send this array of passengers to the server for the server
+		// to update the personalRyde objects
+
+		let reqObj = {
+			rydeId: cardObjArr[0].props.id,
+			// carObjArr contains the array of cards being accepted
+			// and we access the email from the props of the card
+			acceptedPassengerEmail: cardObjArr[0].props.email
+		}
+
+		fetch(this.baseUrl + this.user.email + "/acceptedUpdatedRydes", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 404) {
+				alert("Server error");
+			}
+		}, (err) => {
+			alert("Promise error");
+		});
 
 	}
 
+	// self is the this of the child component
+	rejectPassenger(self) {
+		let passengers = this.state.pendingPassengers;
 
-	rejectPassenger() {
+		for (let i = 0; i < passengers.length; ++i) {
+			// we loop over the passengers array and check if one of the elements id
+			// actually matches the id of the component selected
+			if (passengers[i].props.id === self.props.id) {
+				// returns an array of elements being removed
+				var cardObjArr = passengers.splice(i, 1);
+			}
+		}
+		this.setState({pendingPassengers: passengers});
+	
+		// now we need to send this array of passengers to the server for the 
+		// server to update the personalRyde objects
 
 
+		let reqObj = {
+			rydeId: cardObjArr[0].props.id,
+			rejectedPassengerEmail: cardObjArr[0].props.email
+		}
 
-	}
-
-	getIndex() {
+		fetch(this.baseUrl + this.user.email + "/rejectedUpdatedRydes", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(reqObj)
+		});
 
 	}
 

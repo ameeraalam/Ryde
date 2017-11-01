@@ -70,7 +70,7 @@ class Chat extends Component {
 			for (let i = 0; i < resObj.texts.length; ++i) {
 				// variable names are placed inside {}
 				textComponents.push(
-					<ListItem avatar>
+					<ListItem key = {i} avatar>
 						<Left>
 							<Thumbnail source = {require("./pics/default.png")} />
 						</Left>

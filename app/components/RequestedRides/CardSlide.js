@@ -4,8 +4,7 @@ import React, { Component } from "react";
 
 import {
 	AppRegistry,
-	ScrollView,
-	TouchableOpacity
+	ScrollView
 } from "react-native";
 
 import {  
@@ -30,24 +29,24 @@ class CardSlide extends Component {
 		this.swipeOutButtons = [{
 			text: "Accept",
 			backgroundColor: "#86e079",
-			onPress: () => {this.props.acceptPassenger()}
+			// we pass the child's this to the parent's acceptPassenger function
+			// so the parent's acceptPassenger scoped function can manipulate the child's props
+			onPress: () => {this.props.acceptPassenger(this)}
 		}, {
 			text: "Reject",
 			backgroundColor: "#e54747",
-			onPress: () => {this.props.rejectPassenger()}
+			onPress: () => {this.props.rejectPassenger(this)}
 		}];
 	}
 
 	render() {
 		return(
 			<Swipeout right = {this.swipeOutButtons} autoClose = {true}>
-				<TouchableOpacity activeOpacity = {100} onPress = {() => {this.props.getIndex()}}>
 					<Card>
 						<CardItem>
-							<Text>Ryde-Id: {this.props.id}, First Name: {this.props.firstName} Last Name: {this.props.lastName}, Rating: {this.props.rating}</Text>
+							<Text>Ryde-Id: {this.props.id}, First Name: {this.props.firstName} Last Name: {this.props.lastName}, Email: {this.props.email}, Rating: {this.props.rating}</Text>
 						</CardItem>
 					</Card>
-				</TouchableOpacity>
 			</Swipeout>
 		);
 	}

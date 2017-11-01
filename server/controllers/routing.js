@@ -43,6 +43,10 @@ module.exports = function() {
 
 	app.get("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
 
+	app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); })
+
+	app.post("/:email/rejectedUpdatedRydes", (req, res) => { CONTROLLER.rejectedUpdatedRydes(req, res); });
+
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used
