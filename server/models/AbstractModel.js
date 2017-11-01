@@ -161,6 +161,27 @@ class AbstractModel {
 		});
 	}
 
+	findAll(query, successCallBack, failureCallBack) {
+		return this.MongoClient.connect(this.db, (err, db) => {
+			
+			if (err){	
+				console.log("Failed...");
+				if (failureCallBack){
+					failureCallBack();
+				}
+			} else {
+
+				var cursor = db.collection(this.collection).find(query);
+				 if (successCallBack){
+				 	successCallBack(cursor);
+				 }
+			}
+			
+			db.close();
+			
+		});
+	}
+
 	updatePush(query, updatedFields, successCallBack, failureCallBack) {
 		this.MongoClient.connect(this.db, (err, db) => {
 			if (err) {

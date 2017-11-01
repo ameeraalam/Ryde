@@ -44,19 +44,30 @@ class RideSearch extends Component{
 			luggage: this.state.numLuggage
 		}
 
-		fetch(this.baseUrl + "", {
-			method: "GET",
+		fetch(this.baseUrl + "findRyde", {
+			method: "POST",
 			headers: {
-				"Accept:": "application/json",
+				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+
+			if (res.status === 200){
+
+				let resObjPromise = res.json();
+
+				resObjPromise.then((resObj) => {
+					
+					Actions.rideBrowser({resObj})
+				})
+			} else {
+
+				alert("Error encountered!");
+			}
+		}, (err) => {
+			alert(err);
 		});
-
-		// get object back
-
-		// pass into here
-		Actions.rydeBrowser({});
 	}
 
 	// App visuals

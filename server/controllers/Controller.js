@@ -113,6 +113,7 @@ class Controller {
 	}
 
 	postRyde(req, res){
+		
 		this.modelRydes.insert(req.body, () => {
 			console.log("Ryde added to Ryde DB");
 				
@@ -129,6 +130,36 @@ class Controller {
 			console.log("Failed to add Ryde to DB");
 		});
 	}
+
+	findRyde(req, res){
+		
+		// Looking for Rydes with same destination
+		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
+
+			let potentialRides = cursor.toArray();
+			let sameDestination = {dest:[]};
+
+			potentialRides.then((response) => {
+				
+				console.log("Res length is " + response.length);	
+				for (let i = 0; i < response.length; i++){
+
+					if (response[i].from === req.body.from){
+						console.log("Ryde found!");	
+						sameDestination.dest.push(response[i]);
+					}
+				}
+
+				console.log(sameDestination);
+
+				res.status(200).send(sameDestination);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+
+	}
+	
 
 	getPassengerRequests(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {

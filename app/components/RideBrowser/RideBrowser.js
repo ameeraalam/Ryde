@@ -24,6 +24,15 @@ class RideBrowser extends Component{
         this.baseUrl = "http://" + this.address + ":3000/";
     }
 
+    componentDidMount(){
+        this.testCode();
+    }
+
+    testCode(){
+
+        alert(this.props.resObj.dest);
+    }
+
 	render(){
 
 		return(

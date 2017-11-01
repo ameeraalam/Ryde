@@ -18,7 +18,7 @@ import {
 import config from "./../../config";
 
 // Unique static ID that will be assigned to a Ryde each time one is created
-var rideID = 1;
+var rideNum = 1;
 var emptyArray = [];
 
 // Main class
@@ -52,7 +52,7 @@ class RidePosting extends Component{
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideNum: rideID,
+			rideId: rideNum,
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,

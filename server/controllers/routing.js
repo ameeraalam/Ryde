@@ -47,6 +47,7 @@ module.exports = function() {
 
 	app.post("/postRyde", (req, res) => { CONTROLLER.postRyde(req, res); });
 
+	app.post("/findRyde", (req, res) => { CONTROLLER.findRyde(req, res); });
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used
