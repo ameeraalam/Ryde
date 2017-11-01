@@ -14,7 +14,15 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
+import config from "./../../config";
+
 class RideBrowser extends Component{
+
+    constructor(props){
+        super(props);
+        this.address = config.ip;
+        this.baseUrl = "http://" + this.address + ":3000/";
+    }
 
 	render(){
 

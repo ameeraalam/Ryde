@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
        right: 170
      }
 });
+
 module.exports = PassengerPendingRideProfile;
 
 AppRegistry.registerComponent('PassengerPendingRideProfile', () => PassengerPendingRideProfile);

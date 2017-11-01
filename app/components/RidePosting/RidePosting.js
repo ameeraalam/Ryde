@@ -15,6 +15,8 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
+import config from "./../../config";
+
 // Unique static ID that will be assigned to a Ryde each time one is created
 var rideID = 1;
 var emptyArray = [];
@@ -24,24 +26,27 @@ class RidePosting extends Component{
 
 	constructor(props){
 		super(props);
-		this.address = "172.17.137.0";
+		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			fromLocation: "From:",
 			toLocation: "To:",
 			travelDate: "Date: (DD/MM)",
 			numPassengers: "Passenger Spots:",
-			numLuggage: "Luggage Space:"
-		} 
+			numLuggage: "Luggage Space:",
+			ridePrice: "Price per seat:"
+		}
 	}
 
+
+	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
 	// Code for functionality of the Post button on the app page
 	postButton(){
 		
-		// need to pass Ryde ID here
-		// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
+		let resObj = this.props.resObj;
+
 		let reqObj = {
-			driver: "this@email.com", // this.props.resObj.email, 
+			driver: this.props.resObj.email,
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
@@ -51,7 +56,8 @@ class RidePosting extends Component{
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
-			currentLuggageCount: 0
+			currentLuggageCount: 0,
+			price: "$" + this.state.ridePrice
 		}
 
 		fetch(this.baseUrl + "postRyde",{
@@ -69,10 +75,10 @@ class RidePosting extends Component{
 				rideID++;
 				alert("Ryde Posted!");
 				// Need to pass user Obj here
-				Actions.driverView({});
+				Actions.driverview({resObj});
 			} else {
 				
-				alert("Server Error!");
+				alert("Server Error!!!!!");
 			}
 		}, (err) => {
 
@@ -125,6 +131,13 @@ class RidePosting extends Component{
 					style = {styles.inputBox}
 					placeholder = {this.state.numLuggage}
 					onChangeText = {(text) => this.setState({numLuggage: text})}
+				/>
+
+				{/*Input box for the price of each seat*/}
+				<TextInput
+					style = {styles.inputBox}
+					placeholder = {this.state.ridePrice}
+					onChangeText = {(text) => this.setState({ridePrice: text})}
 				/>
 				
 				{/*Button to use the postButton function with an image being used for the button*/}

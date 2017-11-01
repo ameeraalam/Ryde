@@ -8,20 +8,13 @@ module.exports = function() {
 	var bodyParser = require('body-parser');
 	var Controller = require('./Controller.js');
 
-	/* Socket.IO dependencies */
-	var http = require("http");
-	var socketio = require("socket.io");
-
 	const CONTROLLER = new Controller();
 	const ROOT = './';
 
 	/* Express object created */
 	var app = express();
 
-	/* Socket io configured */
-	var server = http.Server(app);
-	var io = socketio(server); 
-
+	app.set("port", (process.env.PORT || 3000));
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -30,9 +23,11 @@ module.exports = function() {
 		next(); // next without parameter simply invokes the next route in the file
 	});
 
-	/* Routings */
+	/* Socket io configuration */
+	let server = require("http").createServer(app)
+	var io = require("socket.io")(server); 
 
-	app.get("/", (req, res) => { CONTROLLER.index(req, res); });
+	/* Routings */
 
 	app.post("/login", (req, res) => { CONTROLLER.login(req, res); });
 
@@ -42,20 +37,22 @@ module.exports = function() {
 
 	app.post("/driverInfo", (req, res) => { CONTROLLER.driverInfo(req, res); });
 
-	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
-
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
+	
+	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
 
-	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); });
+	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
+
+	app.get("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
 
 	app.post("/postRyde", (req, res) => { CONTROLLER.postRyde(req, res); });
+
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used
 	app.get('*', (req, res) => { CONTROLLER.err(req, res); });
 
 	app.post("*", (req, res) => { CONTROLLER.err(req, res); });
-
 
 	/* Socket Routing */
 
@@ -82,8 +79,8 @@ module.exports = function() {
 
 	// Functions like setTimeout pushes the funciton down the function execution queue.
 	
-	app.listen(3000, CONTROLLER.intro());
+	server.listen(app.get("port"), CONTROLLER.intro());
 
-	server.listen(4000, CONTROLLER.socketIntro());
+//	server.listen(4000, CONTROLLER.socketIntro());
 
 }

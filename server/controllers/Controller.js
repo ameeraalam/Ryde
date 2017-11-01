@@ -5,6 +5,7 @@ let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
+let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
 
 /* Constants */
@@ -16,8 +17,8 @@ class Controller {
 		this.modelUsers = new Users();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
+		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
-
 	}
 
 	intro() {
@@ -95,17 +96,70 @@ class Controller {
 		});
 	}
 
-	postRyde(req, res){
-		this.modelRydes.insert(req.body, () => {
+	driverInfo(req, res) {
+		this.modelUsers.update({"email": req.body.email}, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
 			res.sendStatus(200);
 		}, () => {
 			res.sendStatus(404);
 		});
 	}
 
-	driverInfo(req, res) {
-		this.modelUsers.update({"email": req.body.email}, {plate: req.body.plate, liscense: req.body.liscense, car: req.body.car, allInfoFilled: true}, () => {
+	createPersonalRyde(req, res) {
+		this.modelPersonalRydes.insert({"email": req.params.email, "rydesPostedAsDriver": [], "rydesAppliedToAsPassenger": [], "rydesAcceptedToAsPassenger": []}, () => {
 			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	postRyde(req, res){
+		this.modelRydes.insert(req.body, () => {
+			console.log("Ryde added to Ryde DB");
+				
+			/*this.modelPersonalRydes.updatePush({"email": req.body.email}, {"rydesPostedAsDriver": req.body}, () => {
+				console.log("Ryde added to PersonalRyde DB");
+			}, () => {
+				console.log("Failed to add Ryde to users PersonalRyde DB");
+			});*/
+
+			res.sendStatus(200);
+		
+		}, () => {
+			res.sendStatus(404);
+			console.log("Failed to add Ryde to DB");
+		});
+	}
+
+	getPassengerRequests(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			// on successfully querying the data we sent the res object back
+			// the response object
+			let resObj = {};
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				// creates an attribute within the res object with the id name of the ryde
+				// which will hold values of arrays containing the requests to that ryde
+				resObj[doc.rydesPostedAsDriver[i].rydeId] = [];
+				for (let j = 0; j < doc.rydesPostedAsDriver[i].requests.length; ++j) {
+					resObj[doc.rydesPostedAsDriver[i].rydeId].push(doc.rydesPostedAsDriver[i].requests[j]);
+				}
+			}
+			// this for loop will generate a response object which will loop like this:
+			// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
+			// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
+			res.status(200).send(resObj);
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+	driverView(req, res){
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
+				obj.push(doc.rydesPostedAsDriver[i])
+			}
+			res.status(200).send(obj);
 		}, () => {
 			res.sendStatus(404);
 		});

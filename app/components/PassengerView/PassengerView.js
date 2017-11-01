@@ -4,48 +4,32 @@ import {
 	AppRegistry,
 	StyleSheet,
 	Text,
-	View
+	View,
+  TouchableOpacity,
+  Image
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab, Content } from 'native-base';
-	export default class PassengerView extends Component {
+	
+  export default class PassengerView extends Component {
+
+    findButton(){
+
+      let resObj = this.props.resObj;
+      Actions.rideSearch({resObj});
+    }
+
   render() {
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name='bars' color='white' size={24} />
-            </Button>
-          </Left>
-          <Left>
-            <Button transparent>
-                <Icon name='bell-o' color='white' size={24} />
-            </Button>
-          </Left>
-          <Body>
-            <Title>RYDE</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='search' color='white' size={24} />
-            </Button>
-          </Right>
-        </Header>
-        <Content/>
-        <Footer>
-          <FooterTab>
-                    <Button active vertical default onPress={() => Actions.available({})}>
-                           <Icon active name="check-circle" color='white' size={24} />
-                           <Text style={styles.text}> Available </Text>
-                        </Button>
-                        <Button vertical onPress={() => Actions.pending({})}>
-                           <Icon name="question-circle" color='white' size={24}  />
-                           <Text style={styles.text}> Pending </Text>
-                        </Button>
-                     </FooterTab>
-                 </Footer>
-      </Container>
+      
+      <View>
+      {/*Button to use the findButton function with an image being used for the button*/}
+        <TouchableOpacity onPress = {() => {this.findButton()}}>
+          <Image
+            source = {require("./images/findImage.jpg")}
+          />
+        </TouchableOpacity>
+      </View>
     );
   }
 }

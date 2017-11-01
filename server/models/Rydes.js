@@ -1,12 +1,13 @@
- "use strict";
+"use strict"; // to enable ES6 syntax
 
-let AbstractModel = require("./AbstractModel.js");
+let AbstractModel = require("./AbstractModel");
 
-// this class is responsible for the Users collection in the Ryde mongodb database
+// This file will contain the blue print for the Ryde model
+
 class Rydes extends AbstractModel {
 	constructor() {
 		super();
-		// this is the collection that this model will deal with
+		// This is the collection that this model will deal with
 		this.collection = "Rydes";
 	}
 }

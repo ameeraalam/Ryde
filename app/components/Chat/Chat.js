@@ -31,6 +31,8 @@ import styles from "./styles";
 
 import clientIO from "socket.io-client";
 
+import config from "./../../config"
+
 class Chat extends Component {
 
 	constructor(props) {
@@ -40,10 +42,10 @@ class Chat extends Component {
 		// the id attribute of an object that gets passed on from another page
 		// as the rydeObject will be this.props.rydeObject
 		this.rydeObject = {rydeId: 4};
-		this.address = "192.168.0.19";
+		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		// creating the socket object specific to this client
-		this.socket = clientIO("http://" + this.address + ":4000/");
+		this.socket = clientIO("http://" + this.address + ":3000/");
 		this.state = {
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
@@ -79,8 +81,6 @@ class Chat extends Component {
 					</ListItem>
 				);
 			}
-
-			console.log(resObj.texts.length);
 			this.setState({texts: textComponents});
 		});
 
