@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	AppRegistry,
 	StyleSheet,
@@ -8,46 +7,53 @@ import {
 	FlatList
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
-import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
-export default class DriverView extends Component {
+import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+class DriverView extends Component {
 
 	constructor(props){
 	super(props);
-	this.address = "192.168.0.15";
+	this.address = "192.168.0.30";
 	this.baseUrl = "http://" + this.address + ":3000/";
 	this.state = {
-			from: []
+			data: []
 		}
 	}
 
 	retrievePosts(){
+		return fetch(this.baseUrl + this.props.resObj.email + '/driverView', {
+			method: "GET"
+		})
+			.then((response) => {
+				if(response.status === 200) {
+					resObjPromise = response.json();
 
-    return fetch(this.baseUrl + 'driverView')
-      .then((response) => {
-				if(response.status === 200){
-					response.json()
-					console.log(response.json());
+					resObjPromise.then((resObj) => {
+						//alert(JSON.stringify(resObj));
+						dataSet = [];
+						for(let i=0;i<resObj.length; i++){
+							let resO = resObj[i];
+						dataSet.push(
+							<View>
+							<CardItem button onPress={() => Actions.driverProfile({resO})}>
+								<Body>
+									<Text>From: {resObj[i].from}</Text>
+									<Text>To: {resObj[i].to}</Text>
+									<Text style={{right: 15}}>Date: {resObj[i].date}</Text>
+								</Body>
+							</CardItem>
+							<Text> </Text>
+							</View>
+						);
+					}
+					this.setState({data: dataSet});
+					})
 				}
-				else {
-					alert(Error)
-					console.log(response.json);
-				}}, (err) =>
-					alert(err)
-			)
-      .then((responseJson) => {
 
-				if(typeof responseJson === 'undefined'){
-					console.log('undefined')
-				}
-				else{
-        this.setState({from: responseJson.from});
+				else { alert('Could not retrieve data');
 			}
-		}, err =>
-			alert(err)
-	)
-      .catch((error) => {
-        console.error(error);
-      });
+			}, (err) => {
+				alert(err)
+			});
   }
 
   componentDidMount(){
@@ -56,18 +62,17 @@ export default class DriverView extends Component {
 
   render() {
 		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
-		//console.log("Rovers: ", this.state.rovers);
     return (
       <Container>
         <Header>
           <Left>
             <Button transparent>
-              <Icon name='bars' color='white' size={24} />
+              <Icon name='menu' />
             </Button>
           </Left>
           <Left>
             <Button transparent>
-                <Icon name='bell-o' color='white' size={24} />
+                <Icon name='notifications' />
             </Button>
           </Left>
           <Body>
@@ -75,20 +80,12 @@ export default class DriverView extends Component {
           </Body>
           <Right>
             <Button transparent>
-              <Icon name='plus' color='white' size={24} />
+              <Icon name='add' />
             </Button>
           </Right>
         </Header>
-				<Content style={styles.flatlist}>
-				<FlatList
-					data={this.state.from}
-					keyExtractor={(x,i) => i}
-					renderItem={({item}) =>
-						<Text>
-							{item}
-						</Text>}
-				>
-				</FlatList>
+				<Content>
+				{this.state.data}
 				</Content>
       </Container>
     );
@@ -104,6 +101,11 @@ const styles = StyleSheet.create({
 		 flatlist: {
 			 marginTop: 25,
 			 flex: 1
+		 },
+
+		 price: {
+			 marginRight: 15,
+			 textAlign: 'right'
 		 }
 });
 
