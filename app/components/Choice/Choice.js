@@ -24,11 +24,11 @@ class Choice extends Component {
 		// Otherwise a page will pop up asking for incomplete driver fields to be completed
 		if (!this.props.resObj.allInfoFilled) {
 			let resObj = this.props.resObj
-			// the resObj that gets passed on to Choice component will be
-			// passed to the DriverInfo component
+			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 			Actions.driverInfo({resObj});
 		} else {
 			let resObj = this.props.resObj
+			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 			// take to the driver's home page
 			Actions.driverview({resObj});
 		}
@@ -36,8 +36,9 @@ class Choice extends Component {
 
 	submitPassenger() {
 		// takes you to passenger's home page
-
-		alert("Link me to passenger's homepage");
+		let resObj = this.props.resObj
+		// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
+		Actions.available({resObj});
 	}
 
 	render() {
@@ -45,7 +46,8 @@ class Choice extends Component {
 			<View>
 				<Button title = "Driver" onPress = {() => {this.submitDriver()}}/>
 				<Text></Text>
-				<Button title = "Passenger" onPress = {this.submitPassenger}/>
+				<Button title = "Passenger" onPress = {() => {this.submitPassenger()}}/>
+				<Text></Text>
 			</View>
 		)
 	}
