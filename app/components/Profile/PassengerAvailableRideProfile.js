@@ -10,7 +10,7 @@ import {
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
 
-//will most probably fill out profile details according to db
+//this is the page you will link to when you click on a ride you have been accepted in to as a passenger. make sure to send both ride obj and passenger obj
 class PassengerAvailableRideProfile extends Component {
 
   render() {

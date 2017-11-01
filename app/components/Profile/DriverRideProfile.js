@@ -10,14 +10,9 @@ import {
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
 
-//will most probably fill out profile details according to db
+//this is the profile you link to when you click on a ride you have posted as a driver. make sure to pass both ride and passenger obj
 class DriverRideProfile extends Component {
 
-  //consist of values from the db. name of driver, luggae, spots, etc.
-  //state {
-
-  //}
-  //need to add logic on when it should be disabled, etc.
   constructor(props){
 	super(props);
   this.address = "192.168.0.30";

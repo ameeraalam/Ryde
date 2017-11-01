@@ -105,7 +105,7 @@ class Controller {
 		});
 	}
 
-
+//for getting posts as a driver
 	driverView(req, res){
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let obj = [];
@@ -118,6 +118,7 @@ class Controller {
 		});
 	}
 
+//for getting pending requests as a passenger
 	pending(req,res){
 		console.log(req.params.email);
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
@@ -131,6 +132,7 @@ class Controller {
 		})
 	}
 
+//for getting available requests as a passenger
 	available(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let obj = [];
@@ -143,7 +145,7 @@ class Controller {
 		})
 	}
 
-  //need to figure out how will i get the driver's email as well.
+  //used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
 	//use updatePush for the request for passengers.
 	//update the ryde collection, requests [] with the passenger info
 	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
@@ -216,8 +218,6 @@ class Controller {
 		});
 	}
 
-	//initMessages(socket, id) {
-		//this.modelChat.query({"rydeId": i ad}, (doc) => {
 
 
 

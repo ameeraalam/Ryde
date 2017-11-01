@@ -10,22 +10,12 @@ import {
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Body, Button, Title, Content, Footer, Icon, CardItem} from 'native-base';
 
-//WIP
-//will most probably fill out profile details according to db
+//page you will link to when you search for rides as a passenger and click on a ride you are interested in. make sure to send both the ride and passenger obj.
 class PassengerSearchProfile extends Component {
-
-  //consist of values from the db. name of driver, luggae, spots, etc.
-  //state {
-
-  //}
-  //need to add logic on when it should be disabled, etc.
   constructor(props){
     super(props);
     this.address = "192.168.0.30";
 		this.baseUrl = "http://" + this.address + ":3000/";
-  	this.state = {
-      data: []
-  		}
   	}
 
   requestButton(){

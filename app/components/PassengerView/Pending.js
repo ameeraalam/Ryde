@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, CardItem} from 'native-base';
-
+//this is not the main passenger view page. the default page will be available and you can come to this page by selecting on the pending footer tab. all the rides you have requested to join in as a passenger
+//when you click on a ride, you get redirected to the PassengerPendingRideProfile. Here I send both the ride object and passenger object
 class Pending extends Component {
 
   constructor(props){
@@ -33,8 +34,8 @@ class Pending extends Component {
 						//alert(JSON.stringify(resObj));
             dataSet = [];
             for(let i=0;i<resObj.length;i++){
-              let resO = resObj[i];
-              let myRes = this.props.resObj;
+              let resO = resObj[i]; //ride obj
+              let myRes = this.props.resObj; //passenger obj
               dataSet.push(
                 <View key={i}>
                   <CardItem button onPress={()=>

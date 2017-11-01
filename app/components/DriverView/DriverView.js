@@ -9,6 +9,7 @@ import {
 import {Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 class DriverView extends Component {
+	//this is the main driver page where you can see the rides you have posted
 
 	constructor(props){
 	super(props);
@@ -50,7 +51,7 @@ class DriverView extends Component {
 					})
 				}
 
-				else { alert('Could not retrieve data');
+				else { alert('You have not posted any rides yet.');
 			}
 			}, (err) => {
 				alert(err)
