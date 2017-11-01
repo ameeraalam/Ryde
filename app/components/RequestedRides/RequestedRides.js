@@ -1,22 +1,19 @@
+/* Author: Md. Tanvir Islam */
+
 import React, { Component } from "react";
 
 import {
 	AppRegistry,
 	ScrollView,
+	TouchableOpacity
 } from "react-native";
 
-import { 
-	Container, 
-	Header, 
-	View, 
-	DeckSwiper, 
+import {  
+	View,  
 	Card, 
-	CardItem, 
-	Thumbnail, 
-	Text, 
-	Left, 
-	Body, 
-	Icon 
+	CardItem,  
+	Text,
+	Icon
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
@@ -27,17 +24,9 @@ import config from "./../../config";
 
 import Swipeout from "react-native-swipe-out";
 
+import CardSlide from "./CardSlide";
+
 class RequestedRides extends Component {
-
-				// <Swipeout right = {this.swipeOutButtons} autoClose = {true}>
-				// 	<Card>
-				// 		<CardItem>
-				// 			<Text>sup</Text>
-				// 		</CardItem>
-				// 	</Card>
-				// </Swipeout>
-
-
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
@@ -58,6 +47,7 @@ class RequestedRides extends Component {
 		this.state = {
 			pendingPassengers: []
 		}
+		this.passengerIndex = 0;
 		this.getPassengerRequests();
 	}
 
@@ -90,13 +80,8 @@ class RequestedRides extends Component {
 					// we loop over the requestsPerRydeObject array and append it to the state making a slidable card
 					for (let j = 0; j < requestsPerRydeObject.length; ++j) {
 						passengers.push(
-							<Swipeout right = {this.swipeOutButtons} autoClose = {true}>
-								<Card>
-									<CardItem>
-										<Text>Ryde-Id: {rydeKeys[i]}, First Name: {requestsPerRydeObject[j].firstName} Last Name: {requestsPerRydeObject[j].lastName}, Rating: {requestsPerRydeObject[j].rating}</Text>
-									</CardItem>
-								</Card>
-							</Swipeout>
+							// each card will get the latest index
+							<CardSlide cardIndex = {passengers.length - 1} getIndex = {this.getIndex} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} id = {rydeKeys[i]} firstName = {requestsPerRydeObject[j].firstName} lastName = {requestsPerRydeObject[j].lastName} rating = {requestsPerRydeObject[j].rating} />
 						);
 					}
 				}
@@ -125,6 +110,10 @@ class RequestedRides extends Component {
 
 	}
 
+	getIndex() {
+
+	}
+
 	render() {
 		return(
 			<ScrollView>
@@ -136,4 +125,4 @@ class RequestedRides extends Component {
 
 module.exports = RequestedRides;
 
-AppRegistry.registerComponent("Register", () => Register);
+AppRegistry.registerComponent("RequestedRides", () => RequestedRides);
