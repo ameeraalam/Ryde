@@ -9,30 +9,24 @@ import {
 	TouchableOpacity
 } from "react-native";
 
-import {
-	Form,
-	Item,
-	Label,
-	Input,
-	ListItem,
-} from "native-base";
-
 import { Actions } from "react-native-router-flux";
-
 import styles from "./styles";
+import Config from '../Config/Config';
+
+
 class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.19";
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.address = Config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
 		this.state = {
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
 			car: "Car model number",
-			plateS: {color: "grey"},
-			liscenseS: {color: "grey"},
-			carS: {color: "grey"}
+			plateS: {color: "black"},
+			liscenseS: {color: "black"},
+			carS: {color: "black"}
 		}
 	}
 
@@ -76,7 +70,7 @@ class DriverInfo extends Component {
 				formattedPlate += String.fromCharCode(this.state.plate.charCodeAt(i) - 32)
 			} else {
 				formattedPlate += this.state.plate[i];
-			} 
+			}
 		}
 
 		return formattedPlate;
@@ -162,37 +156,33 @@ class DriverInfo extends Component {
 	render() {
 		return (
 			<View>
-				<ListItem itemHeader>
-					<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
-				</ListItem>
+				<Text></Text>
+				<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
+				<Text></Text>
+				<TextInput
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.plateS}>Plate number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+					style = {this.state.plateS}
+					value = {this.state.plate}
+					onChangeText = {(text) => this.setState({plate: text, plateS: {color: "black"}})}
+
+				/>
+
+				<TextInput
+
+					style = {this.state.liscenseS}
+					value = {this.state.liscense}
+					onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "black"}})}
+
+				/>
 
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.liscenseS}>Liscense number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+				<TextInput
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.carS}>Car model</Label>
-						<Input
-							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+					style = {this.state.carS}
+					value = {this.state.car}
+					onChangeText = {(text) => this.setState({car: text, carS: {color: "black"}})}
+
+				/>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}}>
 					<Image

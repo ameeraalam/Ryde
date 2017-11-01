@@ -9,18 +9,19 @@ import {
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
-
 import styles from "./styles";
+import Config from '../Config/Config';
+
 
 class Login extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.19";
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.address = Config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
 		this.state = {
-			textEmail: "Email",
-			textPass: "Password"
+			textEmail: "bw@r.com",
+			textPass: "bw"
 		}
 	}
 
@@ -67,14 +68,15 @@ class Login extends Component {
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = "Email"
-         			underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textEmail: text})}
+         	underlineColorAndroid = "transparent"
+					// onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
-					onChangeText = {(text) => this.setState({textPass: text})}
+					underlineColorAndroid = "transparent"
+					// onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>

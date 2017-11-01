@@ -17,15 +17,17 @@
     "react-navigation": "^1.0.0-beta.13"
   },
   "devDependencies": {
-    "babel-jest": "21.0.2",
+    "babel-jest": "21.2.0",
     "babel-preset-react-native": "4.0.0",
-    "jest": "21.1.0",
-    "native-base": "^2.3.3",
-    "react-native-vector-icons": "^4.4.2",
-    "react-test-renderer": "16.0.0-alpha.12",
-    "socket.io-client": "^2.0.4"
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0-beta.5"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
   }
 }
