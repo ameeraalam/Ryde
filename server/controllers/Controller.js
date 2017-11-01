@@ -1,3 +1,4 @@
+
 'use strict'
 
 /* Imports */
@@ -229,3 +230,4 @@ class Controller {
 }
 
 module.exports = Controller;
+

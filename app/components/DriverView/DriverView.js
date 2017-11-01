@@ -7,6 +7,7 @@ import {
 	FlatList
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
+
 import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 class DriverView extends Component {
 	//this is the main driver page where you can see the rides you have posted
@@ -90,6 +91,7 @@ class DriverView extends Component {
 				{this.state.data}
 				</Content>
       </Container>
+
     );
   }
 }
@@ -102,12 +104,14 @@ const styles = StyleSheet.create({
 
 		 flatlist: {
 			 marginTop: 25,
+
 			 flex: 1
 		 },
 
 		 price: {
 			 marginRight: 15,
 			 textAlign: 'right'
+
 		 }
 });
 

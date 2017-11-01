@@ -106,6 +106,7 @@ class Pending extends Component {
                    </FooterTab>
                </Footer>
     </Container>
+
     );
   }
 }

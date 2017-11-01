@@ -1,3 +1,4 @@
+
 "use strict";
 
 /*
@@ -187,3 +188,4 @@ class AbstractModel {
 }
 
 module.exports = AbstractModel;
+

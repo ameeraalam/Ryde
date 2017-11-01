@@ -17,6 +17,7 @@ class DriverRideProfile extends Component {
 	super(props);
   this.address = "192.168.0.30";
   this.baseUrl = "http://" + this.address + ":3000/";
+
 	}
 
   render() {

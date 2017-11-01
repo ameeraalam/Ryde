@@ -1,3 +1,5 @@
+
+
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -5,31 +7,23 @@ import {
 	View,
 	TextInput,
 	Image,
-	ScrollView,
-	TouchableOpacity,
+	TouchableOpacity
 } from "react-native";
-
-import {
-	Form,
-	Item,
-	Label,
-	Input,
-	ListItem
-} from "native-base";
-
+import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer, FooterTab,
+          Body, Content, Card, CardItem, Grid, Row, Col, List, ListItem, Switch, Picker, Form, Item as FormItem } from "native-base";
+const Item = Picker.Item;
 import { Actions } from "react-native-router-flux";
-
 import Choice from "../Choice/Choice";
-
 import styles from "./styles";
+import Config from '../Config/Config';
 
 
 class Register extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = "192.168.0.30";
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.address = Config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
@@ -42,43 +36,44 @@ class Register extends Component {
 			liscense: "Driver's liscense number",
 			car: "Car model number",
 			firstNameS: {
-				color: "grey"
+				borderColor: 'red',
+				color: "black"
 			},
 
 			lastNameS: {
-				color: "grey"
+				color: "black"
 			},
 
 			emailS: {
-				color: "grey"
+				color: "black"
 			},
 
 			passwordS: {
-				color: "grey"
+				color: "black"
 			},
 
 			dobS: {
-				color: "grey"
+				color: "black"
 			},
 
 			phoneS: {
-				color: "grey"
+				color: "black"
 			},
 
 			genderS: {
-				color: "grey"
+				color: "black"
 			},
 
 			plateS: {
-				color: "grey"
+				color: "black"
 			},
 
 			liscenseS: {
-				color: "grey"
+				color: "black"
 			},
 
 			carS: {
-				color: "grey"
+				color: "black"
 			}
 		}
 	}
@@ -221,7 +216,7 @@ class Register extends Component {
 				this.setState({emailS: {color: "red"}});
 				errors.push("email");
 			} else {
-				this.setState({emailS: {color: "grey"}});
+				this.setState({emailS: {color: "black"}});
 			}
 
 			let phoneCheck = this.phoneCheck();
@@ -230,21 +225,21 @@ class Register extends Component {
 				this.setState({phoneS: {color: "red"}})
 				errors.push("phone");
 			} else {
-				this.setState({phoneS: {color: "grey"}});
+				this.setState({phoneS: {color: "black"}});
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
 				errors.push("firstName");
 			} else {
-				this.setState({firstNameS: {color: "grey"}})
+				this.setState({firstNameS: {color: "black"}})
 			}
 
 			if (this.lastNameChecker() == false) {
 				this.setState({lastNameS: {color: "red"}});
 				errors.push("lastName");
 			} else {
-				this.setState({lastNameS: {color: "grey"}});
+				this.setState({lastNameS: {color: "black"}});
 			}
 
 			let reqObj = {
@@ -280,7 +275,7 @@ class Register extends Component {
 					if (res.status === 200) {
 						// change alert later
 						alert("Registration complete");
-						Actions.login({});
+						Actions.login({type: 'reset'}); //should use reset, i.e pop all scenes and use this as the intial scene. This is done to prevent a back button when we enter login page
 					} else {
 						alert("Error");
 					}
@@ -294,124 +289,156 @@ class Register extends Component {
 	}
 
 
+	previousPage() {
+    Actions.pop({});
+  }
+
+
 	render() {
 		return (
-			<ScrollView>
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.firstNameS}>First name</Label>
-						<Input
-							onChangeText = {(text) => this.setState({firstName: text, firstNameS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+			<Container>
+        <Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
+          <Left style={{flex: 1}}>
+            <Button transparent onPress={this.previousPage}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.lastNameS}>Last name</Label>
-						<Input
-							onChangeText = {(text) => this.setState({lastName: text, lastNameS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+          <Body style={{flex: 1}}>
+            <Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
+          </Body>
 
+          <Right style={{flex: 1}}/>
+        </Header>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.emailS}>Email</Label>
-						<Input
-							onChangeText = {(text) => this.setState({email: text, emailS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+        <Content style={{backgroundColor:'#fff'}}>
+					<View style={{ marginTop:30, paddingLeft:15, marginBottom:20}}>
+						<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(72, 110, 255)'}}>
+							Register
+						</Text>
+					</View>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.passwordS}>Password</Label>
-						<Input
-							secureTextEntry = {true}
-							onChangeText = {(text) => this.setState({password: text, passwordS: {color: "grey"}})}
+					<View style={{flex: 2, backgroundColor: '#fff', marginTop:10}}>
+							<List>
+								<ListItem icon>
+									<Body>
+										<TextInput
+											placeholder = "First Name"
+		        					underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({firstName: text, firstNameS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-						/>
-					</Item>
-				</Form>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Last Name"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({lastName: text, lastNameS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.dobS}>Date of birth</Label>
-						<Input
-							onChangeText = {(text) => this.setState({dob: text, dobS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Email"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({email: text, emailS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.phoneS}>Phone number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Password"
+		        					underlineColorAndroid = "transparent"
+											secureTextEntry = {true}
+											onChangeText = {(text) => this.setState({password: text, passwordS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.genderS}>Gender</Label>
-						<Input
-							onChangeText = {(text) => this.setState({gender: text, genderS: {color: "grey"}})}
-						/>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Date of Birth"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({dob: text, dobS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-					</Item>
-				</Form>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Phone Number"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({phone: text})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-				<Text>  </Text>
+								<Form style={{paddingLeft:15}}>
+									<Picker
+										mode="dropdown"
+										placeholder="Gender"
+										selectedValue={this.state.gender}
+										onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}  //{this.onValueChange2.bind(this)}
+									>
+										<Item label="Gender" value="gender" />
+										<Item label="Male" value="male" />
+										<Item label="Female" value="female" />
+									</Picker>
+								</Form>
 
-				<ListItem itemHeader>
-					<Text>OPTIONAL</Text>
-				</ListItem>
+								<ListItem itemDivider>
+              		<Text>Optional</Text>
+            		</ListItem>
 
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Plate Number"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({plate: text, plateS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.plateS}>Plate number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Drivers License"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
 
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Car Model"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({car: text, car: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+							</List>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.liscenseS}>Liscense number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.carS}>Car Model</Label>
-						<Input
-							onChangeText = {(text) => this.setState({car: text, car: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-
-				<TouchableOpacity onPress = {() => {this.submitButton()}}>
-					<Image
-						style = {styles.submitButton}
-						source = {require("./images/button.png")}
-					/>
-				</TouchableOpacity>
-
-			</ScrollView>
-
-
+							<View style = {{paddingLeft: 15, paddingBottom: 30, paddingRight: 15}}>
+								<TouchableOpacity onPress = {() => {this.submitButton()}}>
+									<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:54, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+										Register
+									</Text>
+								</TouchableOpacity>
+							</View>
+					</View>
+				</Content>
+			</Container>
 		);
 	}
 }
@@ -419,3 +446,4 @@ class Register extends Component {
 module.exports = Register;
 
 AppRegistry.registerComponent("Register", () => Register);
+

@@ -106,6 +106,7 @@ class Available extends Component {
                    </FooterTab>
                </Footer>
     </Container>
+
     );
   }
 }
