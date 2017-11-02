@@ -21,7 +21,7 @@ import styles from "./styles";
 
 import config from "./../../config";
 
-import Swipeout from "react-native-swipe-out";
+import Swipeout from "react-native-swipeout";
 
 class CardSlide extends Component {
 	constructor(props) {

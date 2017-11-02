@@ -22,8 +22,6 @@ import styles from "./styles";
 
 import config from "./../../config";
 
-import Swipeout from "react-native-swipe-out";
-
 import CardSlide from "./CardSlide";
 
 class RequestedRides extends Component {
