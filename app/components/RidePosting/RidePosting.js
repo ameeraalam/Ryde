@@ -53,7 +53,7 @@ class RidePosting extends Component{
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideId: rideNum,
+			rideId: rideNum,// Needs to become a server side variable
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
