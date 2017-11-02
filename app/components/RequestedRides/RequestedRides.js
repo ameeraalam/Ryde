@@ -30,10 +30,10 @@ class RequestedRides extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		//this.user = this.props.resObj;
+		this.user = this.props.resObj;
 		// database is queryed with the driver's email and the database that is
 		// queried is PersonalRydes database
-		this.user = {email: "ameeraam13@hotmail.com"};
+		//this.user = {email: "ameeraam13@hotmail.com"};
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.swipeOutButtons = [{
 			text: "Accept",

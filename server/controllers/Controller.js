@@ -250,6 +250,141 @@ class Controller {
 	}
 
 
+	postRyde(req, res){
+		
+		this.modelRydes.insert(req.body, () => {
+			console.log("Ryde added to Ryde DB");
+				
+			/*this.modelPersonalRydes.updatePush({"email": req.body.email}, {"rydesPostedAsDriver": req.body}, () => {
+				console.log("Ryde added to PersonalRyde DB");
+			}, () => {
+				console.log("Failed to add Ryde to users PersonalRyde DB");
+			});*/
+
+			res.sendStatus(200);
+		
+		}, () => {
+			res.sendStatus(404);
+			console.log("Failed to add Ryde to DB");
+		});
+	}
+
+	findRyde(req, res){
+		
+		// Looking for Rydes with same destination
+		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
+
+			let potentialRides = cursor.toArray();
+			let sameDestination = {dest:[]};
+
+			potentialRides.then((response) => {
+				
+				console.log("Res length is " + response.length);	
+				for (let i = 0; i < response.length; i++){
+
+					if (response[i].from === req.body.from){
+						console.log("Ryde found!");	
+						sameDestination.dest.push(response[i]);
+					}
+				}
+
+				console.log(sameDestination);
+
+				res.status(200).send(sameDestination);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+
+	//for getting posts as a driver
+	driverView(req, res){
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
+				obj.push(doc.rydesPostedAsDriver[i])
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	//for getting pending requests as a passenger
+	pending(req,res){
+		console.log(req.params.email);
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
+				obj.push(doc.rydesAppliedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	//for getting available requests as a passenger
+	available(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesAcceptedToAsPassenger.length;i++){
+				obj.push(doc.rydesAcceptedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+  	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
+	//use updatePush for the request for passengers.
+	//update the ryde collection, requests [] with the passenger info
+	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
+	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
+	passengerSearch(req,res) {
+		this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":req.body.driverRes} ,() => {
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"requests":req.body.myRes},() => {
+
+				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
+
+					let rydeToModify = undefined;
+					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
+					let indexModified = 0;
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						// we find the specific ryde from the array of rydes that the driver posted
+						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
+							rydeToModify = doc.rydesPostedAsDriver[i];
+							indexModified = i;
+						}
+					}
+
+					rydeToModify.requests.push(req.body.myRes);
+
+					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
+
+					this.modelPersonalRydes.update({"email": req.body.myRes.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+						res.sendStatus(200);
+					}, () => {
+						res.sendStatus(404);
+					});
+
+
+				}, () => {
+					res.sendStatus(404);
+				});
+
+
+			}, () => {
+				res.sendStatus(404);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+
 	err(req, res) {
 		console.log("Processing error....");
 		res.sendStatus(404);

@@ -1,23 +1,26 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   AppRegistry,
   Text,
   View,
   Image,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Right, Body, Button, Title, Content, Footer} from 'native-base';
+import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
 
-//will most probably fill out profile details according to db
-export default class DriverRideProfile extends Component {
+import config from "./../../config";
 
-  //consist of values from the db. name of driver, luggae, spots, etc.
-  //state {
+//this is the profile you link to when you click on a ride you have posted as a driver. make sure to pass both ride and passenger obj
+class DriverRideProfile extends Component {
 
-  //}
-  //need to add logic on when it should be disabled, etc.
+  constructor(props){
+	super(props);
+  this.address = config.ip;
+  this.baseUrl = "http://" + this.address + ":3000/";
+
+	}
 
   render() {
     return (
@@ -25,12 +28,12 @@ export default class DriverRideProfile extends Component {
       <Header>
         <Left>
           <Button transparent>
-            <Icon name='bars' color='white' size={24} />
+            <Icon name='menu'/>
           </Button>
         </Left>
         <Left>
           <Button transparent>
-              <Icon name='bell-o' color='white' size={24} />
+              <Icon name='notifications'/>
           </Button>
         </Left>
         <Body>
@@ -38,36 +41,62 @@ export default class DriverRideProfile extends Component {
         </Body>
         <Right>
           <Button transparent>
-            <Icon name='search' color='white' size={24} />
+            <Icon name='search' />
           </Button>
         </Right>
       </Header>
+  <ScrollView>
       <Content>
       <Image
         style={{
-          flex: 1,
           width: 160,
+          borderRadius: 80,
           height: 160,
-          justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: 'center'
                 }}
-        source={require('../Profile/Images/profilepic.png')}
+        source={require('../Profile/Images/profilepic.jpg')}
       />
-      <Text>Driver Name</Text>
-      <Text>Rating</Text>
-      <Text>Luggage</Text>
-      <Text>Passengers</Text>
-      <Text>Price</Text>
-      <Text>From</Text>
-      <Text>To</Text>
 
-      </Content>
-      <View>
-      <Button large info style={styles.button}><Text style={styles.text}>View Requests</Text></Button>
-      <Button info style={styles.starttrip}><Text style={styles.text}>Start Trip</Text></Button>
-      <Button disabled style={styles.endtrip}><Text style={styles.text}>End Trip</Text></Button>
-      <Button large info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
+      <CardItem>
+      <Text>Driver E-mail: {this.props.resO.driver}</Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>Rating: {this.props.resO.rating}</Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>Luggage: {this.props.resO.luggage} </Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>Passengers: {this.props.resO.passengers}</Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>Price: {this.props.resO.price}</Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>From: {this.props.resO.from}</Text>
+      </CardItem>
+      <Text></Text>
+      <CardItem>
+      <Text>To: {this.props.resO.to}</Text>
+      </CardItem>
+      <Text></Text>
+      <View style={styles.container}>
+      <Button large info><Text style={styles.text}>View Requests</Text>
+      </Button><Button large info><Text style={styles.text}>Chat</Text></Button>
       </View>
+      </Content>
+      </ScrollView>
+      <Footer>
+        <FooterTab>
+        <Button success><Text style={styles.text}>Start Trip</Text></Button>
+        <Button disabled><Text style={styles.text}>End Trip</Text></Button>
+        </FooterTab>
+      </Footer>
 </Container>
     );
   }
@@ -104,7 +133,12 @@ const styles = StyleSheet.create({
        position: 'absolute',
        bottom: 20,
        right: 170
-     }
+     },
+     container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
 });
 module.exports = DriverRideProfile;
 

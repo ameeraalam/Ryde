@@ -47,6 +47,19 @@ module.exports = function() {
 
 	app.post("/:email/rejectedUpdatedRydes", (req, res) => { CONTROLLER.rejectedUpdatedRydes(req, res); });
 
+	app.post("/postRyde", (req, res) => { CONTROLLER.postRyde(req, res); });
+
+	app.post("/findRyde", (req, res) => { CONTROLLER.findRyde(req, res); });
+	
+	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
+
+	app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
+
+	app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
+
+	app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); })
+
+
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used

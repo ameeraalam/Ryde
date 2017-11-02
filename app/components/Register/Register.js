@@ -14,7 +14,16 @@ import {
 	Item,
 	Label,
 	Input,
-	ListItem
+	ListItem,
+	Header,
+	Left,
+	Body,
+	Title,
+	Button,
+	Icon,
+	Right,
+	Picker,
+	Item as FormItem
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -25,6 +34,8 @@ import styles from "./styles";
 
 import config from "./../../config";
 
+import DateTimePicker from 'react-native-modal-datetime-picker';
+
 class Register extends Component {
 
 	constructor(props) {
@@ -32,9 +43,11 @@ class Register extends Component {
 		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
+			date: 'Date of Birth',
+			isDateTimePickerVisible: false,
 			firstName: "First name",
 			lastName: "Last name",
-			email: "Email",	
+			email: "Email",
 			password: "password",
 			dob: "Date of birth",
 			phone: "Mobile phone number",
@@ -77,12 +90,24 @@ class Register extends Component {
 			liscenseS: {
 				color: "grey"
 			},
-			
+
 			carS: {
 				color: "grey"
 			}
 		}
 	}
+
+	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+	_handleDatePicked = (date) => {
+		let dateString = date.toString();
+		let formattedDate = dateString.slice(3, 13);
+		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
+    // console.log('Your Date of Birth is: ', date);
+    this._hideDateTimePicker();
+  }
 
 	emailCheck() {
 		let emailCheck = false;
@@ -150,7 +175,7 @@ class Register extends Component {
 		let phoneCheck = true;
 
 		for (let i = 0; i < this.state.phone.length; ++i) {
-			// Either of these expression being true will result in the statement eing true, 
+			// Either of these expression being true will result in the statement eing true,
 			// only if both the statements are false then the first half of the expression will be false.
 			// Both the expression in the outer expresion need to be true in order for the entire expression to be true,
 			// one of the expression being false will result in the entire statement being false.
@@ -217,7 +242,7 @@ class Register extends Component {
 		let emailCheck = this.emailCheck();
 
 		emailCheck.then((val) => {
-			
+
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
 				errors.push("email");
@@ -279,8 +304,6 @@ class Register extends Component {
 					body: JSON.stringify(reqObj)
 				}).then((res) => {
 					if (res.status === 200) {
-						// change alert later
-						alert("Registration complete");
 						// on completing the registration we create the personal rydes object which
 						// every user will have
 						// we send the email address using the query string
@@ -315,7 +338,19 @@ class Register extends Component {
 
 	render() {
 		return (
-			<ScrollView>
+			<ScrollView style={{backgroundColor: '#fff'}}>
+				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
+					<Body>
+						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
+					</Body>
+				</Header>
+
+				<View style={{ marginTop:30, paddingLeft:15}}>
+					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(72, 110, 255)'}}>
+						Register
+					</Text>
+				</View>
+
 				<Form>
 					<Item floatingLabel>
 						<Label style = {this.state.firstNameS}>First name</Label>
@@ -355,37 +390,46 @@ class Register extends Component {
 					</Item>
 				</Form>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.dobS}>Date of birth</Label>
-						<Input
-							onChangeText = {(text) => this.setState({dob: text, dobS: {color: "grey"}})}
-						/>	
-					</Item>
-				</Form>
+				<ListItem icon style={{marginTop:28}} onPress={this._showDateTimePicker}>
+					<Body>
+						<Text style={{fontSize: 16}}>{this.state.date}</Text>
+					</Body>
+				</ListItem>
+				<DateTimePicker
+         			isVisible={this.state.isDateTimePickerVisible}
+          			onConfirm={this._handleDatePicked}
+          			onCancel={this._hideDateTimePicker}
+        		/>
 
 				<Form>
 					<Item floatingLabel>
 						<Label style = {this.state.phoneS}>Phone number</Label>
 						<Input
 							onChangeText = {(text) => this.setState({phone: text, phoneS: {color: "grey"}})}
-						/>		
+						/>
 					</Item>
 				</Form>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.genderS}>Gender</Label>
-						<Input
-							onChangeText = {(text) => this.setState({gender: text, genderS: {color: "grey"}})}
-						/>
-	
-					</Item>
+
+				<Form style={{paddingLeft:15, marginTop:28, marginBottom: 28}}>
+					<Picker
+						mode="dropdown"
+						placeholder="Gender"
+						selectedValue={this.state.gender}
+						onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}
+					>
+						<Item label="Gender" value="gender" />
+						<Item label="Male" value="male" />
+						<Item label="Female" value="female" />
+					</Picker>
 				</Form>
+
+
+
 
 				<Text>  </Text>
 
-				<ListItem itemHeader>
+				<ListItem itemDivider>
 					<Text>OPTIONAL</Text>
 				</ListItem>
 
@@ -420,13 +464,14 @@ class Register extends Component {
 					</Item>
 				</Form>
 
+				<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
+					<TouchableOpacity onPress = {() => {this.submitButton()}}>
+						<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+							Register
+						</Text>
+					</TouchableOpacity>
+				</View>
 
-				<TouchableOpacity onPress = {() => {this.submitButton()}}>
-					<Image
-						style = {styles.submitButton}
-						source = {require("./images/button.png")}
-					/>
-				</TouchableOpacity>
 			</ScrollView>
 		);
 	}

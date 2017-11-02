@@ -1,5 +1,5 @@
 let config = {
-	ip: "192.168.0.13"
+	ip: "172.17.65.229"
 }
 
 module.exports = config
