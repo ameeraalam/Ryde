@@ -99,15 +99,15 @@ class Register extends Component {
 
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
-  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
 	_handleDatePicked = (date) => {
 		let dateString = date.toString();
 		let formattedDate = dateString.slice(3, 13);
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
-    // console.log('Your Date of Birth is: ', date);
-    this._hideDateTimePicker();
-  }
+    	// console.log('Your Date of Birth is: ', date);
+    	this._hideDateTimePicker();
+  	}
 
 	emailCheck() {
 		let emailCheck = false;
