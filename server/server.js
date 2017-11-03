@@ -6,6 +6,6 @@ function main() {
 	routes()
 }
 
-if(!module.parent) {
+if (!module.parent) {
 	main();
 }
