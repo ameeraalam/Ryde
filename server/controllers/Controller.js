@@ -1,12 +1,20 @@
+
 'use strict'
 
 /* Imports */
 let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
+<<<<<<< HEAD
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
+=======
+let Rydes = require("./../models/Rydes.js")
+let PersonalRydes = require("./../models/PersonalRydes.js")
+let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
+let Chat = require("./../models/Chat.js");
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -15,10 +23,17 @@ class Controller {
 
 	constructor() {
 		this.modelUsers = new Users();
+<<<<<<< HEAD
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
+=======
+		this.modelRydes = new Rydes();
+		this.modelPersonalRydes = new PersonalRydes();
+		this.idGen = new IdGenerator();
+		this.modelChat = new Chat();
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 	}
 
 	intro() {
@@ -29,11 +44,19 @@ class Controller {
 	login(req, res) {
 		// First thing we have to do is query mongodb and find the object
 		// using the email, after finding the object we have to compare
+<<<<<<< HEAD
 		// the password hash provided by the user and the password hash in the database 
 		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// bcrypt.compare will compare the password attribute of the object provided
 			// by the user with the document object's password field in mongodb
 			// bcrypt.compare(), takes two 3 arguments, the password in strings, the 
+=======
+		// the password hash provided by the user and the password hash in the database
+		this.modelUsers.query({"email": req.body.email}, (doc) => {
+			// bcrypt.compare will compare the password attribute of the object provided
+			// by the user with the document object's password field in mongodb
+			// bcrypt.compare(), takes two 3 arguments, the password in strings, the
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			// hashed password and the callback function
 			bcrypt.compare(req.body.password, doc.password, (err, result) => {
 				if (err) {
@@ -62,6 +85,10 @@ class Controller {
 		}, () => {
 			res.sendStatus(404);
 		});
+<<<<<<< HEAD
+=======
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 	}
 
 	// contains the logic for the register feature of the app
@@ -103,6 +130,7 @@ class Controller {
 			res.sendStatus(404);
 		});
 	}
+<<<<<<< HEAD
 
 	createPersonalRyde(req, res) {
 		this.modelPersonalRydes.insert({"email": req.params.email, "rydesPostedAsDriver": [], "rydesAppliedToAsPassenger": [], "rydesAcceptedToAsPassenger": []}, () => {
@@ -291,6 +319,131 @@ class Controller {
 			});
 		});
 	}
+=======
+
+//for getting posts as a driver
+	driverView(req, res){
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
+				obj.push(doc.rydesPostedAsDriver[i])
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+//for getting pending requests as a passenger
+	pending(req,res){
+		console.log(req.params.email);
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
+				obj.push(doc.rydesAppliedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+//for getting available requests as a passenger
+	available(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesAcceptedToAsPassenger.length;i++){
+				obj.push(doc.rydesAcceptedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+  //used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
+	//use updatePush for the request for passengers.
+	//update the ryde collection, requests [] with the passenger info
+	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
+	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
+	passengerSearch(req,res) {
+		this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":req.body.driverRes} ,() => {
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"requests":req.body.myRes},() => {
+
+				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
+
+					let rydeToModify = undefined;
+					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
+					let indexModified = 0;
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						// we find the specific ryde from the array of rydes that the driver posted
+						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
+							rydeToModify = doc.rydesPostedAsDriver[i];
+							indexModified = i;
+						}
+					}
+
+					rydeToModify.requests.push(req.body.myRes);
+
+					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
+
+					this.modelPersonalRydes.update({"email": req.body.myRes.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+						res.sendStatus(200);
+					}, () => {
+						res.sendStatus(404);
+					});
+
+
+				}, () => {
+					res.sendStatus(404);
+				});
+
+
+			}, () => {
+				res.sendStatus(404);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	err(req, res) {
+		console.log("Processing error....");
+		res.sendStatus(404);
+	}
+
+
+	socketIntro() {
+		console.log("Socket is open on port 4000...");
+	}
+
+
+	connection(socket) {
+		console.log("Connection received from " +  socket.id + "...");
+	}
+
+	idEnquiry(socket) {
+		console.log("Id has been sent by the socket...");
+		// creating a promise for the async socket event
+		return new Promise((resolve, reject) => {
+			socket.on("idEnquiry", (id) => {
+				console.log("Socket request " + id +  "...");
+				socket.join(id);
+				resolve(id);
+			})
+		});
+	}
+
+
+
+
+
+
+
+
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 }
 
 module.exports = Controller;
+

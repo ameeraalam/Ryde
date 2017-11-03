@@ -1,12 +1,23 @@
+<<<<<<< HEAD
 "use strict";
 
 /*	
+=======
+
+"use strict";
+
+/*
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 	NOTE** - The reason that the successCallBack and failureCallBack will work and can
 	successfully access the variables is because the class Users has a composition relationship
 	with the Controller, this means that because of lexical scoping the Users class can access
 	the variables scoped within the Controller class. I am specifying this to remind you that
 	the function that invokes has to supply all the variables and resources for the function being
+<<<<<<< HEAD
 	passed on to do the job!		
+=======
+	passed on to do the job!
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
 */
 
@@ -65,7 +76,11 @@ class AbstractModel {
 			if (err) {
 				console.log("Failed to connect to the Ryde database...");
 			} else {
+<<<<<<< HEAD
 				db.collection(this.collection).update(query, {$set: updatedFields}, (err, result) => {
+=======
+				db.collection(this.collection).update(query, {$set: updatedFields}, (err, doc) => {
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 					if (err) {
 						console.log("Error in updating the item in the Ryde database...");
 						console.log(err);
@@ -79,6 +94,7 @@ class AbstractModel {
 						// calling an undefined variable
 						console.log("Item is successfully updated in the Ryde database...");
 						if (successCallBack) {
+<<<<<<< HEAD
 							this.query(query, (doc) => {
 								successCallBack(doc);
 							}, () => {
@@ -86,6 +102,38 @@ class AbstractModel {
 									failureCallBack();
 								}
 							})
+=======
+							successCallBack(doc);
+						}
+					}
+					db.close();
+				});
+			}
+		})
+	}
+
+  //used for updating arrays in collections
+	updatePush(query, updatedFields, successCallBack, failureCallBack) {
+		this.MongoClient.connect(this.db, (err, db) => {
+			if (err) {
+				console.log("Failed to connect to the Ryde database...");
+			} else {
+				db.collection(this.collection).update(query, {$push: updatedFields}, (err, doc) => {
+					if (err) {
+						console.log("Error in updating the item in the Ryde database...");
+						console.log(err);
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						if (failureCallBack) {
+							failureCallBack();
+						}
+					} else {
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						console.log("Item is successfully updated in the Ryde database...");
+						if (successCallBack) {
+							successCallBack(doc);
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 						}
 					}
 					db.close();
@@ -161,6 +209,7 @@ class AbstractModel {
 		});
 	}
 
+<<<<<<< HEAD
 	findAll(query, successCallBack, failureCallBack) {
 		return this.MongoClient.connect(this.db, (err, db) => {
 			
@@ -213,3 +262,9 @@ class AbstractModel {
 }
 
 module.exports = AbstractModel;
+=======
+}
+
+module.exports = AbstractModel;
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46

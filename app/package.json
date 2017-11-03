@@ -7,6 +7,10 @@
     "test": "jest"
   },
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "bcrypt": "^1.0.3",
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
     "expo": "^21.0.2",
     "native-base": "^2.3.3",
     "react": "16.0.0-beta.5",
@@ -17,6 +21,7 @@
     "react-navigation": "^1.0.0-beta.13"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "babel-jest": "21.0.2",
     "babel-preset-react-native": "4.0.0",
     "jest": "21.1.0",
@@ -27,5 +32,19 @@
   },
   "jest": {
     "preset": "react-native"
+=======
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0-beta.5"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
   }
 }

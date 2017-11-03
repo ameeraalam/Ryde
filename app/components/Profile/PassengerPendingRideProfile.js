@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import Icon from 'react-native-vector-icons/FontAwesome';
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 import {
   AppRegistry,
   Text,
   View,
   Image,
+<<<<<<< HEAD
   StyleSheet
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
@@ -18,6 +22,16 @@ export default class PassengerPendingRideProfile extends Component {
 
   //}
   //need to add logic on when it should be disabled, etc.
+=======
+  StyleSheet,
+  ScrollView
+} from 'react-native';
+import {Actions } from 'react-native-router-flux';
+import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
+
+//this is the page you link to when you click on a ride you have requested to join as a passenger. make sure to send both the ride and passenger obj.
+class PassengerPendingRideProfile extends Component {
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
   render() {
     return (
@@ -25,12 +39,20 @@ export default class PassengerPendingRideProfile extends Component {
       <Header>
         <Left>
           <Button transparent>
+<<<<<<< HEAD
             <Icon name='bars' color='white' size={24} />
+=======
+            <Icon name='menu'  />
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
           </Button>
         </Left>
         <Left>
           <Button transparent>
+<<<<<<< HEAD
               <Icon name='bell-o' color='white' size={24} />
+=======
+              <Icon name='notifications' />
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
           </Button>
         </Left>
         <Body>
@@ -38,6 +60,7 @@ export default class PassengerPendingRideProfile extends Component {
         </Body>
         <Right>
           <Button transparent>
+<<<<<<< HEAD
             <Icon name='search' color='white' size={24} />
           </Button>
         </Right>
@@ -62,6 +85,54 @@ export default class PassengerPendingRideProfile extends Component {
       <Text>To</Text>
 
       </Content>
+=======
+            <Icon name='search' />
+          </Button>
+        </Right>
+      </Header>
+      <ScrollView>
+          <Content>
+          <Image
+            style={{
+              width: 160,
+              borderRadius: 80,
+              height: 160,
+                    alignItems: 'center'
+                    }}
+            source={require('../Profile/Images/profilepic.jpg')}
+          />
+
+          <CardItem>
+          <Text>Driver E-mail: {this.props.resO.driver}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Rating: {this.props.resO.rating}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Luggage: {this.props.resO.luggage} </Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Passengers: {this.props.resO.passengers}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Price: {this.props.resO.price}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>From: {this.props.resO.from}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>To: {this.props.resO.to}</Text>
+          </CardItem>
+          <Text></Text>
+          </Content>
+          </ScrollView>
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
       <View>
       <Button large info disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
       <Button large info disabled style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
@@ -99,7 +170,10 @@ const styles = StyleSheet.create({
        right: 170
      }
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 module.exports = PassengerPendingRideProfile;
 
 AppRegistry.registerComponent('PassengerPendingRideProfile', () => PassengerPendingRideProfile);

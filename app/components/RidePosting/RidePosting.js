@@ -15,11 +15,16 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
+<<<<<<< HEAD
 import config from "./../../config";
 import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
 // Unique static ID that will be assigned to a Ryde each time one is created
 var rideNum = 1;
+=======
+// Unique static ID that will be assigned to a Ryde each time one is created
+var rideID = 1;
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 var emptyArray = [];
 
 // Main class
@@ -27,13 +32,18 @@ class RidePosting extends Component{
 
 	constructor(props){
 		super(props);
+<<<<<<< HEAD
 		this.address = config.ip;
+=======
+		this.address = "172.17.137.0";
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			fromLocation: "From:",
 			toLocation: "To:",
 			travelDate: "Date: (DD/MM)",
 			numPassengers: "Passenger Spots:",
+<<<<<<< HEAD
 			numLuggage: "Luggage Space:",
 			ridePrice: "Price per seat:"
 		}
@@ -48,17 +58,38 @@ class RidePosting extends Component{
 
 		let reqObj = {
 			driver: this.props.resObj.email,
+=======
+			numLuggage: "Luggage Space:"
+		} 
+	}
+
+	// Code for functionality of the Post button on the app page
+	postButton(){
+		
+		// need to pass Ryde ID here
+		// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
+		let reqObj = {
+			driver: "this@email.com", // this.props.resObj.email, 
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
+<<<<<<< HEAD
 			rideId: rideNum,// Needs to become a server side variable
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
 			currentLuggageCount: 0,
 			price: "$" + this.state.ridePrice
+=======
+			rideNum: rideID,
+			pending: emptyArray,
+			members: emptyArray,
+			currentPassengerCount: 0,
+			currentLuggageCount: 0
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		}
 
 		fetch(this.baseUrl + "postRyde",{
@@ -76,10 +107,17 @@ class RidePosting extends Component{
 				rideID++;
 				alert("Ryde Posted!");
 				// Need to pass user Obj here
+<<<<<<< HEAD
 				Actions.driverview({resObj});
 			} else {
 				
 				alert("Server Error!!!!!");
+=======
+				Actions.driverView({});
+			} else {
+				
+				alert("Server Error!");
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 		}, (err) => {
 
@@ -133,6 +171,7 @@ class RidePosting extends Component{
 					placeholder = {this.state.numLuggage}
 					onChangeText = {(text) => this.setState({numLuggage: text})}
 				/>
+<<<<<<< HEAD
 
 				{/*Input box for the price of each seat*/}
 				<TextInput
@@ -140,6 +179,8 @@ class RidePosting extends Component{
 					placeholder = {this.state.ridePrice}
 					onChangeText = {(text) => this.setState({ridePrice: text})}
 				/>
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 				
 				{/*Button to use the postButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.postButton()}}>

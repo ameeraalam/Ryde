@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -5,6 +10,7 @@ import {
 	View,
 	TextInput,
 	Image,
+<<<<<<< HEAD
 	ScrollView,
 	TouchableOpacity,
 } from "react-native";
@@ -24,17 +30,38 @@ import Choice from "../Choice/Choice";
 import styles from "./styles";
 
 import config from "./../../config";
+=======
+	TouchableOpacity
+} from "react-native";
+import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer, FooterTab,
+          Body, Content, Card, CardItem, Grid, Row, Col, List, ListItem, Switch, Picker, Form, Item as FormItem } from "native-base";
+const Item = Picker.Item;
+import { Actions } from "react-native-router-flux";
+import Choice from "../Choice/Choice";
+import styles from "./styles";
+import Config from '../Config/Config';
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
 class Register extends Component {
 
 	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			firstName: "First name",
 			lastName: "Last name",
 			email: "Email",	
+=======
+		this.address = Config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
+		this.state = {
+			firstName: "First name",
+			lastName: "Last name",
+			email: "Email",
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			password: "password",
 			dob: "Date of birth",
 			phone: "Mobile phone number",
@@ -43,6 +70,7 @@ class Register extends Component {
 			liscense: "Driver's liscense number",
 			car: "Car model number",
 			firstNameS: {
+<<<<<<< HEAD
 				color: "grey"
 			},
 
@@ -80,6 +108,46 @@ class Register extends Component {
 			
 			carS: {
 				color: "grey"
+=======
+				borderColor: 'red',
+				color: "black"
+			},
+
+			lastNameS: {
+				color: "black"
+			},
+
+			emailS: {
+				color: "black"
+			},
+
+			passwordS: {
+				color: "black"
+			},
+
+			dobS: {
+				color: "black"
+			},
+
+			phoneS: {
+				color: "black"
+			},
+
+			genderS: {
+				color: "black"
+			},
+
+			plateS: {
+				color: "black"
+			},
+
+			liscenseS: {
+				color: "black"
+			},
+
+			carS: {
+				color: "black"
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 		}
 	}
@@ -150,7 +218,11 @@ class Register extends Component {
 		let phoneCheck = true;
 
 		for (let i = 0; i < this.state.phone.length; ++i) {
+<<<<<<< HEAD
 			// Either of these expression being true will result in the statement eing true, 
+=======
+			// Either of these expression being true will result in the statement eing true,
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			// only if both the statements are false then the first half of the expression will be false.
 			// Both the expression in the outer expresion need to be true in order for the entire expression to be true,
 			// one of the expression being false will result in the entire statement being false.
@@ -217,12 +289,20 @@ class Register extends Component {
 		let emailCheck = this.emailCheck();
 
 		emailCheck.then((val) => {
+<<<<<<< HEAD
 			
+=======
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
 				errors.push("email");
 			} else {
+<<<<<<< HEAD
 				this.setState({emailS: {color: "grey"}});
+=======
+				this.setState({emailS: {color: "black"}});
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 
 			let phoneCheck = this.phoneCheck();
@@ -231,21 +311,33 @@ class Register extends Component {
 				this.setState({phoneS: {color: "red"}})
 				errors.push("phone");
 			} else {
+<<<<<<< HEAD
 				this.setState({phoneS: {color: "grey"}});
+=======
+				this.setState({phoneS: {color: "black"}});
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
 				errors.push("firstName");
 			} else {
+<<<<<<< HEAD
 				this.setState({firstNameS: {color: "grey"}})
+=======
+				this.setState({firstNameS: {color: "black"}})
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 
 			if (this.lastNameChecker() == false) {
 				this.setState({lastNameS: {color: "red"}});
 				errors.push("lastName");
 			} else {
+<<<<<<< HEAD
 				this.setState({lastNameS: {color: "grey"}});
+=======
+				this.setState({lastNameS: {color: "black"}});
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			}
 
 			let reqObj = {
@@ -281,6 +373,7 @@ class Register extends Component {
 					if (res.status === 200) {
 						// change alert later
 						alert("Registration complete");
+<<<<<<< HEAD
 						// on completing the registration we create the personal rydes object which
 						// every user will have
 						// we send the email address using the query string
@@ -300,6 +393,9 @@ class Register extends Component {
 							alert("Server error")
 
 						});
+=======
+						Actions.login({type: 'reset'}); //should use reset, i.e pop all scenes and use this as the intial scene. This is done to prevent a back button when we enter login page
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 					} else {
 						alert("Error");
 					}
@@ -313,6 +409,7 @@ class Register extends Component {
 	}
 
 
+<<<<<<< HEAD
 	render() {
 		return (
 			<ScrollView>
@@ -428,10 +525,167 @@ class Register extends Component {
 					/>
 				</TouchableOpacity>
 			</ScrollView>
+=======
+	previousPage() {
+    Actions.pop({});
+  }
+
+
+	render() {
+		return (
+			<Container>
+        <Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
+          <Left style={{flex: 1}}>
+            <Button transparent onPress={this.previousPage}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
+
+          <Body style={{flex: 1}}>
+            <Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
+          </Body>
+
+          <Right style={{flex: 1}}/>
+        </Header>
+
+        <Content style={{backgroundColor:'#fff'}}>
+					<View style={{ marginTop:30, paddingLeft:15, marginBottom:20}}>
+						<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(72, 110, 255)'}}>
+							Register
+						</Text>
+					</View>
+
+					<View style={{flex: 2, backgroundColor: '#fff', marginTop:10}}>
+							<List>
+								<ListItem icon>
+									<Body>
+										<TextInput
+											placeholder = "First Name"
+		        					underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({firstName: text, firstNameS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Last Name"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({lastName: text, lastNameS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Email"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({email: text, emailS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Password"
+		        					underlineColorAndroid = "transparent"
+											secureTextEntry = {true}
+											onChangeText = {(text) => this.setState({password: text, passwordS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Date of Birth"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({dob: text, dobS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Phone Number"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({phone: text})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<Form style={{paddingLeft:15}}>
+									<Picker
+										mode="dropdown"
+										placeholder="Gender"
+										selectedValue={this.state.gender}
+										onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}  //{this.onValueChange2.bind(this)}
+									>
+										<Item label="Gender" value="gender" />
+										<Item label="Male" value="male" />
+										<Item label="Female" value="female" />
+									</Picker>
+								</Form>
+
+								<ListItem itemDivider>
+              		<Text>Optional</Text>
+            		</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+									<TextInput
+										placeholder = "Plate Number"
+										underlineColorAndroid = "transparent"
+										onChangeText = {(text) => this.setState({plate: text, plateS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Drivers License"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+
+								<ListItem icon style={{marginTop:10}}>
+									<Body>
+										<TextInput
+											placeholder = "Car Model"
+											underlineColorAndroid = "transparent"
+											onChangeText = {(text) => this.setState({car: text, car: {color: "black"}})} />
+									</Body>
+									<Right />
+								</ListItem>
+							</List>
+
+							<View style = {{paddingLeft: 15, paddingBottom: 30, paddingRight: 15}}>
+								<TouchableOpacity onPress = {() => {this.submitButton()}}>
+									<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:54, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+										Register
+									</Text>
+								</TouchableOpacity>
+							</View>
+					</View>
+				</Content>
+			</Container>
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		);
 	}
 }
 
 module.exports = Register;
 
+<<<<<<< HEAD
 AppRegistry.registerComponent("Register", () => Register);
+=======
+AppRegistry.registerComponent("Register", () => Register);
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46

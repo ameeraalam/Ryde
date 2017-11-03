@@ -13,6 +13,7 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
+<<<<<<< HEAD
 import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 import config from "./../../config";
 
@@ -53,12 +54,24 @@ class RideBrowser extends Component{
         this.setState({rydes: allRydes});
     }
 
+=======
+
+class RideBrowser extends Component{
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 	render(){
 
 		return(
 
+<<<<<<< HEAD
 		    <View>
 		        {this.state.rydes}
+=======
+			<View style = {styles.mainStyle}>
+				<Text style = {styles.welcome}>
+					Ryde Browser
+				</Text>
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			</View>
 		);
 	}

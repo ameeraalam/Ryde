@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -20,15 +24,22 @@ import {
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
+<<<<<<< HEAD
 
 import config from "./../../config"
 
 
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 		this.address = config.ip;
+=======
+		this.address = "192.168.0.30";
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			plate: "Car plate number",
@@ -80,7 +91,11 @@ class DriverInfo extends Component {
 				formattedPlate += String.fromCharCode(this.state.plate.charCodeAt(i) - 32)
 			} else {
 				formattedPlate += this.state.plate[i];
+<<<<<<< HEAD
 			} 
+=======
+			}
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		}
 
 		return formattedPlate;
@@ -150,7 +165,12 @@ class DriverInfo extends Component {
 			if (res.status === 200) {
 
 				// if the info gets succesfully updated then we move to the driver's homepage
+<<<<<<< HEAD
 				alert("Link me to Driver's homepage")
+=======
+				let resObj = this.props.resObj
+				Actions.driverView({resObj});
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
 			} else {
 				alert("Error");
@@ -211,4 +231,9 @@ class DriverInfo extends Component {
 	}
 }
 
+<<<<<<< HEAD
 module.exports = DriverInfo;
+=======
+module.exports = DriverInfo;
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
