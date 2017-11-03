@@ -67,20 +67,17 @@ class RidePosting extends Component{
 		// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
 		let reqObj = {
 			driver: "this@email.com", // this.props.resObj.email, 
->>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-<<<<<<< HEAD
 			rideId: rideNum,// Needs to become a server side variable
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
 			currentLuggageCount: 0,
-			price: "$" + this.state.ridePrice
-=======
+			price: "$" + this.state.ridePrice,
 			rideNum: rideID,
 			pending: emptyArray,
 			members: emptyArray,
