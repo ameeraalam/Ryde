@@ -21,10 +21,7 @@ import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Foot
 
 // Unique static ID that will be assigned to a Ryde each time one is created
 var rideNum = 1;
-=======
-// Unique static ID that will be assigned to a Ryde each time one is created
 var rideID = 1;
->>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 var emptyArray = [];
 
 // Main class
