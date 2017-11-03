@@ -21,7 +21,9 @@ import {
 	Title,
 	Button,
 	Icon,
-	Right
+	Right,
+	Picker,
+	Item as FormItem
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -39,7 +41,8 @@ class Register extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
+		// this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = "https://ryde-matb.herokuapp.com/";
 		this.state = {
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
@@ -302,8 +305,6 @@ class Register extends Component {
 					body: JSON.stringify(reqObj)
 				}).then((res) => {
 					if (res.status === 200) {
-						// change alert later
-						alert("Registration complete");
 						// on completing the registration we create the personal rydes object which
 						// every user will have
 						// we send the email address using the query string
@@ -396,10 +397,10 @@ class Register extends Component {
 					</Body>
 				</ListItem>
 				<DateTimePicker
-          isVisible={this.state.isDateTimePickerVisible}
-          onConfirm={this._handleDatePicked}
-          onCancel={this._hideDateTimePicker}
-        />
+         			isVisible={this.state.isDateTimePickerVisible}
+          			onConfirm={this._handleDatePicked}
+          			onCancel={this._hideDateTimePicker}
+        		/>
 
 				<Form>
 					<Item floatingLabel>
@@ -410,15 +411,22 @@ class Register extends Component {
 					</Item>
 				</Form>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.genderS}>Gender</Label>
-						<Input
-							onChangeText = {(text) => this.setState({gender: text, genderS: {color: "grey"}})}
-						/>
 
-					</Item>
+				<Form style={{paddingLeft:15, marginTop:28, marginBottom: 28}}>
+					<Picker
+						mode="dropdown"
+						placeholder="Gender"
+						selectedValue={this.state.gender}
+						onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}
+					>
+						<Item label="Gender" value="gender" />
+						<Item label="Male" value="male" />
+						<Item label="Female" value="female" />
+					</Picker>
 				</Form>
+
+
+
 
 				<Text>  </Text>
 

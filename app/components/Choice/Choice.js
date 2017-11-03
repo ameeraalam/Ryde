@@ -35,22 +35,21 @@ class Choice extends Component {
 		// Otherwise a page will pop up asking for incomplete driver fields to be completed
 		if (!this.props.resObj.allInfoFilled) {
 			let resObj = this.props.resObj
-			// the resObj that gets passed on to Choice component will be
-			// passed to the DriverInfo component
+			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 			Actions.driverInfo({resObj});
 		} else {
+			let resObj = this.props.resObj
+			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 			// take to the driver's home page
-			// alert("Link me to driver's homepage");
-			this.setState({isPassenger: false});
-			Actions.driverview({});
+			Actions.driverView({resObj});
 		}
 	}
 
 	submitPassenger() {
 		// takes you to passenger's home page
-		// alert("Link me to passenger's homepage");
-		this.setState({isPassenger: true});
-		Actions.available({});
+		let resObj = this.props.resObj
+		// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
+		Actions.available({resObj});
 	}
 
 	render() {

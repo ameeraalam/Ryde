@@ -5,23 +5,25 @@ import {
 	View,
 	TextInput,
 	Image,
-	TouchableOpacity
+	TouchableOpacity,
+	Keyboard
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
-import styles from "./styles";
-import Config from '../../config';
 
+import styles from "./styles";
+
+import config from "./../../config"
 
 class Login extends Component {
-
-	constructor(props) {
+ constructor(props) {
 		super(props);
-		this.address = Config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
+		this.address = config.ip;
+		// this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = "https://ryde-matb.herokuapp.com/";
 		this.state = {
-			textEmail: "bw@r.com",
-			textPass: "bw"
+			textEmail: "Email",
+			textPass: "Password"
 		}
 	}
 
@@ -47,6 +49,7 @@ class Login extends Component {
 				// returned by the promise is used
 				resObjPromise.then(function(resObj) {
 					// We then pass the resObj as a property for the choise page
+					Keyboard.dismiss();
 					Actions.choice({resObj});
 				})
 			} else {
@@ -59,6 +62,7 @@ class Login extends Component {
 	}
 
 	registerButton() {
+		Keyboard.dismiss();
 		Actions.register({});
 	}
 
@@ -69,14 +73,13 @@ class Login extends Component {
 					style = {styles.inputBox}
 					placeholder = "Email"
          	underlineColorAndroid = "transparent"
-					// onChangeText = {(text) => this.setState({textEmail: text})}
+					onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
-					underlineColorAndroid = "transparent"
-					// onChangeText = {(text) => this.setState({textPass: text})}
+					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>

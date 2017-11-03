@@ -13,24 +13,60 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import config from "./../../config";
 
 class RideBrowser extends Component{
+
+    constructor(props){
+        super(props);
+        this.address = config.ip;
+        // this.baseUrl = "http://" + this.address + ":3000/";
+				this.baseUrl = "https://ryde-matb.herokuapp.com/";
+        this.state = {rydes: []}
+    }
+
+    componentDidMount(){
+        this.loadRydes();
+    }
+
+    loadRydes(){
+
+        let allRydes = [];
+        let myRes = this.props.passedResObj;
+        let resO = null;
+
+        for (let i = 0; i < this.props.resObj.dest.length;  i++){
+
+            resO = this.props.resObj.dest[i];
+
+            allRydes.push(
+                <View>
+                    <CardItem button onPress={() => Actions.passengerSearchProfile({myRes, resO})}> //add a key to get rid of the warning cu react native needs, do something like key={i}
+                    <Body>
+                    <Text>Driver Email: {myRes.driver}</Text>
+                    </Body>
+                    </CardItem>
+                </View>
+            );
+        }
+
+        this.setState({rydes: allRydes});
+    }
 
 	render(){
 
 		return(
 
-			<View style = {styles.mainStyle}>
-				<Text style = {styles.welcome}>
-					Ryde Browser
-				</Text>
+		    <View>
+		        {this.state.rydes}
 			</View>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-  	
+
   	mainStyle: {
     	flex: 1,
     	justifyContent: 'center',
@@ -44,14 +80,14 @@ const styles = StyleSheet.create({
   		borderColor: '#000000',
   		borderWidth: 1
   	},
- 	
+
  	welcome: {
     	fontSize: 20,
     	textAlign: 'center',
     	margin: 10,
     	color: '#000000',
   	},
-  	
+
   	instructions: {
     	textAlign: 'center',
     	color: '#FFFFFF',

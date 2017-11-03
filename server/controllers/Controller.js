@@ -5,6 +5,8 @@ let bcrypt = require("bcrypt"); // encryption module
 let Users = require("./../models/Users.js") // Users database model
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
+let PersonalRydes = require("./../models/PersonalRydes.js");
+let Rydes = require("./../models/Rydes.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -15,6 +17,8 @@ class Controller {
 		this.modelUsers = new Users();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
+		this.modelPersonalRydes = new PersonalRydes();
+		this.modelRydes = new Rydes();
 	}
 
 	intro() {
@@ -100,61 +104,382 @@ class Controller {
 		});
 	}
 
-
-	polling(req, res) {
-		setTimeout(() => {
+	createPersonalRyde(req, res) {
+		this.modelPersonalRydes.insert({"email": req.params.email, "rydesPostedAsDriver": [], "rydesAppliedToAsPassenger": [], "rydesAcceptedToAsPassenger": []}, () => {
 			res.sendStatus(200);
-		}, 30000);
-	}
-
-
-	storeChat(req, res) {
-		this.modelChat.query({"rydeId": req.body.rydeId}, (doc) => {
-			// we update the text array in the database by adding the new messages to it
-			// from the request objects body containing the array of texts
-			// we just need to loop over it and add to our mongodb doc's texts
-			for (let i = req.body.lastEntryAt; i < req.body.texts.length; ++i) {
-				doc.texts.push(req.body.texts[i]);
-			}
-			// if we find the object we then update it
-			this.modelChat.update({"rydeId": req.body.rydeId}, {rydeId: req.body.rydeId, texts: doc.texts}, () => {
-				// success in updating the object
-				res.sendStatus(200);
-			}, () => {
-				// failure to update the object
-				res.sendStatus(404);
-			});
-		}, () => {
-			// if we can't find the object we insert the object
-			let dbObj = {
-				rydeId: req.body.rydeId,
-				texts: req.body.texts
-			}
-
-			this.modelChat.insert(dbObj, () => {
-				// success in inserting the document
-				res.sendStatus(200);
-			}, () => {
-				// failure to insert the document
-				res.sendStatus(404);
-			});
-		});
-	}
-
-	getMesseges(req, res) {
-		let rydeId = Number(req.params.rydeId);
-		this.modelChat.query({"rydeId": rydeId}, (doc) => {
-			res.status(200).send(doc);
 		}, () => {
 			res.sendStatus(404);
 		});
 	}
+
+	getPassengerRequests(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			// on successfully querying the data we sent the res object back
+			// the response object
+			let resObj = {};
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				// creates an attribute within the res object with the id name of the ryde
+				// which will hold values of arrays containing the requests to that ryde
+				resObj[doc.rydesPostedAsDriver[i].rydeId] = [];
+				for (let j = 0; j < doc.rydesPostedAsDriver[i].requests.length; ++j) {
+					resObj[doc.rydesPostedAsDriver[i].rydeId].push(doc.rydesPostedAsDriver[i].requests[j]);
+				}
+			}
+			// this for loop will generate a response object which will loop like this:
+			// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
+			// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
+			res.status(200).send(resObj);
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+
+	acceptedUpdatedRydes(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+
+			let rydeToModify = undefined;
+
+			let rydeIndexModified = 0;
+
+			// we loop over the array of rydes posted by the driver
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				// if the ryde object in the rydesPostedAsDriver array's id matches the id of the card
+				// we assign the ryde object to a variable
+				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
+					rydeToModify = doc.rydesPostedAsDriver[i];
+					// we save the index of the array for which the ryde object we are modifying	
+					rydeIndexModified = i;
+
+					// we break the loop as we no longer need to iterate the array
+					break;
+				}
+			}
+			// we get the user object form the request array to be inserted
+			// back into the members array of the ryde object
+			let userMember = undefined;
+			// we loop over the requests array of the ryde object
+			for (let i = 0; i < rydeToModify.requests.length; ++i) {
+				if (rydeToModify.requests[i].email === req.body.acceptedPassengerEmail) {
+					userMember = rydeToModify.requests[i];
+					// we remove the user from the requests array
+					rydeToModify.requests.splice(i, 1);
+				}
+			}
+			// we insert the user the user to the members of the ride now
+			rydeToModify.members.push(userMember);
+
+			// we update the ryde at the index that we just modified
+			doc.rydesPostedAsDriver[rydeIndexModified] = rydeToModify;
+
+			this.modelPersonalRydes.update({"email": req.params.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver} ,(doc) => {
+				// now what we need to do is update the universal Rydes database, and update only the fields that we need to modify
+				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "requests": rydeToModify.requests}, () => {
+					// on success callback we sent the 200 code
+					res.sendStatus(200);
+				}, () => {
+					// on unsuccessful callback we sent 404 code
+					res.sendStatus(404);
+				});
+			}, () => {
+				// error on trying to update
+				res.sendStatus(404);
+			});
+
+
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+
+		});
+	}
+
+	rejectedUpdatedRydes(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let rydeToModify = undefined;
+
+			let rydeIndexModified = 0;
+
+			// we loop over the array of rydes posted by the driver
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				// if the ryde object in the rydesPostedAsDriver array's id matches the id of the card
+				// we assign the ryde object to a variable
+				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
+					rydeToModify = doc.rydesPostedAsDriver[i];
+					// we save the index of the array for which the ryde object we are modifying	
+					rydeIndexModified = i;
+
+					// we break the loop as we no longer need to iterate the array
+					break;
+				}
+			}
+
+
+			// we loop over the requests array of the ryde object
+			for (let i = 0; i < rydeToModify.requests.length; ++i) {
+				if (rydeToModify.requests[i].email === req.body.rejectedPassengerEmail) {
+					// we remove the user from the requests array
+					rydeToModify.requests.splice(i, 1);
+				}
+			}
+	
+			// we update the ryde at the index that we just modified
+			doc.rydesPostedAsDriver[rydeIndexModified] = rydeToModify;
+
+			this.modelPersonalRydes.update({"email": req.params.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver} ,(doc) => {
+				// now what we need to do is update the universal Rydes database, and update only the fields that we need to modify
+				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "requests": rydeToModify.requests}, () => {
+					// on success callback we sent the 200 code
+					res.sendStatus(200);
+				}, () => {
+					// on unsuccessful callback we sent 404 code
+					res.sendStatus(404);
+				});
+			}, () => {
+				// error on trying to update
+				res.sendStatus(404);
+			});
+
+
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+
+		});
+	}
+
+
+	postRyde(req, res){
+		
+		this.modelRydes.insert(req.body, () => {
+			console.log("Ryde added to Ryde DB");
+				
+			/*this.modelPersonalRydes.updatePush({"email": req.body.email}, {"rydesPostedAsDriver": req.body}, () => {
+				console.log("Ryde added to PersonalRyde DB");
+			}, () => {
+				console.log("Failed to add Ryde to users PersonalRyde DB");
+			});*/
+
+			res.sendStatus(200);
+		
+		}, () => {
+			res.sendStatus(404);
+			console.log("Failed to add Ryde to DB");
+		});
+	}
+
+	findRyde(req, res){
+		
+		// Looking for Rydes with same destination
+		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
+
+			let potentialRides = cursor.toArray();
+			let sameDestination = {dest:[]};
+
+			potentialRides.then((response) => {
+				
+				console.log("Res length is " + response.length);	
+				for (let i = 0; i < response.length; i++){
+
+					if (response[i].from === req.body.from){
+						console.log("Ryde found!");	
+						sameDestination.dest.push(response[i]);
+					}
+				}
+
+				console.log(sameDestination);
+
+				res.status(200).send(sameDestination);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+
+	//for getting posts as a driver
+	driverView(req, res){
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
+				obj.push(doc.rydesPostedAsDriver[i])
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
+	//for getting pending requests as a passenger
+	pending(req,res){
+		console.log(req.params.email);
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
+				obj.push(doc.rydesAppliedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	//for getting available requests as a passenger
+	available(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let obj = [];
+			for(let i=0;i<doc.rydesAcceptedToAsPassenger.length;i++){
+				obj.push(doc.rydesAcceptedToAsPassenger[i]);
+			}
+			res.status(200).send(obj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+  	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
+	//use updatePush for the request for passengers.
+	//update the ryde collection, requests [] with the passenger info
+	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
+	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
+	passengerSearch(req,res) {
+		this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":req.body.driverRes} ,() => {
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"requests":req.body.myRes},() => {
+
+				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
+
+					let rydeToModify = undefined;
+					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
+					let indexModified = 0;
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						// we find the specific ryde from the array of rydes that the driver posted
+						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
+							rydeToModify = doc.rydesPostedAsDriver[i];
+							indexModified = i;
+						}
+					}
+
+					rydeToModify.requests.push(req.body.myRes);
+
+					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
+
+					this.modelPersonalRydes.update({"email": req.body.myRes.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+						res.sendStatus(200);
+					}, () => {
+						res.sendStatus(404);
+					});
+
+
+				}, () => {
+					res.sendStatus(404);
+				});
+
+
+			}, () => {
+				res.sendStatus(404);
+			});
+		}, () => {
+			res.sendStatus(404);
+		});
+	}
+
 
 	err(req, res) {
 		console.log("Processing error....");
 		res.sendStatus(404);
 	}
 
+
+	socketIntro() {
+		console.log("Socket is open on port 4000...");
+	}
+
+
+	connection(socket) {
+		console.log("Connection received from " +  socket.id + "...");
+	}
+
+	idEnquiry(socket) {
+		console.log("Id has been sent by the socket...");
+		// creating a promise for the async socket event
+		return new Promise((resolve, reject) => {
+			socket.on("idEnquiry", (id) => {
+				console.log("Socket request " + id +  "...");
+				socket.join(id);
+				resolve(id);
+			})
+		});
+	}
+	
+	initMessages(socket, id) {
+		this.modelChat.query({"rydeId": id}, (doc) => {
+
+			// successful in finding the object from mongodb
+			console.log("Success emission...");
+			socket.emit(id + "/success");
+
+			console.log(id + "/initMessages" + " emission...");
+			socket.emit(id + "/initMessages", doc);
+
+		}, () => {
+
+			// failure in finding the object in mongodb
+			console.log("Failure emission...");
+			socket.emit(id + "/failure");
+		});
+	}
+
+
+	storeChat(io, socket, id) {
+		socket.on(id + "/storeChat", (reqObj) => {
+			console.log("Socket request " + id + "/storeChat...");
+			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
+				// we update the text array in the database by adding the new messages to it
+				// from the request objects body containing the new text
+				doc.texts.push({username: reqObj.username, text: reqObj.text});
+				// if we find the object we then update it
+				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, (doc) => {
+					// sending socket connection for success in the job
+					console.log("Success emission...");
+					socket.emit(id + "/success");
+
+					// now to broadcast the message to everyone in the chat room
+					console.log("Broadcasting message from room-" + id + " emission");
+					io.to(id).emit(id + "/broadcast", doc);
+
+				}, () => {
+					// sending socket connection for failure in the job
+					console.log("Failure emission...");
+					socket.emit(id + "/failure");
+				});
+			}, () => {
+				// if we can't find the object we insert the object
+				let dbObj = {
+					rydeId: reqObj.rydeId,
+					texts: []
+				}
+				// pushing the message received to the db object's texts attribute
+				// which is an array
+				dbObj.texts.push({username: reqObj.username, text: reqObj.text});
+				this.modelChat.insert(dbObj, () => {
+					// sending socket connection for success in the job
+					console.log("Success emission...");
+					socket.emit(id + "/success");
+
+					// now we broadcast the message to everyone in the chat room
+					console.log("Broadcasting message from room-" + id + " emission");
+					io.to(id).emit(id + "/broadcast", dbObj);
+
+				}, () => {
+					// sending socket connection for failure in the job
+					console.log("Failure emission...");
+					socket.emit(id + "/failure");
+				});
+
+			});
+		});
+	}
 }
 
 module.exports = Controller;

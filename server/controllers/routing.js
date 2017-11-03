@@ -14,6 +14,7 @@ module.exports = function() {
 	/* Express object created */
 	var app = express();
 
+	app.set("port", (process.env.PORT || 3000));
 	app.use(express.static(ROOT));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -22,9 +23,11 @@ module.exports = function() {
 		next(); // next without parameter simply invokes the next route in the file
 	});
 
-	/* Routings */
+	/* Socket io configuration */
+	let server = require("http").createServer(app)
+	var io = require("socket.io")(server); 
 
-	app.get("/", (req, res) => { CONTROLLER.index(req, res); });
+	/* Routings */
 
 	app.post("/login", (req, res) => { CONTROLLER.login(req, res); });
 
@@ -34,13 +37,28 @@ module.exports = function() {
 
 	app.post("/driverInfo", (req, res) => { CONTROLLER.driverInfo(req, res); });
 
-	app.post("/:rideId/chat", (req, res) => { CONTROLLER.chat(req, res); });
-
-	app.get("/polling", (req, res) => { CONTROLLER.polling(req, res); });
-
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
+					
+	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
 
-	app.get("/:rydeId/getMesseges", (req, res) => { CONTROLLER.getMesseges(req, res); })
+	app.get("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
+
+	app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); })
+
+	app.post("/:email/rejectedUpdatedRydes", (req, res) => { CONTROLLER.rejectedUpdatedRydes(req, res); });
+
+	app.post("/postRyde", (req, res) => { CONTROLLER.postRyde(req, res); });
+
+	app.post("/findRyde", (req, res) => { CONTROLLER.findRyde(req, res); });
+	
+	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
+
+	app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
+
+	app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
+
+	app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); })
+
 
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
@@ -48,6 +66,21 @@ module.exports = function() {
 	app.get('*', (req, res) => { CONTROLLER.err(req, res); });
 
 	app.post("*", (req, res) => { CONTROLLER.err(req, res); });
+
+	/* Socket Routing */
+
+	io.on("connection", (socket) => {
+		CONTROLLER.connection(socket);
+		
+		// CONTROLLER.idEnquiry returns a promise that we need to resolve
+		CONTROLLER.idEnquiry(socket).then((id) => {
+
+			CONTROLLER.initMessages(socket, id);
+
+			CONTROLLER.storeChat(io, socket, id);
+		});
+
+	});
 
 
 	// The compiler probably uses a queue datastructure to handle the functions responsible
@@ -59,6 +92,8 @@ module.exports = function() {
 
 	// Functions like setTimeout pushes the funciton down the function execution queue.
 	
-	app.listen(3000, CONTROLLER.intro());
+	server.listen(app.get("port"), CONTROLLER.intro());
+
+//	server.listen(4000, CONTROLLER.socketIntro());
 
 }

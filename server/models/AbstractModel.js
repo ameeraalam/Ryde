@@ -1,12 +1,12 @@
 "use strict";
 
-/*
+/*	
 	NOTE** - The reason that the successCallBack and failureCallBack will work and can
 	successfully access the variables is because the class Users has a composition relationship
 	with the Controller, this means that because of lexical scoping the Users class can access
 	the variables scoped within the Controller class. I am specifying this to remind you that
 	the function that invokes has to supply all the variables and resources for the function being
-	passed on to do the job!
+	passed on to do the job!		
 
 */
 
@@ -79,7 +79,13 @@ class AbstractModel {
 						// calling an undefined variable
 						console.log("Item is successfully updated in the Ryde database...");
 						if (successCallBack) {
-							successCallBack();
+							this.query(query, (doc) => {
+								successCallBack(doc);
+							}, () => {
+								if (failureCallBack) {
+									failureCallBack();
+								}
+							})
 						}
 					}
 					db.close();
@@ -153,6 +159,57 @@ class AbstractModel {
 				});
 			}
 		});
+	}
+
+
+	findAll(query, successCallBack, failureCallBack) {
+		return this.MongoClient.connect(this.db, (err, db) => {
+			
+			if (err){	
+				console.log("Failed...");
+				if (failureCallBack){
+					failureCallBack();
+				}
+			} else {
+
+				var cursor = db.collection(this.collection).find(query);
+				 if (successCallBack){
+				 	successCallBack(cursor);
+				 }
+			}
+			
+			db.close();
+			
+		});
+	}
+
+	//used for updating arrays in collections
+	updatePush(query, updatedFields, successCallBack, failureCallBack) {
+		this.MongoClient.connect(this.db, (err, db) => {
+			if (err) {
+				console.log("Failed to connect to the Ryde database...");
+			} else {
+				db.collection(this.collection).update(query, {$push: updatedFields}, (err, doc) => {
+					if (err) {
+						console.log("Error in updating the item in the Ryde database...");
+						console.log(err);
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						if (failureCallBack) {
+							failureCallBack();
+						}
+					} else {
+						// check to see if a function is provided before calling it to prevent
+						// calling an undefined variable
+						console.log("Item is successfully updated in the Ryde database...");
+						if (successCallBack) {
+							successCallBack(doc);
+						}
+					}
+					db.close();
+				});
+			}
+		})
 	}
 
 }

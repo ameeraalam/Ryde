@@ -14,14 +14,18 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+
+import config from "./../../config";
 
 // Main class
 class RideSearch extends Component{
 
 	constructor(props){
 		super(props);
-		this.address = "192.168.0.1";
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.address = config.ip;
+		// this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = "https://ryde-matb.herokuapp.com/";
 		this.state = {
 			fromLocation: "From:",
 			toLocation: "To:",
@@ -34,6 +38,8 @@ class RideSearch extends Component{
 	// Code for functionality of the Find button on the app page
 	findButton(){
 
+		let passedResObj = this.props.resObj;
+
 		let reqObj = {
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
@@ -42,19 +48,30 @@ class RideSearch extends Component{
 			luggage: this.state.numLuggage
 		}
 
-		fetch(this.baseUrl + "", {
-			method: "GET",
+		fetch(this.baseUrl + "findRyde", {
+			method: "POST",
 			headers: {
-				"Accept:": "application/json",
+				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+
+			if (res.status === 200){
+
+				let resObjPromise = res.json();
+
+				resObjPromise.then((resObj) => {
+
+					Actions.rideBrowser({passedResObj, resObj})
+				})
+			} else {
+
+				alert("Error encountered!");
+			}
+		}, (err) => {
+			alert(err);
 		});
-
-		// get object back
-
-		// pass into here
-		Actions.rydeBrowser({});
 	}
 
 	// App visuals
@@ -63,14 +80,14 @@ class RideSearch extends Component{
 		return(
 
 			<View style = {styles.mainStyle}>
-				
+
 				{/*Instruction Text*/}
 				<Text style = {styles.welcome}>
 					Find a Ryde
 				</Text>
 
 				{/*Input box for the from location*/}
-				<TextInput 
+				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.fromLocation}
 					onChangeText = {(text) => this.setState({fromLocation: text})}
@@ -106,10 +123,9 @@ class RideSearch extends Component{
 
 				{/*Button to use the findButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.findButton()}}>
-					<Image
-						style = {styles.myImage}
-						source = {require("./images/findImage.jpg")}
-					/>
+					<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:200, fontFamily: 'sans-serif'}}>
+						Find
+					</Text>
 				</TouchableOpacity>
 
 			</View>
@@ -119,7 +135,7 @@ class RideSearch extends Component{
 
 // Styling
 const styles = StyleSheet.create({
-  	
+
   	mainStyle: {
     	flex: 1,
     	justifyContent: 'center',
@@ -133,14 +149,14 @@ const styles = StyleSheet.create({
   		borderColor: '#000000',
   		borderWidth: 1
   	},
- 	
+
  	welcome: {
     	fontSize: 20,
     	textAlign: 'center',
     	margin: 10,
     	color: '#000000',
   	},
-  	
+
   	instructions: {
     	textAlign: 'center',
     	color: '#FFFFFF',

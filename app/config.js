@@ -1,6 +1,5 @@
-
-const baseUrl = {
-  ip: '192.168.0.29'
+let config = {
+	ip: "172.17.65.229"
 }
 
-module.exports = baseUrl;
+module.exports = config

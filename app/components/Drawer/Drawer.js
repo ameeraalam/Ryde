@@ -20,7 +20,7 @@ class Drawer extends Component {
   switchRole() { //check if this.props.isPassenger is undefined first
     if (this.props.isPassenger !== undefined) {
       if (this.props.isPassenger) {
-  		  Actions.driverview({type: 'reset'});
+  		  Actions.driverView({type: 'reset'});
       } else {
         Actions.available({type: 'reset'});
       }
@@ -60,7 +60,7 @@ class Drawer extends Component {
                     <Icon name="swap" style={{color: 'rgb(72, 110, 255)'}} />
                   </Left>
                   <Body>
-                    <Text style={{color:'black', fontSize:18, fontFamily: 'sans-serif'}}>Switch {this.props.role}</Text>
+                    <Text disabled style={{color:'black', fontSize:18, fontFamily: 'sans-serif'}}>Switch {this.props.role}</Text>
                   </Body>
                   <Right />
                 </ListItem>

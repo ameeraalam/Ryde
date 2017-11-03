@@ -15,8 +15,11 @@ import {
 	Actions
 } from 'react-native-router-flux';
 
+import config from "./../../config";
+import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+
 // Unique static ID that will be assigned to a Ryde each time one is created
-var rideID = 1;
+var rideNum = 1;
 var emptyArray = [];
 
 // Main class
@@ -24,34 +27,39 @@ class RidePosting extends Component{
 
 	constructor(props){
 		super(props);
-		this.address = "172.17.137.0";
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.address = config.ip;
+		// this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = "https://ryde-matb.herokuapp.com/";
 		this.state = {
 			fromLocation: "From:",
 			toLocation: "To:",
 			travelDate: "Date: (DD/MM)",
 			numPassengers: "Passenger Spots:",
-			numLuggage: "Luggage Space:"
-		} 
+			numLuggage: "Luggage Space:",
+			ridePrice: "Price per seat:"
+		}
 	}
 
+
+	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
 	// Code for functionality of the Post button on the app page
 	postButton(){
-		
-		// need to pass Ryde ID here
-		// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
+
+		let resObj = this.props.resObj;
+
 		let reqObj = {
-			driver: "this@email.com", // this.props.resObj.email, 
+			driver: this.props.resObj.email,
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideNum: rideID,
+			rideId: rideNum,
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
-			currentLuggageCount: 0
+			currentLuggageCount: 0,
+			price: "$" + this.state.ridePrice
 		}
 
 		fetch(this.baseUrl + "postRyde",{
@@ -63,16 +71,16 @@ class RidePosting extends Component{
 			body: JSON.stringify(reqObj)
 
 		}).then((res) => {
-			
+
 			if (res.status === 200){
 
-				rideID++;
+				//rideId++;
 				alert("Ryde Posted!");
 				// Need to pass user Obj here
-				Actions.driverView({});
+				Actions.driverView({resObj});
 			} else {
-				
-				alert("Server Error!");
+
+				alert("Server Error!!!!!");
 			}
 		}, (err) => {
 
@@ -82,11 +90,11 @@ class RidePosting extends Component{
 
 	// App visuals
 	render(){
-		
+
 		return(
-			
+
 			<View style = {styles.mainStyle}>
-				
+
 				{/*Instruction Text*/}
 				<Text style = {styles.welcome}>
 					Post Your Ryde
@@ -98,42 +106,49 @@ class RidePosting extends Component{
 					placeholder = {this.state.fromLocation}
 					onChangeText = {(text) => this.setState({fromLocation: text})}
 				/>
-				
+
 				{/*Input box for the to location*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.toLocation}
 					onChangeText = {(text) => this.setState({toLocation: text})}
 				/>
-				
+
 				{/*Input box for the travel date*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.travelDate}
 					onChangeText = {(text) => this.setState({travelDate: text})}
 				/>
-				
+
 				{/*Input box for the number of passengers*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numPassengers}
 					onChangeText = {(text) => this.setState({numPassengers: text})}
 				/>
-				
+
 				{/*Input box for the amount of luggage*/}
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = {this.state.numLuggage}
 					onChangeText = {(text) => this.setState({numLuggage: text})}
 				/>
-				
+
+				{/*Input box for the price of each seat*/}
+				<TextInput
+					style = {styles.inputBox}
+					placeholder = {this.state.ridePrice}
+					onChangeText = {(text) => this.setState({ridePrice: text})}
+				/>
+
 				{/*Button to use the postButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.postButton()}}>
-					<Image
-						source = {require("./images/postImage.jpg")}
-					/>
+					<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:200, fontFamily: 'sans-serif'}}>
+						Post
+					</Text>
 				</TouchableOpacity>
-			
+
 			</View>
 		);
 	}
@@ -142,7 +157,7 @@ class RidePosting extends Component{
 
 // Styling
 const styles = StyleSheet.create({
-  	
+
   	mainStyle: {
     	flex: 1,
     	justifyContent: 'center',
@@ -156,14 +171,14 @@ const styles = StyleSheet.create({
   		borderColor: '#000000',
   		borderWidth: 1
   	},
- 	
+
  	welcome: {
     	fontSize: 20,
     	textAlign: 'center',
     	margin: 10,
     	color: '#000000',
   	},
-  	
+
   	instructions: {
     	textAlign: 'center',
     	color: '#FFFFFF',
