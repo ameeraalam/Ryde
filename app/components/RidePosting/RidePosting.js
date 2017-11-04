@@ -40,7 +40,9 @@ class RidePosting extends Component{
 	}
 
 
-	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
+	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
+	// doesnt get affected
+	
 	// Code for functionality of the Post button on the app page
 	postButton(){
 		
@@ -48,6 +50,8 @@ class RidePosting extends Component{
 
 		let reqObj = {
 			driver: this.props.resObj.email,
+			firstName: this.props.resObj.firstName,
+			lastName: this.props.resObj.lastName,
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
