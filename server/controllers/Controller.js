@@ -7,6 +7,7 @@ let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that genera
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
+let RydeID = require("./../models/RydeID.js");
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -19,6 +20,7 @@ class Controller {
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
+		this.rydeID = new RydeID();
 	}
 
 	intro() {
@@ -144,7 +146,7 @@ class Controller {
 				console.log("Res length is " + response.length);	
 				for (let i = 0; i < response.length; i++){
 
-					if (response[i].from === req.body.from){
+					if ((response[i].from === req.body.from) && (response[i].to === req.body.to)){
 						console.log("Ryde found!");	
 						sameDestination.dest.push(response[i]);
 					}
@@ -182,6 +184,33 @@ class Controller {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
 		});
+	}
+
+	incrementRydeID(req, res){
+
+		// Variable that current ID value from the database will be assigned to
+		let currentID = undefined;
+
+		// Query the DB to find the object with the Ryde ID we want to increment
+		this.rydeID.query({"queryField": req.body.query}, (doc) => {
+
+			currentID = doc.rydeID;
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		});
+
+		// Increment ID
+		currentID++;
+
+		// Update object in DB with the incremented Ryde ID
+		this.rydeID.update({"queryField": req.body.query}, {rydeID: currentID}, () => {
+			res.sendStatus(200);
+		}, () => {
+			res.sendStatus(404);
+		});
+
+		console.log("Ryde ID has been incremented to " + currentID);
 	}
 
 	driverView(req, res){
