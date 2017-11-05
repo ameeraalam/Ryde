@@ -43,7 +43,7 @@ class RideBrowser extends Component{
                 <View>
                     <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, currentRyde})}>
                     <Body>
-                    <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName + "    Passenger Spots" + currentRyde}</Text>
+                    <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName + "    Passenger Spots" + currentRyde.}</Text>
                     <Text>Price: {currentRyde.price}</Text>
                     </Body>
                     </CardItem>
