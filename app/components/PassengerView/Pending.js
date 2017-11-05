@@ -24,6 +24,12 @@ class Pending extends Component {
     }
   }
 
+  findButton(){
+
+    let resObj = this.props.resObj;
+    Actions.rideSearch({resObj});
+  }
+
   retrievePendingPosts(){
 
     return fetch(this.baseUrl + this.props.resObj.email + '/pending', {
@@ -39,6 +45,7 @@ class Pending extends Component {
             for(let i=0;i<resObj.length;i++){
               let resO = resObj[i]; //ride obj
               let myRes = this.props.resObj; //passenger obj
+
               dataSet.push(
                 <View key={i}>
                   <CardItem button onPress={()=>
@@ -68,6 +75,8 @@ class Pending extends Component {
 
   render() {
     let resObj = this.props.resObj;
+    alert(JSON.stringify(this.state.data));
+
     return (
       <Container>
       <Header>
@@ -85,7 +94,7 @@ class Pending extends Component {
           <Title>RYDE</Title>
         </Body>
         <Right>
-          <Button transparent>
+          <Button onPress = {() => {this.findButton()}} transparent>
             <Icon name='search' />
           </Button>
         </Right>

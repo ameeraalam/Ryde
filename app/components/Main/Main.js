@@ -37,7 +37,7 @@ export default () => (
 			<Scene key = "availableProfile" component = {AvailableProfile} hideNavBar/>
 			<Scene key = "passengerSearchProfile" component = {PassengerSearchProfile} hideNavBar />
 			<Scene key = "pendingProfile" component = {PendingProfile} hideNavBar/>
-			<Scene key = "driverProfile" component = {DriverProfile} hideNavBar />
+			<Scene key = "driverRideProfile" component = {DriverProfile} hideNavBar />
 			
 			<Scene key = "ridePosting" component = {RidePosting} title = "Ryde"/>
 			<Scene key = "rideSearch" component = {RideSearch} title = "Ryde"/>

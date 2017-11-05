@@ -139,6 +139,8 @@ class DriverInfo extends Component {
 			car: this.state.car
 		}
 
+		let resObj = this.props.resObj
+
 		fetch(this.baseUrl + "driverInfo", {
 			method: "POST",
 			headers: {
@@ -148,10 +150,7 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-
-				// if the info gets succesfully updated then we move to the driver's homepage
-				alert("Link me to Driver's homepage")
-
+				Actions.driverView({resObj});
 			} else {
 				alert("Error");
 			}

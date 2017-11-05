@@ -15,14 +15,18 @@ import config from "./../../config";
 //this is the profile you link to when you click on a ride you have posted as a driver. make sure to pass both ride and passenger obj
 class DriverRideProfile extends Component {
 
-  constructor(props){
-	super(props);
-  this.address = config.ip;
-  this.baseUrl = "http://" + this.address + ":3000/";
 
+  constructor(props){
+    super(props);
+    this.address = config.ip;
+    this.baseUrl = "http://" + this.address + ":3000/";
 	}
 
   render() {
+
+    let resObjDriver = this.props.resObjDriver;
+    let resObjRide = this.props.resObjRide;
+
     return (
       <Container>
       <Header>
@@ -58,35 +62,37 @@ class DriverRideProfile extends Component {
       />
 
       <CardItem>
-      <Text>Driver E-mail: {this.props.resO.driver}</Text>
+        <Text>Driver E-mail: {this.props.resObjRide.driver}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>Rating: {this.props.resO.rating}</Text>
+        <Text>Rating: {this.props.resObjRide.rating}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>Luggage: {this.props.resO.luggage} </Text>
+        <Text>Luggage: {this.props.resObjRide.numLuggage} </Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>Passengers: {this.props.resO.passengers}</Text>
+        <Text>Passengers: {this.props.resObjRide.numPassengers}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>Price: {this.props.resO.price}</Text>
+        <Text>Price: {this.props.resObjRide.price}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>From: {this.props.resO.from}</Text>
+        <Text>From: {this.props.resObjRide.from}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <CardItem>
-      <Text>To: {this.props.resO.to}</Text>
+        <Text>To: {this.props.resObjRide.to}</Text>
       </CardItem>
-      <Text></Text>
+        <Text></Text>
       <View style={styles.container}>
-      <Button large info><Text style={styles.text}>View Requests</Text>
+      <Button large info onPress = {() => {
+          Actions.requestedRides({resObjDriver, resObjRide});
+      }}><Text style={styles.text}>View Requests</Text>
       </Button><Button large info><Text style={styles.text}>Chat</Text></Button>
       </View>
       </Content>

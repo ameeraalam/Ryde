@@ -162,7 +162,6 @@ class Register extends Component {
 				}
 				return emailCheck;
 			} else {
-				alert("A user with the email is already registered");
 				return emailCheck;
 			}
 		}, (err) => {
@@ -459,7 +458,7 @@ class Register extends Component {
 					<Item floatingLabel>
 						<Label style = {this.state.carS}>Car Model</Label>
 						<Input
-							onChangeText = {(text) => this.setState({car: text, car: {color: "grey"}})}
+							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
 						/>
 					</Item>
 				</Form>

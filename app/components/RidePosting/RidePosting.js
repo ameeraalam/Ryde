@@ -40,20 +40,23 @@ class RidePosting extends Component{
 	}
 
 
-	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING
+	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
+	// doesnt get affected
+	
 	// Code for functionality of the Post button on the app page
 	postButton(){
-		
 		let resObj = this.props.resObj;
 
 		let reqObj = {
 			driver: this.props.resObj.email,
+			firstName: this.props.resObj.firstName,
+			lastName: this.props.resObj.lastName,
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideId: rideNum,
+			rydeId: rideNum,// Needs to become a server side variable
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
@@ -68,22 +71,16 @@ class RidePosting extends Component{
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
-
 		}).then((res) => {
-			
 			if (res.status === 200){
-
-				//rideId++;
-				alert("Ryde Posted!");
 				// Need to pass user Obj here
 				Actions.driverView({resObj});
 			} else {
-				
-				alert("Server Error!!!!!");
+				alert("Connection error");
 			}
 		}, (err) => {
 
-			alert("Server Error!");
+			alert("Server Error");
 		});
 	}
 
@@ -143,7 +140,7 @@ class RidePosting extends Component{
 				
 				{/*Button to use the postButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.postButton()}}>
-					<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:200, fontFamily: 'sans-serif'}}>
+					<Text>
 						Post
 					</Text>
 				</TouchableOpacity>

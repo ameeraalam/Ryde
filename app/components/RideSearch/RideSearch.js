@@ -122,8 +122,8 @@ class RideSearch extends Component{
 
 				{/*Button to use the findButton function with an image being used for the button*/}
 				<TouchableOpacity onPress = {() => {this.findButton()}}>
-					<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:200, fontFamily: 'sans-serif'}}>
-						Find
+					<Text>
+						Query
 					</Text>
 				</TouchableOpacity>
 

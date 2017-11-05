@@ -41,11 +41,11 @@ class DriverView extends Component {
 					resObjPromise.then((resObj) => {
 						dataSet = [];
 						for(let i=0;i<resObj.length; i++){
-							let resO = resObj[i];
-							let myRes = this.props.resObj;
+							let resObjRide = resObj[i]; //ride information
+							let resObjDriver = this.props.resObj; //driver information
 						dataSet.push(
 							<View key={i}>
-							<CardItem button onPress={() => Actions.driverProfile({resO,myRes})}>
+							<CardItem button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
 								<Body>
 									<Text>From: {resObj[i].from}</Text>
 									<Text>To: {resObj[i].to}</Text>
@@ -77,15 +77,15 @@ class DriverView extends Component {
     return (
       <Container>
         <Header>
-          <Left>
+          <Left style = {{flex: 1}}>
             <Button transparent>
               <Icon name='menu' />
             </Button>
           </Left>
-          <Body>
-            <Title></Title>
+          <Body style = {{flex: 1}}>
+            <Title>Dashboard</Title>
           </Body>
-          <Right>
+          <Right style = {{flex: 1}}>
             <Button onPress = {() => {this.postButton()}} transparent>
               <Icon name='add' />
             </Button>
@@ -94,18 +94,6 @@ class DriverView extends Component {
 				<Content>
 				{this.state.data}
 				</Content>
-				      <Footer>
-        <FooterTab>
-                  <Button active vertical>
-                         <Icon active name="checkmark-circle" color='white' size={24} />
-                         <Text style={styles.text}> Posted </Text>
-                      </Button>
-                      <Button vertical>
-                         <Icon name="help" color='white' size={24}  />
-                         <Text style={styles.text}> Requested </Text>
-                      </Button>
-                   </FooterTab>
-               </Footer>
       </Container>
 
     );

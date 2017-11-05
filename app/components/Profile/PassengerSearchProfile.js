@@ -23,8 +23,8 @@ class PassengerSearchProfile extends Component {
   requestButton(){
     let reqObj = {
 
-      myRes: this.props.myRes,
-      driverRes: this.props.resO
+      myRes: this.props.currentPassenger,
+      driverRes: this.props.currentRyde
     }
 
     fetch(this.baseUrl + "passengerSearch", {
@@ -40,16 +40,17 @@ class PassengerSearchProfile extends Component {
 				alert("Request succesfully sent.")
 
 			} else {
-				alert("Error");
+				alert("Cannot request twice");
 			}
 		}, (err) => {
 			if (err) {
-				alert(err);
+				alert("Cannot request");
 			}
 		});
   }
 
   render() {
+
     return (
       <Container>
       <Header>
@@ -85,31 +86,31 @@ class PassengerSearchProfile extends Component {
           />
 
           <CardItem>
-          <Text>Driver E-mail: {this.props.resO.driver}</Text>
+          <Text>Driver E-mail: {this.props.currentRyde.driver}</Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>Rating: {this.props.resO.rating}</Text>
+          <Text>Rating: {this.props.currentRyde.rating}</Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>Luggage: {this.props.resO.luggage} </Text>
+          <Text>Luggage: {this.props.currentRyde.numLuggage} </Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>Passengers: {this.props.resO.passengers}</Text>
+          <Text>Passengers: {this.props.currentRyde.numPassengers}</Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>Price: {this.props.resO.price}</Text>
+          <Text>Price: {this.props.currentRyde.price}</Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>From: {this.props.resO.from}</Text>
+          <Text>From: {this.props.currentRyde.from}</Text>
           </CardItem>
           <Text></Text>
           <CardItem>
-          <Text>To: {this.props.resO.to}</Text>
+          <Text>To: {this.props.currentRyde.to}</Text>
           </CardItem>
           <Text></Text>
           </Content>

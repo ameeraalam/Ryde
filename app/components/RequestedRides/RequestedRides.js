@@ -28,10 +28,7 @@ class RequestedRides extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		this.user = this.props.resObj;
-		// database is queryed with the driver's email and the database that is
-		// queried is PersonalRydes database
-		//this.user = {email: "ameeraam13@hotmail.com"};
+		this.user = this.props.resObjDriver;
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.swipeOutButtons = [{
 			text: "Accept",
@@ -67,36 +64,28 @@ class RequestedRides extends Component {
 	getPassengerRequests() {
 		// we sent a query string to the server with the email of the driver
 		fetch(this.baseUrl + this.user.email + "/getPassengerRequests", {
-			method: "GET"
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({rydeId: this.props.resObjRide.rydeId})
 		}).then((res) => {
 			// response object being returned
 			if (res.status === 200) {
 				resPromise = res.json();
 				resPromise.then((resObj) => {
-				// the response object will look something like this:
-				// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
-				// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
-				let rydeKeys = Object.keys(resObj);
-
-				// rydeKeys will be an array of keys in the resObj
-
-				// what we do here is we obtain all the keys of the response object and put it in an array
-				// after that we populate the pending passengers using these information
-
-				// this.state.pendingPassengers will be set to this value after the loop
+				
+			
+				// holds the array of cards with the details with passengers requesting to join the ride
 				let passengers = [];
-				for (let i = 0; i < rydeKeys.length; ++i) {
-					// we extract the array containing all the passengers of a specific ryde
-					let requestsPerRydeObject = resObj[rydeKeys[i]];
-
-					// we loop over the requestsPerRydeObject array and append it to the state making a slidable card
-					for (let j = 0; j < requestsPerRydeObject.length; ++j) {
-						passengers.push(
-							<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} id = {rydeKeys[i]} firstName = {requestsPerRydeObject[j].firstName} lastName = {requestsPerRydeObject[j].lastName} email = {requestsPerRydeObject[j].email} rating = {requestsPerRydeObject[j].rating} />
-						);
-					}
+				
+				for (let i = 0; i < resObj.pending.length; ++i) {
+					passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRide.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
 				}
+
 				this.setState({pendingPassengers: passengers});
+				
 				}, (err) => {
 					alert("Promise error");
 				});
@@ -126,7 +115,7 @@ class RequestedRides extends Component {
 		// to update the personalRyde objects
 
 		let reqObj = {
-			rydeId: cardObjArr[0].props.id,
+			rydeId: cardObjArr[0].props.rydeId,
 			// carObjArr contains the array of cards being accepted
 			// and we access the email from the props of the card
 			acceptedPassengerEmail: cardObjArr[0].props.email
@@ -162,13 +151,14 @@ class RequestedRides extends Component {
 			}
 		}
 		this.setState({pendingPassengers: passengers});
-	
+
+
 		// now we need to send this array of passengers to the server for the 
 		// server to update the personalRyde objects
 
 
 		let reqObj = {
-			rydeId: cardObjArr[0].props.id,
+			rydeId: cardObjArr[0].props.rydeId,
 			rejectedPassengerEmail: cardObjArr[0].props.email
 		}
 
@@ -179,6 +169,12 @@ class RequestedRides extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 404) {
+				alert("Server error");
+			}
+		}, (err) => {
+			alert("Promise error");
 		});
 
 	}

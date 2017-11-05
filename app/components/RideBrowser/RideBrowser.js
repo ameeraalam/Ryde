@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import {
-	AppRegistry,
-	StyleSheet,
-	Text,
-	View,
-	Image,
-	Button,
-	Alert,
-	TextInput,
-	TouchableOpacity
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  Alert,
+  TextInput,
+  TouchableOpacity
 } from 'react-native';
 import {
-	Actions
+  Actions
 } from 'react-native-router-flux';
 import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 import config from "./../../config";
@@ -32,18 +32,19 @@ class RideBrowser extends Component{
     loadRydes(){
 
         let allRydes = [];
-        let myRes = this.props.passedResObj;
-        let resO = null;
+        let currentPassenger = this.props.passedResObj;
+        let currentRyde = null;
 
         for (let i = 0; i < this.props.resObj.dest.length;  i++){
 
-            resO = this.props.resObj.dest[i];
+            currentRyde = this.props.resObj.dest[i];
 
             allRydes.push(
-                <View>
-                    <CardItem button onPress={() => Actions.passengerSearchProfile({myRes, resO})}>
+                <View key={i}>
+                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, currentRyde})}>
                     <Body>
-                    <Text>Driver Email: {myRes.driver}</Text>
+                    <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName}</Text>
+                    <Text>Price: {currentRyde.price}</Text>
                     </Body>
                     </CardItem>
                 </View>
@@ -53,50 +54,50 @@ class RideBrowser extends Component{
         this.setState({rydes: allRydes});
     }
 
-	render(){
+  render(){
 
-		return(
+    return(
 
-		    <View>
-		        {this.state.rydes}
-			</View>
-		);
-	}
+        <View>
+            {this.state.rydes}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  	
-  	mainStyle: {
-    	flex: 1,
-    	justifyContent: 'center',
-    	alignItems: 'center',
-    	backgroundColor: '#FFFFFF',
-  	},
+    
+    mainStyle: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#FFFFFF',
+    },
 
-  	inputBox: {
-  		height: 40,
-  		width: 200,
-  		borderColor: '#000000',
-  		borderWidth: 1
-  	},
- 	
- 	welcome: {
-    	fontSize: 20,
-    	textAlign: 'center',
-    	margin: 10,
-    	color: '#000000',
-  	},
-  	
-  	instructions: {
-    	textAlign: 'center',
-    	color: '#FFFFFF',
-    	marginBottom: 5,
-  	},
+    inputBox: {
+      height: 40,
+      width: 200,
+      borderColor: '#000000',
+      borderWidth: 1
+    },
+  
+  welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 10,
+      color: '#000000',
+    },
+    
+    instructions: {
+      textAlign: 'center',
+      color: '#FFFFFF',
+      marginBottom: 5,
+    },
 
-  	myImage: {
-  		justifyContent: 'center',
-  		alignItems: 'center'
-  	}
+    myImage: {
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
 });
 
 module.exports = RideBrowser;
