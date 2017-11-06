@@ -12,10 +12,13 @@ import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
 
-import config from "./../../config"
+import config from "./../../config";
+
+let MessageBarAlert = require('react-native-message-bar').MessageBar;
+let MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
 class Login extends Component {
- constructor(props) {
+ 	constructor(props) {
 		super(props);
 		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
@@ -24,6 +27,18 @@ class Login extends Component {
 			textEmail: "Email",
 			textPass: "Password"
 		}
+	}
+
+	componentDidMount() {
+		// Register the alert located on this master page
+		// This MessageBar will be accessible from the current (same) component, and from its child component
+		// The MessageBar is then declared only once, in your main component.
+		MessageBarManager.registerMessageBar(this.refs.alert);
+	}
+	 
+	componentWillUnmount() {
+		// Remove the alert located on this master page from the manager
+		MessageBarManager.unregisterMessageBar();
 	}
 
 	submitButton() {
@@ -51,7 +66,13 @@ class Login extends Component {
 					Actions.choice({resObj});
 				})
 			} else {
-				alert("Wrong username or password");
+				MessageBarManager.showAlert({
+					title: "Authentication Error",
+					message: "Wrong username or password",
+					alertType: "info",
+						stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
+						titleColor: '#000611', messageColor: '#000611'}
+				});
 			}
 
 		}, (err) => {
@@ -86,6 +107,8 @@ class Login extends Component {
 				<View style = {styles.registerContainer}>
 					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
 				</View>
+
+				<MessageBarAlert ref="alert" />
 
 			</View>
 		);
