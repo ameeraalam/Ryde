@@ -42,11 +42,24 @@ class RidePosting extends Component{
 
 	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
 	// doesnt get affected
-	
+
 	// Code for functionality of the Post button on the app page
 	postButton(){
 		
+		let newRydeID = undefined;
 		let resObj = this.props.resObj;
+
+		// FINISH
+		fetch(this.baseUrl + "getRydeID", {
+
+		
+		}).then((res) => {
+
+
+		}, (err) => {
+
+
+		});
 
 		let reqObj = {
 			driver: this.props.resObj.email,
@@ -57,7 +70,7 @@ class RidePosting extends Component{
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideId: rideNum,// Needs to become a server side variable
+			rideId: newRydeID,
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
@@ -65,6 +78,7 @@ class RidePosting extends Component{
 			price: "$" + this.state.ridePrice
 		}
 
+		// Adding Ryde to the Database
 		fetch(this.baseUrl + "postRyde",{
 			method: "POST",
 			headers: {
@@ -77,13 +91,11 @@ class RidePosting extends Component{
 			
 			if (res.status === 200){
 
-				rideID++;
 				alert("Ryde Posted!");
-				// Need to pass user Obj here
 				Actions.driverview({resObj});
 			} else {
 				
-				alert("Server Error!!!!!");
+				alert("Server Error!");
 			}
 		}, (err) => {
 
