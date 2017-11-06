@@ -99,6 +99,8 @@ class RequestedRides extends Component {
 
 	// self is the this of the child component
 	acceptPassenger(self) {
+		// now we send this array of passengers to the server for the server
+		// to update the personalRyde objects
 		let passengers = this.state.pendingPassengers;
 
 		for (let i = 0; i < passengers.length; ++i) {
@@ -109,10 +111,6 @@ class RequestedRides extends Component {
 				var cardObjArr = passengers.splice(i, 1);
 			}
 		}
-		this.setState({pendingPassengers: passengers});
-
-		// now we send this array of passengers to the server for the server
-		// to update the personalRyde objects
 
 		let reqObj = {
 			rydeId: cardObjArr[0].props.rydeId,
@@ -129,8 +127,12 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status === 404) {
+			if (res.status === 200) {
+				this.setState({pendingPassengers: passengers});
+			} else if (res.status === 404) {
 				alert("Server error");
+			} else {
+				alert("The ryde cannot take in anymore passengers");
 			}
 		}, (err) => {
 			alert("Promise error");
@@ -140,6 +142,8 @@ class RequestedRides extends Component {
 
 	// self is the this of the child component
 	rejectPassenger(self) {
+		// now we need to send this array of passengers to the server for the 
+		// server to update the personalRyde objects
 		let passengers = this.state.pendingPassengers;
 
 		for (let i = 0; i < passengers.length; ++i) {
@@ -150,12 +154,6 @@ class RequestedRides extends Component {
 				var cardObjArr = passengers.splice(i, 1);
 			}
 		}
-		this.setState({pendingPassengers: passengers});
-
-
-		// now we need to send this array of passengers to the server for the 
-		// server to update the personalRyde objects
-
 
 		let reqObj = {
 			rydeId: cardObjArr[0].props.rydeId,
@@ -170,7 +168,9 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status === 404) {
+			if (res.status === 200) {
+				this.setState({pendingPassengers: passengers});
+			} else if (res.status === 404) {
 				alert("Server error");
 			}
 		}, (err) => {

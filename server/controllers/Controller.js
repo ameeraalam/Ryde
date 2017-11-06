@@ -157,6 +157,15 @@ class Controller {
 					break;
 				}
 			}
+
+			// if the ryde has maximum members we send an error request saying ryde is full
+			if (Number(rydeToModify.numPassengers) === rydeToModify.members.length) {
+				// 410 gone code is sent indicating ryde is full
+				res.sendStatus(410);
+				// we return to prevent the code below from executing if this happens
+				return;
+			}
+
 			// we get the user object form the request array to be inserted
 			// back into the members array of the ryde object
 			let userMember = undefined;
@@ -193,6 +202,7 @@ class Controller {
 									break;
 								}
 							}
+
 							// step - 3 complete
 							// now we update the fields rideAcceptedToAsPassenger in the personal ryde object for the passenger
 							this.modelPersonalRydes.update({"email": userMember.email}, {"rydesAppliedToAsPassenger": arrayToModify}, () => {
@@ -319,7 +329,6 @@ class Controller {
 										// now we need to find the specific ryde object we are dealing with
 										// from the array of rydes
 										if (myRydes[j].rydeId === rydeToModify.rydeId) {
-											
 											// if we find the ryde we are looking for in myRydes we just
 											// assign rydeToModify which is the modified ryde to that index
 											// of the array replacing the item
@@ -339,11 +348,8 @@ class Controller {
 									res.sendStatus(404);
 								});
 							}
-
 							// on success we send 200 code
 							res.sendStatus(200);
-
-							
 						}, () => {
 							// on failure we send the 404 code
 							res.sendStatus(404);
