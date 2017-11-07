@@ -66,7 +66,7 @@ class RideBrowser extends Component{
 }
 
 const styles = StyleSheet.create({
-    
+
     mainStyle: {
       flex: 1,
       justifyContent: 'center',
@@ -80,14 +80,14 @@ const styles = StyleSheet.create({
       borderColor: '#000000',
       borderWidth: 1
     },
-  
+
   welcome: {
       fontSize: 20,
       textAlign: 'center',
       margin: 10,
       color: '#000000',
     },
-    
+
     instructions: {
       textAlign: 'center',
       color: '#FFFFFF',

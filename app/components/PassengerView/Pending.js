@@ -40,7 +40,6 @@ class Pending extends Component {
           resObjPromise = response.json();
 
           resObjPromise.then((resObj) => {
-            //alert(JSON.stringify(resObj));
             dataSet = [];
             for(let i=0;i<resObj.length;i++){
               let resO = resObj[i]; //ride obj
@@ -75,7 +74,6 @@ class Pending extends Component {
 
   render() {
     let resObj = this.props.resObj;
-    alert(JSON.stringify(this.state.data));
 
     return (
       <Container>

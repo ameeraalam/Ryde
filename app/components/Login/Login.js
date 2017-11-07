@@ -5,7 +5,8 @@ import {
 	View,
 	TextInput,
 	Image,
-	TouchableOpacity
+	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
@@ -24,6 +25,7 @@ class Login extends Component {
 		this.baseUrl = "http://" + this.address + ":3000/";
 		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
 		this.state = {
+			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
 		}
@@ -42,6 +44,7 @@ class Login extends Component {
 	}
 
 	submitButton() {
+		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
 			password: this.state.textPass
@@ -54,6 +57,7 @@ class Login extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 			if (res.status === 200) {
 				// The response object returned contains the object being sent
 				// from the server, we need to call the function res.json() which will
@@ -76,7 +80,14 @@ class Login extends Component {
 			}
 
 		}, (err) => {
-			alert(err)
+			this.setState({loading: false});
+			MessageBarManager.showAlert({
+				title: "Connection Error",
+				message: "Cannot connect to the internet",
+				alertType: "info",
+					stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
+					titleColor: '#000611', messageColor: '#000611'}
+			});
 		});
 	}
 
@@ -109,6 +120,13 @@ class Login extends Component {
 				</View>
 
 				<MessageBarAlert ref="alert" />
+
+				{this.state.loading && <View style = {styles.loading}>
+					<ActivityIndicator
+						animating
+						size="large"
+					/>
+				</View>}
 
 			</View>
 		);

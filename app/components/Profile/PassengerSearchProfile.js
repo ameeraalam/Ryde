@@ -21,6 +21,7 @@ class PassengerSearchProfile extends Component {
   	}
 
   requestButton(){
+    let resObj = this.props.currentRyde;
     let reqObj = {
 
       myRes: this.props.currentPassenger,
@@ -36,11 +37,12 @@ class PassengerSearchProfile extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
+        let resObj = this.props.currentPassenger;
         //if request is succesfully sent then we alert the user
 				alert("Request succesfully sent.")
-
+  			Actions.pending({resObj});
 			} else {
-				alert("Cannot request twice");
+				alert("Can't send a request twice.");
 			}
 		}, (err) => {
 			if (err) {

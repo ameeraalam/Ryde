@@ -466,66 +466,100 @@ class Controller {
 	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
 
 
-					
+
 	passengerSearch(req,res) {
-	
-		this.modelRydes.query({"driver": req.body.driverRes.driver}, (doc) => {
-				
-				for(let i = 0; i < doc.pending.length; ++i){
-					if(doc.pending[i].email === req.body.myRes.email){
-						res.sendStatus(404);
-						return;
-					}
+		this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (doc) => {
+			//doesn't let user request twice
+			for(let i = 0; i < doc.pending.length; ++i){
+				if(doc.pending[i].email === req.body.myRes.email){
+					res.sendStatus(404);
+					return;
 				}
+			}
+			//doesn't let a user who have been accepted request again
+			for(let i = 0; i < doc.members.length; ++i){
+				if(doc.members[i].email === req.body.myRes.email){
+					res.sendStatus(404);
+					return;
+				}
+			}
 
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"pending":req.body.myRes},() => {
 
+				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
 
-				this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"pending":req.body.myRes},() => {
-
-					this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
-
-						let rydeToModify = undefined;
-						// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
-						let indexModified = 0;
-						for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
-							// we find the specific ryde from the array of rydes that the driver posted
-							if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
-								rydeToModify = doc.rydesPostedAsDriver[i];
-								indexModified = i;
-							}
+					let rydeToModify = undefined;
+					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
+					let indexModified = 0;
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						// we find the specific ryde from the array of rydes that the driver posted
+						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
+							rydeToModify = doc.rydesPostedAsDriver[i];
+							indexModified = i;
 						}
+					}
 
-						rydeToModify.pending.push(req.body.myRes);
+					rydeToModify.pending.push(req.body.myRes);
 
-						doc.rydesPostedAsDriver[indexModified] = rydeToModify;
+					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
 
-						this.modelPersonalRydes.update({"email": req.body.driverRes.driver}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+					this.modelPersonalRydes.update({"email": req.body.driverRes.driver}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
 
-							this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":doc.rydesPostedAsDriver}, () => {
-								res.sendStatus(200);
+						this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (docs) => {
 
+							for(let j=0;j<docs.pending.length;++j){
+
+								this.modelPersonalRydes.query({"email": docs.pending[j].email}, (docss)=> {
+									let appliedRydes = docss.rydesAppliedToAsPassenger;
+
+									for(let i=0;i<appliedRydes.length;++i){
+
+										if(appliedRydes[i].rydeId === rydeToModify.rydeId){
+
+											appliedRydes[i] = rydeToModify;
+
+											//adds the object again
+											this.modelPersonalRydes.update({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": appliedRydes}, () => {
+
+												//res.sendStatus(200);
+											}, () => {
+												res.sendStatus(404);
+											});
+
+											return;
+										}
+									}
+
+										this.modelPersonalRydes.updatePush({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": rydeToModify}, () => {
+
+												res.sendStatus(200);
+											}, () => {
+												res.sendStatus(404);
+											});
+										}, () => {
+											res.sendStatus(404);
+										});
+									}
+								}, () => {
+									res.sendStatus(404);
+								});
 							}, () => {
-								res.sendStatus(404);
-
-							});
-
-						}, () => {
 							res.sendStatus(404);
 						});
 
 					}, () => {
 						res.sendStatus(404);
 					});
+
 				}, () => {
 					res.sendStatus(404);
 				});
+
 			}, () => {
 				res.sendStatus(404);
-		});
-	}
-
-		
-					
+			});
+		}
+				
 
 	err(req, res) {
 		console.log("Processing error....");
