@@ -190,8 +190,10 @@ class Controller {
 
 		this.rydeID.query({"queryField": req.body.query}, (doc) => {
 
+			console.log(doc);
+
 			console.log("Ryde ID retrieved and sent");
-			res.staus(200).send(doc);
+			res.status(200).send(doc);
 		}, () => {
 			console.log("Ryde ID not retrieved");
 			res.sendStatus(404);
@@ -206,12 +208,14 @@ class Controller {
 		// Query the DB to find the object with the Ryde ID we want to increment
 		this.rydeID.query({"queryField": req.body.query}, (doc) => {
 
+			console.log("doc.rydeID = " + doc.rydeID);
 			currentID = doc.rydeID;
-			res.sendStatus(200);
+			//res.sendStatus(200);
 		}, () => {
-			res.sendStatus(404);
+			//res.sendStatus(404);
 		});
 
+		console.log("currentID is " + currentID);
 		// Increment ID
 		currentID++;
 

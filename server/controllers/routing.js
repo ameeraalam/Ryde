@@ -50,6 +50,8 @@ module.exports = function() {
 	app.post("/findRyde", (req, res) => { CONTROLLER.findRyde(req, res); });
 
 	app.post("/incrementRydeID", (req, res) => { CONTROLLER.incrementRydeID(req, res); });
+
+	app.post("/getRydeID", (req, res) => {CONTROLLER.getRydeID(req, res); });
 	// Error get request must always be processed at the very end after all options
 	// have been exhausting in resolving the request. This happens because of the 
 	// next() middleware being used

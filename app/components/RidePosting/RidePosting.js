@@ -56,8 +56,8 @@ class RidePosting extends Component{
 			headers: {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
-			}
-			body: JSON.stringify(newRydeID);
+			},
+			body: JSON.stringify(newRydeID)
 
 		}).then((res) => {
 			
@@ -108,7 +108,7 @@ class RidePosting extends Component{
 						"Accept": "application/json",
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify(newRydeID);
+					body: JSON.stringify(newRydeID)
 				
 				}).then((res) => {
 					
