@@ -1,0 +1,27 @@
+{
+  "name": "ryde",
+  "version": "1.0.0",
+  "description": "A server created for Android App Ryde",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ameeraalam/Ryde/tree/Tanvir/server"
+  },
+  "author": "MATB",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.15.5",
+    "mongodb": "^2.2.31",
+    "nodemon": "^1.12.1",
+    "socket.io": "^2.0.4"
+  }
+}
