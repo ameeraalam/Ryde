@@ -1,7 +1,0 @@
-Week 1
-------
-
-Assigned the RidePosting, RideSearching, and RideBrowser pages of the Ryde app
-
-1. Began to research how to create a mobile app and how to work with React-Native
-2. Setup git
