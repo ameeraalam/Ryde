@@ -186,6 +186,18 @@ class Controller {
 		});
 	}
 
+	getRydeID(req, res){
+
+		this.rydeID.query({"queryField": req.body.query}, (doc) => {
+
+			console.log("Ryde ID retrieved and sent");
+			res.staus(200).send(doc);
+		}, () => {
+			console.log("Ryde ID not retrieved");
+			res.sendStatus(404);
+		});
+	}
+
 	incrementRydeID(req, res){
 
 		// Variable that current ID value from the database will be assigned to

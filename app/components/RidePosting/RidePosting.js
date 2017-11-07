@@ -45,20 +45,27 @@ class RidePosting extends Component{
 
 	// Code for functionality of the Post button on the app page
 	postButton(){
-		
-		let newRydeID = undefined;
+		let sameDestination = {dest:[]};
+		let newRydeID = {query: "databaseID", rydeID: 0};
 		let resObj = this.props.resObj;
 
-		// FINISH
+		// Getting the current RydeID to assign to Ryde being posted
 		fetch(this.baseUrl + "getRydeID", {
+			
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			}
+			body: JSON.stringify(newRydeID);
 
-		
 		}).then((res) => {
-
-
+			
+			newRydeID.rydeID = res.rydeID; 
+		
 		}, (err) => {
 
-
+			console.log("Error getting Ryde ID");	
 		});
 
 		let reqObj = {
@@ -70,7 +77,7 @@ class RidePosting extends Component{
 			date: this.state.travelDate,
 			numPassengers: this.state.numPassengers,
 			numLuggage: this.state.numLuggage,
-			rideId: newRydeID,
+			rideId: newRydeID.rydeID,
 			pending: emptyArray,
 			members: emptyArray,
 			currentPassengerCount: 0,
@@ -79,7 +86,8 @@ class RidePosting extends Component{
 		}
 
 		// Adding Ryde to the Database
-		fetch(this.baseUrl + "postRyde",{
+		fetch(this.baseUrl + "postRyde", {
+			
 			method: "POST",
 			headers: {
 				"Accept": "application/json",
@@ -92,7 +100,32 @@ class RidePosting extends Component{
 			if (res.status === 200){
 
 				alert("Ryde Posted!");
+
+				fetch(this.baseUrl + "incrementRydeID", {
+					
+					method: "POST",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(newRydeID);
+				
+				}).then((res) => {
+					
+					if (res.status === 200){
+						console.log("RydeID incremented");
+					
+					} else {
+					
+						console.log("RydeID failed to increment");
+					}	
+				}, (err) => {
+					
+					alert("Server Error with Ryde ID");
+				});
+
 				Actions.driverview({resObj});
+
 			} else {
 				
 				alert("Server Error!");
@@ -101,6 +134,8 @@ class RidePosting extends Component{
 
 			alert("Server Error!");
 		});
+
+		
 	}
 
 	// App visuals
