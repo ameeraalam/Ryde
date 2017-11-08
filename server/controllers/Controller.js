@@ -206,7 +206,7 @@ class Controller {
 		let currentID = undefined;
 
 		// Query the DB to find the object with the Ryde ID we want to increment
-		this.rydeID.query({"queryField": req.body.query}, (doc) => {
+		/*this.rydeID.query({"queryField": req.body.query}, (doc) => {
 
 			console.log("doc.rydeID = " + doc.rydeID);
 			currentID = doc.rydeID;
@@ -218,9 +218,10 @@ class Controller {
 		console.log("currentID is " + currentID);
 		// Increment ID
 		currentID++;
-
+		*/
+		console.log("reqbodyrydeID = " + req.body.rydeID);
 		// Update object in DB with the incremented Ryde ID
-		this.rydeID.update({"queryField": req.body.query}, {rydeID: currentID}, () => {
+		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
 			res.sendStatus(200);
 		}, () => {
 			res.sendStatus(404);

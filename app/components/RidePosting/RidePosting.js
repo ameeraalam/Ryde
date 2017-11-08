@@ -45,6 +45,7 @@ class RidePosting extends Component{
 
 	// Code for functionality of the Post button on the app page
 	postButton(){
+		
 		let sameDestination = {dest:[]};
 		let newRydeID = {query: "databaseID", rydeID: 0};
 		let resObj = this.props.resObj;
@@ -60,82 +61,69 @@ class RidePosting extends Component{
 			body: JSON.stringify(newRydeID)
 
 		}).then((res) => {
-			
-			newRydeID.rydeID = res.rydeID; 
-		
-		}, (err) => {
 
-			console.log("Error getting Ryde ID");	
-		});
+			let resObjPromise = res.json();
 
-		let reqObj = {
-			driver: this.props.resObj.email,
-			firstName: this.props.resObj.firstName,
-			lastName: this.props.resObj.lastName,
-			from: this.state.fromLocation,
-			to: this.state.toLocation,
-			date: this.state.travelDate,
-			numPassengers: this.state.numPassengers,
-			numLuggage: this.state.numLuggage,
-			rideId: newRydeID.rydeID,
-			pending: emptyArray,
-			members: emptyArray,
-			currentPassengerCount: 0,
-			currentLuggageCount: 0,
-			price: "$" + this.state.ridePrice
-		}
+			resObjPromise.then((resObj) => {
 
-		// Adding Ryde to the Database
-		fetch(this.baseUrl + "postRyde", {
-			
-			method: "POST",
-			headers: {
-				"Accept": "application/json",
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(reqObj)
+				console.log("resObj.rydeID = " + resObj.rydeID);
+				newRydeID.rydeID = resObj.rydeID;
 
-		}).then((res) => {
-			
-			if (res.status === 200){
-
-				alert("Ryde Posted!");
-
-				fetch(this.baseUrl + "incrementRydeID", {
+				// Adding Ryde to the Database
+				fetch(this.baseUrl + "postRyde", {
 					
 					method: "POST",
 					headers: {
 						"Accept": "application/json",
 						"Content-Type": "application/json"
 					},
-					body: JSON.stringify(newRydeID)
-				
+					body: JSON.stringify(reqObj)
+
 				}).then((res) => {
 					
 					if (res.status === 200){
-						console.log("RydeID incremented");
-					
+
+						alert("Ryde Posted!");
+
+						fetch(this.baseUrl + "incrementRydeID", {
+							
+							method: "POST",
+							headers: {
+								"Accept": "application/json",
+								"Content-Type": "application/json"
+							},
+							body: JSON.stringify(newRydeID)
+						
+						}).then((res) => {
+							
+							if (res.status === 200){
+								console.log("RydeID incremented");
+							
+							} else {
+							
+								console.log("RydeID failed to increment");
+							}	
+						}, (err) => {
+							
+							alert("Server Error with Ryde ID");
+						});
+
+						Actions.driverview({resObj});
+
 					} else {
-					
-						console.log("RydeID failed to increment");
-					}	
+						
+						alert("Server Error!");
+					}
 				}, (err) => {
-					
-					alert("Server Error with Ryde ID");
+
+					alert("Server Error!");
 				});
-
-				Actions.driverview({resObj});
-
-			} else {
-				
-				alert("Server Error!");
-			}
+			})
+			 
 		}, (err) => {
 
-			alert("Server Error!");
+			console.log("Error getting Ryde ID");	
 		});
-
-		
 	}
 
 	// App visuals
