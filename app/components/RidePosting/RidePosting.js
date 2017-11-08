@@ -66,8 +66,24 @@ class RidePosting extends Component{
 
 			resObjPromise.then((resObj) => {
 
-				console.log("resObj.rydeID = " + resObj.rydeID);
 				newRydeID.rydeID = resObj.rydeID;
+
+				let reqObj = {
+					driver: this.props.resObj.email,
+					firstName: this.props.resObj.firstName,
+					lastName: this.props.resObj.lastName,
+					from: this.state.fromLocation,
+					to: this.state.toLocation,
+					date: this.state.travelDate,
+					numPassengers: this.state.numPassengers,
+					numLuggage: this.state.numLuggage,
+					rideId: newRydeID.rydeID,
+					pending: emptyArray,
+					members: emptyArray,
+					currentPassengerCount: 0,
+					currentLuggageCount: 0,
+					price: "$" + this.state.ridePrice
+				}
 
 				// Adding Ryde to the Database
 				fetch(this.baseUrl + "postRyde", {

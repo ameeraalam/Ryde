@@ -190,11 +190,10 @@ class Controller {
 
 		this.rydeID.query({"queryField": req.body.query}, (doc) => {
 
-			console.log(doc);
-
 			console.log("Ryde ID retrieved and sent");
 			res.status(200).send(doc);
 		}, () => {
+			
 			console.log("Ryde ID not retrieved");
 			res.sendStatus(404);
 		});
@@ -203,7 +202,7 @@ class Controller {
 	incrementRydeID(req, res){
 
 		// Variable that current ID value from the database will be assigned to
-		let currentID = undefined;
+		//let currentID = undefined;
 
 		// Query the DB to find the object with the Ryde ID we want to increment
 		/*this.rydeID.query({"queryField": req.body.query}, (doc) => {
@@ -219,15 +218,16 @@ class Controller {
 		// Increment ID
 		currentID++;
 		*/
-		console.log("reqbodyrydeID = " + req.body.rydeID);
+		
 		// Update object in DB with the incremented Ryde ID
 		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
+			
+			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1);
 			res.sendStatus(200);
 		}, () => {
+			console.log("Ryde ID has not been incremented");
 			res.sendStatus(404);
 		});
-
-		console.log("Ryde ID has been incremented to " + currentID);
 	}
 
 	driverView(req, res){
