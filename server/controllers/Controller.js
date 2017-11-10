@@ -146,6 +146,12 @@ class Controller {
 				console.log("Res length is " + response.length);	
 				for (let i = 0; i < response.length; i++){
 
+					// If the Ryde is full
+					if (response[i].members.length === response[i].numPassengers){
+						continue;
+					}
+
+					// If the to and from locations match then the Ryde is valid
 					if ((response[i].from === req.body.from) && (response[i].to === req.body.to)){
 						console.log("Ryde found!");	
 						sameDestination.dest.push(response[i]);
@@ -222,7 +228,7 @@ class Controller {
 		// Update object in DB with the incremented Ryde ID
 		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
 			
-			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1);
+			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1));
 			res.sendStatus(200);
 		}, () => {
 			console.log("Ryde ID has not been incremented");
