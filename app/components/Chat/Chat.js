@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import {
-	Container,
-	Header,
-	Content,
-	Item,
-	Input,
-	Card,
-	CardItem,
+import { 
+	Container, 
+	Header, 
+	Content, 
+	Item, 
+	Input, 
+	Card, 
+	CardItem, 
 	Body,
 	List,
 	ListItem,
@@ -43,11 +43,9 @@ class Chat extends Component {
 		// as the rydeObject will be this.props.rydeObject
 		this.rydeObject = {rydeId: 4};
 		this.address = config.ip;
-		// this.baseUrl = "http://" + this.address + ":3000/";
-		this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		this.baseUrl = "http://" + this.address + ":3000/";
 		// creating the socket object specific to this client
-		// this.socket = clientIO("http://" + this.address + ":3000/");
-		this.socket = clientIO("https://ryde-matb.herokuapp.com/");
+		this.socket = clientIO("http://" + this.address + ":3000/");
 		this.state = {
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
@@ -102,7 +100,7 @@ class Chat extends Component {
 	// the state's text attribute to the object retrieved from mongo db.
 	// This function is called only when the page is displayed
 	initMessages() {
-
+	
 		// socket emission to send the ryde id to the sever
 		// we need to tell the server what id we are and what ryde chat room
 		// we belong to
@@ -112,7 +110,7 @@ class Chat extends Component {
 		// this event listener catches the path through which the socket from the
 		// server will send the all the messages related to the ride from the database
 		this.socket.on(this.rydeObject.rydeId.toString() + "/initMessages", (resObj) => {
-			let initMsgs = [];
+			let initMsgs = []; 
 			for (let i = 0; i < resObj.texts.length; ++i) {
 				initMsgs.push(
 					<ListItem avatar>
@@ -126,9 +124,9 @@ class Chat extends Component {
 					</ListItem>
 				);
 			}
-			console.log(resObj.texts.length);
+			console.log(resObj.texts.length);		
 			this.setState({texts: initMsgs});
-		});
+		});		
 
 	}
 
@@ -175,7 +173,7 @@ class Chat extends Component {
 								// input
 								this.setState({textValue: ""});
 							}}
-						></Input>
+						></Input>	
 					</Item>
 					<Button
 						onPress = {() => {this.sendMessage()}}

@@ -117,17 +117,16 @@ class Controller {
 			// on successfully querying the data we sent the res object back
 			// the response object
 			let resObj = {};
+			// we look for the ryde by rydeId in the personal database's rydesPostedAsDriver field
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
-				// creates an attribute within the res object with the id name of the ryde
-				// which will hold values of arrays containing the requests to that ryde
-				resObj[doc.rydesPostedAsDriver[i].rydeId] = [];
-				for (let j = 0; j < doc.rydesPostedAsDriver[i].requests.length; ++j) {
-					resObj[doc.rydesPostedAsDriver[i].rydeId].push(doc.rydesPostedAsDriver[i].requests[j]);
+			
+				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
+					resObj.pending = doc.rydesPostedAsDriver[i].pending;
+					// we break the loop when we find the ryde
+					break;
 				}
+
 			}
-			// this for loop will generate a response object which will loop like this:
-			// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
-			// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
 			res.status(200).send(resObj);
 		}, () => {
 			// on unsuccesful query we sent 404 code
@@ -139,10 +138,13 @@ class Controller {
 	acceptedUpdatedRydes(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 
+			// 1 - update object in global rydes collection (check)
+			// 2 - update driver's personal ryde object in rydesPostedAsDriver (check)
+			// 3 - update passenger's personal ryde ryde objects rydesAppliedToAsPassenger and rydesAcceptedToAsPassenger
+			// 4 - update all the rydesAcceptedToAsPassenger array's ryde object for all the members of that ryde
+
 			let rydeToModify = undefined;
-
 			let rydeIndexModified = 0;
-
 			// we loop over the array of rydes posted by the driver
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
 				// if the ryde object in the rydesPostedAsDriver array's id matches the id of the card
@@ -151,33 +153,111 @@ class Controller {
 					rydeToModify = doc.rydesPostedAsDriver[i];
 					// we save the index of the array for which the ryde object we are modifying	
 					rydeIndexModified = i;
-
 					// we break the loop as we no longer need to iterate the array
 					break;
 				}
 			}
+
+			// if the ryde has maximum members we send an error request saying ryde is full
+			if (Number(rydeToModify.numPassengers) === rydeToModify.members.length) {
+				// 410 gone code is sent indicating ryde is full
+				res.sendStatus(410);
+				// we return to prevent the code below from executing if this happens
+				return;
+			}
+
 			// we get the user object form the request array to be inserted
 			// back into the members array of the ryde object
 			let userMember = undefined;
-			// we loop over the requests array of the ryde object
-			for (let i = 0; i < rydeToModify.requests.length; ++i) {
-				if (rydeToModify.requests[i].email === req.body.acceptedPassengerEmail) {
-					userMember = rydeToModify.requests[i];
-					// we remove the user from the requests array
-					rydeToModify.requests.splice(i, 1);
+			// we loop over the pending array of the ryde object
+			for (let i = 0; i < rydeToModify.pending.length; ++i) {
+				if (rydeToModify.pending[i].email === req.body.acceptedPassengerEmail) {
+					userMember = rydeToModify.pending[i];
+					// we remove the user from the pending array
+					rydeToModify.pending.splice(i, 1);
 				}
 			}
 			// we insert the user the user to the members of the ride now
 			rydeToModify.members.push(userMember);
-
 			// we update the ryde at the index that we just modified
 			doc.rydesPostedAsDriver[rydeIndexModified] = rydeToModify;
-
+			// step -2 completed here
 			this.modelPersonalRydes.update({"email": req.params.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver} ,(doc) => {
+				// step - 1 completed here
 				// now what we need to do is update the universal Rydes database, and update only the fields that we need to modify
-				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "requests": rydeToModify.requests}, () => {
-					// on success callback we sent the 200 code
-					res.sendStatus(200);
+				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "pending": rydeToModify.pending}, () => {
+					// now we update the user's personal ryde the field which says rydesAcceptedToAsPassenger
+					// we use update push here because we are pushing a ride to an already existing array
+					// step - 3 complete
+					this.modelPersonalRydes.updatePush({"email": userMember.email}, {"rydesAcceptedToAsPassenger": rydeToModify}, () => {
+						// now we remove the element from rydesAppliedToAsPassenger and update that array
+						// in the passenger's personal ryde object
+						this.modelPersonalRydes.query({"email": userMember.email}, (doc) => {
+							let arrayToModify = doc.rydesAppliedToAsPassenger;
+							for (let i = 0; i < arrayToModify.length; ++i) {
+								// we find the ryde object that the user applied to
+								if (arrayToModify[i].driver === rydeToModify.driver) {
+									arrayToModify.splice(i, 1);
+									// we break the loop when we find it
+									break;
+								}
+							}
+
+							// step - 3 complete
+							// now we update the fields rideAcceptedToAsPassenger in the personal ryde object for the passenger
+							this.modelPersonalRydes.update({"email": userMember.email}, {"rydesAppliedToAsPassenger": arrayToModify}, () => {
+								// now we have to iterate over each members of the ride and change the ryde object that they have
+								let membersOfRyde = rydeToModify.members;
+								// we loop over the members of the array
+								for (let i = 0; i < membersOfRyde.length; ++i) {
+									// using the email of each user we access their own personalRyde object
+									// and change the rydeAcceptedAsPassenger array's ryde in it
+									this.modelPersonalRydes.query({"email": membersOfRyde[i].email}, (doc) => {
+
+										// the array of rydes that the user has been accepted to
+										let myRydes = doc.rydesAcceptedToAsPassenger;
+
+										for (let j = 0; j < myRydes.length; ++j) {
+											// now we need to find the specific ryde object we are dealing with
+											// from the array of rydes
+											if (myRydes[j].rydeId === rydeToModify.rydeId) {
+												
+												// if we find the ryde we are looking for in myRydes we just
+												// assign rydeToModify which is the modified ryde to that index
+												// of the array replacing the item
+												myRydes[j] = rydeToModify;
+												break;
+											}
+										}
+										// step - 4 complete
+										this.modelPersonalRydes.update({"email": membersOfRyde[i].email}, {"rydesAcceptedToAsPassenger": myRydes}, () => {
+											// can't send 200 code here as we are in a for loop and we can't send multiple codes for one request
+										}, () => {
+											// on failure we send the 404 code
+											res.sendStatus(404);
+										});
+
+									}, () => {
+										// on failure we send the 404 code
+										res.sendStatus(404);
+									});
+								}
+
+								// on success we send the 200 code
+								res.sendStatus(200);
+
+							}, () => {
+								// on failure we send the 404 code
+								res.sendStatus(404);
+							});
+						}, () => {
+							// on failure we send a 404 code
+							res.sendStatus(404);
+						});
+					}, () => {
+						// on failure callback we sent the 404 code
+						res.sendStatus(404);
+					});
 				}, () => {
 					// on unsuccessful callback we sent 404 code
 					res.sendStatus(404);
@@ -186,8 +266,6 @@ class Controller {
 				// error on trying to update
 				res.sendStatus(404);
 			});
-
-
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
@@ -198,9 +276,7 @@ class Controller {
 	rejectedUpdatedRydes(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let rydeToModify = undefined;
-
 			let rydeIndexModified = 0;
-
 			// we loop over the array of rydes posted by the driver
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
 				// if the ryde object in the rydesPostedAsDriver array's id matches the id of the card
@@ -209,29 +285,79 @@ class Controller {
 					rydeToModify = doc.rydesPostedAsDriver[i];
 					// we save the index of the array for which the ryde object we are modifying	
 					rydeIndexModified = i;
-
 					// we break the loop as we no longer need to iterate the array
 					break;
 				}
 			}
-
-
-			// we loop over the requests array of the ryde object
-			for (let i = 0; i < rydeToModify.requests.length; ++i) {
-				if (rydeToModify.requests[i].email === req.body.rejectedPassengerEmail) {
-					// we remove the user from the requests array
-					rydeToModify.requests.splice(i, 1);
+			// we loop over the pending array of the ryde object
+			for (let i = 0; i < rydeToModify.pending.length; ++i) {
+				if (rydeToModify.pending[i].email === req.body.rejectedPassengerEmail) {
+					// we remove the user from the pending array
+					rydeToModify.pending.splice(i, 1);
 				}
 			}
-	
 			// we update the ryde at the index that we just modified
 			doc.rydesPostedAsDriver[rydeIndexModified] = rydeToModify;
-
 			this.modelPersonalRydes.update({"email": req.params.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver} ,(doc) => {
 				// now what we need to do is update the universal Rydes database, and update only the fields that we need to modify
-				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "requests": rydeToModify.requests}, () => {
-					// on success callback we sent the 200 code
-					res.sendStatus(200);
+				this.modelRydes.update({"rydeId": rydeToModify.rydeId}, {"members": rydeToModify.members, "pending": rydeToModify.pending}, () => {
+					// now we remove the element from rydesAppliedToAsPassenger and update that array
+					// in the passenger's personal ryde object
+					this.modelPersonalRydes.query({"email": req.body.rejectedPassengerEmail}, (doc) => {
+						let arrayToModify = doc.rydesAppliedToAsPassenger;
+						for (let i = 0; i < arrayToModify.length; ++i) {
+							// we find the ryde object that the user applied to
+							if (arrayToModify[i].driver === rydeToModify.driver) {
+								arrayToModify.splice(i, 1);
+								// we break the loop when we find it
+								break;
+							}
+						}
+						this.modelPersonalRydes.update({"email": req.body.rejectedPassengerEmail}, {"rydesAppliedToAsPassenger": arrayToModify}, () => {
+							// now we have to iterate over each members of the ride and change the ryde object that they have
+							let membersOfRyde = rydeToModify.members;
+							// we loop over the members of the array
+							for (let i = 0; i < membersOfRyde.length; ++i) {
+								// using the email of each user we access their own personalRyde object
+								// and change the rydeAcceptedAsPassenger array's ryde in it
+								this.modelPersonalRydes.query({"email": membersOfRyde[i].email}, (doc) => {
+
+									// the array of rydes that the user has been accepted to
+									let myRydes = doc.rydesAcceptedToAsPassenger;
+
+									for (let j = 0; j < myRydes.length; ++j) {
+										// now we need to find the specific ryde object we are dealing with
+										// from the array of rydes
+										if (myRydes[j].rydeId === rydeToModify.rydeId) {
+											// if we find the ryde we are looking for in myRydes we just
+											// assign rydeToModify which is the modified ryde to that index
+											// of the array replacing the item
+											myRydes[j] = rydeToModify;
+											break;
+										}
+									}
+									this.modelPersonalRydes.update({"email": membersOfRyde[i].email}, {"rydesAcceptedToAsPassenger": myRydes}, () => {
+										// can't send 200 code here as we are in a for loop and we can't send multiple codes for one request
+									}, () => {
+										// on failure we send the 404 code
+										res.sendStatus(404);
+									});
+
+								}, () => {
+									// on failure we send the 404 code
+									res.sendStatus(404);
+								});
+							}
+							// on success we send 200 code
+							res.sendStatus(200);
+						}, () => {
+							// on failure we send the 404 code
+							res.sendStatus(404);
+						});
+					}, () => {
+						// on failure we send the 404 code
+						res.sendStatus(404);
+					});
 				}, () => {
 					// on unsuccessful callback we sent 404 code
 					res.sendStatus(404);
@@ -240,32 +366,27 @@ class Controller {
 				// error on trying to update
 				res.sendStatus(404);
 			});
-
-
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
-
 		});
 	}
 
 
 	postRyde(req, res){
-		
 		this.modelRydes.insert(req.body, () => {
-			console.log("Ryde added to Ryde DB");
-				
-			/*this.modelPersonalRydes.updatePush({"email": req.body.email}, {"rydesPostedAsDriver": req.body}, () => {
-				console.log("Ryde added to PersonalRyde DB");
+			this.modelPersonalRydes.query({"email": req.body.driver}, (doc) => {
+				doc.rydesPostedAsDriver.push(req.body);
+				this.modelPersonalRydes.update({"email": req.body.driver}, {rydesPostedAsDriver: doc.rydesPostedAsDriver}, (doc) => {
+					res.sendStatus(200);
+				}, () => {
+					res.sendStatus(404);
+				});
 			}, () => {
-				console.log("Failed to add Ryde to users PersonalRyde DB");
-			});*/
-
-			res.sendStatus(200);
-		
+				res.sendStatus(404);
+			});		
 		}, () => {
 			res.sendStatus(404);
-			console.log("Failed to add Ryde to DB");
 		});
 	}
 
@@ -282,7 +403,7 @@ class Controller {
 				console.log("Res length is " + response.length);	
 				for (let i = 0; i < response.length; i++){
 
-					if (response[i].from === req.body.from){
+					if (response[i].from === req.body.from && response[i].to === req.body.to){
 						console.log("Ryde found!");	
 						sameDestination.dest.push(response[i]);
 					}
@@ -343,9 +464,27 @@ class Controller {
 	//update the ryde collection, requests [] with the passenger info
 	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
 	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
+
+
+
 	passengerSearch(req,res) {
-		this.modelPersonalRydes.updatePush({"email": req.body.myRes.email},{"rydesAppliedToAsPassenger":req.body.driverRes} ,() => {
-			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"requests":req.body.myRes},() => {
+		this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (doc) => {
+			//doesn't let user request twice
+			for(let i = 0; i < doc.pending.length; ++i){
+				if(doc.pending[i].email === req.body.myRes.email){
+					res.sendStatus(404);
+					return;
+				}
+			}
+			//doesn't let a user who have been accepted request again
+			for(let i = 0; i < doc.members.length; ++i){
+				if(doc.members[i].email === req.body.myRes.email){
+					res.sendStatus(404);
+					return;
+				}
+			}
+
+			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"pending":req.body.myRes},() => {
 
 				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
 
@@ -360,30 +499,67 @@ class Controller {
 						}
 					}
 
-					rydeToModify.requests.push(req.body.myRes);
+					rydeToModify.pending.push(req.body.myRes);
 
 					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
 
-					this.modelPersonalRydes.update({"email": req.body.myRes.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
-						res.sendStatus(200);
+					this.modelPersonalRydes.update({"email": req.body.driverRes.driver}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+
+						this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (docs) => {
+
+							for(let j=0;j<docs.pending.length;++j){
+
+								this.modelPersonalRydes.query({"email": docs.pending[j].email}, (docss)=> {
+									let appliedRydes = docss.rydesAppliedToAsPassenger;
+
+									for(let i=0;i<appliedRydes.length;++i){
+
+										if(appliedRydes[i].rydeId === rydeToModify.rydeId){
+
+											appliedRydes[i] = rydeToModify;
+
+											//adds the object again
+											this.modelPersonalRydes.update({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": appliedRydes}, () => {
+
+												//res.sendStatus(200);
+											}, () => {
+												res.sendStatus(404);
+											});
+
+											return;
+										}
+									}
+
+										this.modelPersonalRydes.updatePush({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": rydeToModify}, () => {
+
+												res.sendStatus(200);
+											}, () => {
+												res.sendStatus(404);
+											});
+										}, () => {
+											res.sendStatus(404);
+										});
+									}
+								}, () => {
+									res.sendStatus(404);
+								});
+							}, () => {
+							res.sendStatus(404);
+						});
+
 					}, () => {
 						res.sendStatus(404);
 					});
-
 
 				}, () => {
 					res.sendStatus(404);
 				});
 
-
 			}, () => {
 				res.sendStatus(404);
 			});
-		}, () => {
-			res.sendStatus(404);
-		});
-	}
-
+		}
+				
 
 	err(req, res) {
 		console.log("Processing error....");

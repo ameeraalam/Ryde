@@ -6,28 +6,47 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
-	Keyboard
+	ActivityIndicator,
+	Keyboard,
+	StatusBar
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
 
-import config from "./../../config"
+import config from "./../../config";
+
+let MessageBarAlert = require('react-native-message-bar').MessageBar;
+let MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
 class Login extends Component {
- constructor(props) {
+ 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		// this.baseUrl = "http://" + this.address + ":3000/";
-		this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		this.baseUrl = "http://" + this.address + ":3000/";
+		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
 		this.state = {
+			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
 		}
 	}
 
+	componentDidMount() {
+		// Register the alert located on this master page
+		// This MessageBar will be accessible from the current (same) component, and from its child component
+		// The MessageBar is then declared only once, in your main component.
+		MessageBarManager.registerMessageBar(this.refs.alert);
+	}
+
+	componentWillUnmount() {
+		// Remove the alert located on this master page from the manager
+		MessageBarManager.unregisterMessageBar();
+	}
+
 	submitButton() {
+		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
 			password: this.state.textPass
@@ -40,6 +59,7 @@ class Login extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 			if (res.status === 200) {
 				// The response object returned contains the object being sent
 				// from the server, we need to call the function res.json() which will
@@ -53,11 +73,24 @@ class Login extends Component {
 					Actions.choice({resObj});
 				})
 			} else {
-				alert("Wrong username or password");
+				MessageBarManager.showAlert({
+					title: "Authentication Error",
+					message: "Wrong username or password",
+					alertType: "info",
+						stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
+						titleColor: '#000611', messageColor: '#000611'}
+				});
 			}
 
 		}, (err) => {
-			alert(err)
+			this.setState({loading: false});
+			MessageBarManager.showAlert({
+				title: "Connection Error",
+				message: "Cannot connect to the internet",
+				alertType: "info",
+					stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
+					titleColor: '#000611', messageColor: '#000611'}
+			});
 		});
 	}
 
@@ -69,6 +102,10 @@ class Login extends Component {
 	render() {
 		return (
 			<View style = {styles.container}>
+				<StatusBar
+		     backgroundColor="rgb(72, 110, 255)"
+		     barStyle="light-content"
+		   	/>
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = "Email"
@@ -79,6 +116,7 @@ class Login extends Component {
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
+					underlineColorAndroid = "transparent"
 					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
@@ -89,6 +127,15 @@ class Login extends Component {
 				<View style = {styles.registerContainer}>
 					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
 				</View>
+
+				<MessageBarAlert ref="alert" />
+
+				{this.state.loading && <View style = {styles.loading}>
+					<ActivityIndicator
+						animating
+						size="large"
+					/>
+				</View>}
 
 			</View>
 		);

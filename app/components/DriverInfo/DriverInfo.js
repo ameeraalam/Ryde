@@ -5,7 +5,6 @@ import {
 	View,
 	TextInput,
 	Image,
-	Button,
 	TouchableOpacity
 } from "react-native";
 
@@ -15,12 +14,20 @@ import {
 	Label,
 	Input,
 	ListItem,
+	Container,
+	Header,
+	Left,
+	Icon,
+	Body,
+	Button,
+	Right,
+	Title
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
-
+import Drawer from '../Drawer/Drawer';
 import config from "./../../config"
 
 
@@ -29,8 +36,8 @@ class DriverInfo extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		// this.baseUrl = "http://" + this.address + ":3000/";
-		this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		this.baseUrl = "http://" + this.address + ":3000/";
+		this.openMenu = this.openMenu.bind(this);
 		this.state = {
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
@@ -40,6 +47,11 @@ class DriverInfo extends Component {
 			carS: {color: "grey"}
 		}
 	}
+
+	openMenu() {
+		this.drawer.openDrawer();
+	}
+
 
 	// plate number can only contain numbers and letters
 	plateCheck() {
@@ -140,6 +152,8 @@ class DriverInfo extends Component {
 			car: this.state.car
 		}
 
+		let resObj = this.props.resObj
+
 		fetch(this.baseUrl + "driverInfo", {
 			method: "POST",
 			headers: {
@@ -149,10 +163,7 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-
-				// if the info gets succesfully updated then we move to the driver's homepage
-				alert("Link me to Driver's homepage")
-
+				Actions.driverView({resObj});
 			} else {
 				alert("Error");
 			}
@@ -166,48 +177,65 @@ class DriverInfo extends Component {
 
 	render() {
 		return (
-			<View>
-				<ListItem itemHeader>
-					<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
-				</ListItem>
+			<Drawer
+				ref={(drawer) => this.drawer = drawer}>
+				<Container>
+					<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+						<Left style={{flex: 1}}>
+							<Button transparent onPress={this.openMenu}>
+								<Icon name='menu' />
+							</Button>
+						</Left>
+						<Body style={{alignItems: 'center', flex: 1}}>
+							<Title style={{fontFamily: 'sans-serif'}}>DRIVER INFO</Title>
+						</Body>
+						<Right style={{flex: 1}} />
+					</Header>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.plateS}>Plate number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+					<View>
+						<ListItem itemHeader>
+							<Text>The information below are mandatory in order to access functionalities of a driver</Text>
+						</ListItem>
 
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.liscenseS}>Liscense number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.carS}>Car model</Label>
-						<Input
-							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-				<TouchableOpacity onPress = {() => {this.submitButton()}}>
-					<Image
-						style = {styles.submitButton}
-						source = {require("./images/button.png")}
-					/>
-				</TouchableOpacity>
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.plateS}>Plate number</Label>
+								<Input
+									onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
 
 
-			</View>
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.liscenseS}>Liscense number</Label>
+								<Input
+									onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
+
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.carS}>Car model</Label>
+								<Input
+									onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
+
+						<TouchableOpacity onPress = {() => {this.submitButton()}}>
+							<Image
+								style = {styles.submitButton}
+								source = {require("./images/button.png")}
+								/>
+						</TouchableOpacity>
+
+					</View>
+				</Container>
+			</Drawer>
+
 		);
 	}
 }

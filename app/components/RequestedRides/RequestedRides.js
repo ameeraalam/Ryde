@@ -13,13 +13,21 @@ import {
 	Card,
 	CardItem,
 	Text,
-	Icon
+	Icon,
+	Container,
+	Header,
+	Left,
+	Body,
+	Button,
+	Right,
+	Title
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
-
+import Drawer from '../Drawer/Drawer';
+import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 
 import CardSlide from "./CardSlide";
@@ -28,12 +36,10 @@ class RequestedRides extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		this.user = this.props.resObj;
-		// database is queryed with the driver's email and the database that is
-		// queried is PersonalRydes database
-		//this.user = {email: "ameeraam13@hotmail.com"};
-		// this.baseUrl = "http://" + this.address + ":3000/";
-		this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		this.user = this.props.resObjDriver;
+		this.baseUrl = "http://" + this.address + ":3000/";
+		this.openMenu = this.openMenu.bind(this);
+		this.openNotifications = this.openNotifications.bind(this);
 		this.swipeOutButtons = [{
 			text: "Accept",
 			backgroundColor: "#86e079",
@@ -54,7 +60,7 @@ class RequestedRides extends Component {
 		// from one scope to another by passing it in as a prop
 		// when it is passed in as a prop the this variable inside the function changes to whatever
 		// scope you are passing the function to
-		// This is when .bing(this); comes into place, what .bind(this) does is whenever it is called it
+		// This is when .bind(this); comes into place, what .bind(this) does is whenever it is called it
 		// forever binds the scope where .bind(this) is called to the function for life. Now no matter how
 		// many times the function is passed around from and to different component, the this variable will
 		// always be the this of the scope where .bind(this) was called
@@ -64,42 +70,41 @@ class RequestedRides extends Component {
 
 	}
 
+	openNotifications(){
+		this.notifications.openDrawer();
+	}
+
+	openMenu() {
+		this.drawer.openDrawer();
+	}
+
+
 	// we query to get the passengers who have applied to our rydes
 	getPassengerRequests() {
 		// we sent a query string to the server with the email of the driver
 		fetch(this.baseUrl + this.user.email + "/getPassengerRequests", {
-			method: "GET"
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({rydeId: this.props.resObjRide.rydeId})
 		}).then((res) => {
 			// response object being returned
 			if (res.status === 200) {
 				resPromise = res.json();
 				resPromise.then((resObj) => {
-				// the response object will look something like this:
-				// resObj = {"1": [firstName: "Brian", lastName: "West", email: "brianwest@ryde.com", dob: "12/12/1994", phone: "615897446", …], "2": [], "3": []}
-				// where "1", "2", "3" are the keys of the object which are the id's of the different rydes posted by the driver
-				let rydeKeys = Object.keys(resObj);
 
-				// rydeKeys will be an array of keys in the resObj
 
-				// what we do here is we obtain all the keys of the response object and put it in an array
-				// after that we populate the pending passengers using these information
+					// holds the array of cards with the details with passengers requesting to join the ride
+					let passengers = [];
 
-				// this.state.pendingPassengers will be set to this value after the loop
-				let passengers = [];
-				for (let i = 0; i < rydeKeys.length; ++i) {
-					// we extract the array containing all the passengers of a specific ryde
-					let requestsPerRydeObject = resObj[rydeKeys[i]];
-
-					// we loop over the requestsPerRydeObject array and append it to the state making a slidable card
-					for (let j = 0; j < requestsPerRydeObject.length; ++j) {
-						passengers.push(
-							<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger}
-							id = {rydeKeys[i]} firstName = {requestsPerRydeObject[j].firstName} lastName = {requestsPerRydeObject[j].lastName}
-							email = {requestsPerRydeObject[j].email} rating = {requestsPerRydeObject[j].rating} />
-						);
+					for (let i = 0; i < resObj.pending.length; ++i) {
+						passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRide.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
 					}
-				}
-				this.setState({pendingPassengers: passengers});
+
+					this.setState({pendingPassengers: passengers});
+
 				}, (err) => {
 					alert("Promise error");
 				});
@@ -113,6 +118,8 @@ class RequestedRides extends Component {
 
 	// self is the this of the child component
 	acceptPassenger(self) {
+		// now we send this array of passengers to the server for the server
+		// to update the personalRyde objects
 		let passengers = this.state.pendingPassengers;
 
 		for (let i = 0; i < passengers.length; ++i) {
@@ -123,13 +130,9 @@ class RequestedRides extends Component {
 				var cardObjArr = passengers.splice(i, 1);
 			}
 		}
-		this.setState({pendingPassengers: passengers});
-
-		// now we send this array of passengers to the server for the server
-		// to update the personalRyde objects
 
 		let reqObj = {
-			rydeId: cardObjArr[0].props.id,
+			rydeId: cardObjArr[0].props.rydeId,
 			// carObjArr contains the array of cards being accepted
 			// and we access the email from the props of the card
 			acceptedPassengerEmail: cardObjArr[0].props.email
@@ -143,8 +146,12 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status === 404) {
+			if (res.status === 200) {
+				this.setState({pendingPassengers: passengers});
+			} else if (res.status === 404) {
 				alert("Server error");
+			} else {
+				alert("The ryde cannot take in anymore passengers");
 			}
 		}, (err) => {
 			alert("Promise error");
@@ -154,6 +161,8 @@ class RequestedRides extends Component {
 
 	// self is the this of the child component
 	rejectPassenger(self) {
+		// now we need to send this array of passengers to the server for the
+		// server to update the personalRyde objects
 		let passengers = this.state.pendingPassengers;
 
 		for (let i = 0; i < passengers.length; ++i) {
@@ -164,14 +173,9 @@ class RequestedRides extends Component {
 				var cardObjArr = passengers.splice(i, 1);
 			}
 		}
-		this.setState({pendingPassengers: passengers});
-
-		// now we need to send this array of passengers to the server for the
-		// server to update the personalRyde objects
-
 
 		let reqObj = {
-			rydeId: cardObjArr[0].props.id,
+			rydeId: cardObjArr[0].props.rydeId,
 			rejectedPassengerEmail: cardObjArr[0].props.email
 		}
 
@@ -182,15 +186,47 @@ class RequestedRides extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status === 200) {
+				this.setState({pendingPassengers: passengers});
+			} else if (res.status === 404) {
+				alert("Server error");
+			}
+		}, (err) => {
+			alert("Promise error");
 		});
 
 	}
 
 	render() {
 		return(
-			<ScrollView>
-				{this.state.pendingPassengers}
-			</ScrollView>
+			<Notifications
+				ref={(notifications) => (this.notifications = notifications)}>
+				<Drawer
+					ref={(drawer) => this.drawer = drawer}>
+					<Container>
+						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+							<Left style={{flex: 1}}>
+								<Button transparent onPress={this.openMenu}>
+									<Icon name='menu' />
+								</Button>
+							</Left>
+							<Body style={{alignItems: 'center', flex: 1}}>
+								<Title style={{fontFamily: 'sans-serif'}}>RYDE SEARCH</Title>
+							</Body>
+							<Right style={{flex: 1}}>
+								<Button onPress = {() => {this.openNotifications()}} transparent>
+									<Icon name='notifications' />
+								</Button>
+							</Right>
+						</Header>
+						<ScrollView>
+							{this.state.pendingPassengers}
+						</ScrollView>
+					</Container>
+				</Drawer>
+			</Notifications>
+
 		);
 	}
 }

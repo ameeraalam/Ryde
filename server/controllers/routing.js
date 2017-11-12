@@ -41,7 +41,7 @@ module.exports = function() {
 					
 	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
 
-	app.get("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
+	app.post("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
 
 	app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); })
 

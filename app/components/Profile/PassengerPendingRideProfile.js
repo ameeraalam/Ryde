@@ -49,39 +49,53 @@ class PassengerPendingRideProfile extends Component {
           />
 
           <CardItem>
-          <Text>Driver E-mail: {this.props.resO.driver}</Text>
+            <Text>Driver E-mail: {this.props.resO.driver}</Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>Rating: {this.props.resO.rating}</Text>
+            <Text>Rating: {this.props.resO.rating}</Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>Luggage: {this.props.resO.luggage} </Text>
+            <Text>Luggage: {this.props.resO.numLuggage} </Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>Passengers: {this.props.resO.passengers}</Text>
+            <Text>Passengers: {this.props.resO.numPassengers}</Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>Price: {this.props.resO.price}</Text>
+            <Text>Price: {this.props.resO.price}</Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>From: {this.props.resO.from}</Text>
+            <Text>From: {this.props.resO.from}</Text>
           </CardItem>
+
           <Text></Text>
+
           <CardItem>
-          <Text>To: {this.props.resO.to}</Text>
+            <Text>To: {this.props.resO.to}</Text>
           </CardItem>
+
           <Text></Text>
+
           </Content>
           </ScrollView>
       <View>
-      <Button large info disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
-      <Button large info disabled style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-      <Button large info disabled style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
+        <Button large info disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
+        <Button large info disabled style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
+        <Button large info disabled style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
       </View>
 </Container>
     );

@@ -1,62 +1,67 @@
 import React, { Component } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-	AppRegistry,
-	StyleSheet,
-	Text,
-	View
-} from "react-native";
-import {Actions } from 'react-native-router-flux';
-import { Container, Header, Left, Body, Right, Button, Title, Footer, FooterTab, Content } from 'native-base';
-	export default class PassengerView extends Component {
+import { View, Text, AppRegistry,StatusBar } from "react-native";
+import { Container, Header, Content, Icon, Left, Right, Button, Title, Body, TabHeading, Tab, Tabs, Fab } from 'native-base';
+import Available from './Available';
+import Pending from './Pending';
+import Drawer from '../Drawer/Drawer';
+import Notifications from '../Notifications/Notifications';
+
+
+class PassengerView extends Component {
+
+  constructor(props){
+    super(props);
+    this.openMenu = this.openMenu.bind(this);
+    this.openNotifications = this.openNotifications.bind(this);
+  }
+
+  openNotifications(){
+    this.notifications.openDrawer();
+  }
+
+  openMenu() {
+    this.drawer.openDrawer();
+  }
+
+
   render() {
+    let resObj = this.props.resObj
+
     return (
+      <Notifications
+        ref={(notifications) => (this.notifications = notifications)}>
+        <Drawer
+          ref={(drawer) => this.drawer = drawer}>
       <Container>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name='bars' color='white' size={24} />
+        <Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+          <Left style={{flex: 1}}>
+            <Button transparent onPress={this.openMenu}>
+              <Icon name='menu' />
             </Button>
           </Left>
-          <Left>
-            <Button transparent>
-                <Icon name='bell-o' color='white' size={24} />
-            </Button>
-          </Left>
-          <Body>
-            <Title>RYDE</Title>
+          <Body style={{alignItems: 'center', flex: 1}}>
+            <Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
           </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='search' color='white' size={24} />
+          <Right style={{flex: 1}}>
+            <Button onPress = {() => {this.openNotifications()}} transparent>
+              <Icon name='notifications' />
             </Button>
           </Right>
         </Header>
-        <Content/>
-        <Footer>
-          <FooterTab>
-                    <Button active vertical default onPress={() => Actions.available({})}>
-                           <Icon active name="check-circle" color='white' size={24} />
-                           <Text style={styles.text}> Available </Text>
-                        </Button>
-                        <Button vertical onPress={() => Actions.pending({})}>
-                           <Icon name="question-circle" color='white' size={24}  />
-                           <Text style={styles.text}> Pending </Text>
-                        </Button>
-                     </FooterTab>
-                 </Footer>
+        <Tabs initialPage={0} tabBarPosition='bottom' >
+          <Tab heading={ <TabHeading style={{backgroundColor: 'rgb(72, 110, 255)'}}><Icon active name="checkmark-circle"/><Text style={{color:'white', fontSize: 16, fontFamily: 'sans-serif', marginLeft: 10}}>Available</Text></TabHeading>}>
+            <Available resObj />
+          </Tab>
+          <Tab heading={ <TabHeading style={{backgroundColor: 'rgb(72, 110, 255)'}}><Icon active name="time" /><Text style={{color:'white', fontSize: 16, fontFamily: 'sans-serif', marginLeft: 10}}>Pending</Text></TabHeading>}>
+            <Pending resObj />
+          </Tab>
+        </Tabs>
       </Container>
+    </Drawer>
+  </Notifications>
     );
   }
 }
-
-const styles = StyleSheet.create({
-     text: {
-        color: 'white',
-        fontSize: 16,
-     }
-});
-
 
 module.exports = PassengerView;
 

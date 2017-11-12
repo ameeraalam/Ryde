@@ -44,7 +44,7 @@ class CardSlide extends Component {
 			<Swipeout right = {this.swipeOutButtons} autoClose = {true}>
 					<Card>
 						<CardItem>
-							<Text>Ryde-Id: {this.props.id}, First Name: {this.props.firstName} Last Name: {this.props.lastName}, Email: {this.props.email}, Rating: {this.props.rating}</Text>
+							<Text>RydeId: {this.props.rydeId} First Name: {this.props.firstName} Last Name: {this.props.lastName}, Email: {this.props.email}, Rating: {this.props.rating}</Text>
 						</CardItem>
 					</Card>
 			</Swipeout>

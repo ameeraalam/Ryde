@@ -5,11 +5,9 @@ import { Actions } from "react-native-router-flux";
 import styles from './Styles';
 
 class ContactUs extends Component {
-  
 
-  handleSubmitButton() {
-    alert('Thank you for your feedback\n We will get back to you shortly');
-    Actions.pop();
+  previousPage() {
+    Actions.pop({});
   }
 
 
@@ -48,7 +46,7 @@ class ContactUs extends Component {
                   multiline = {true}
                   numberOfLines = {5}/>
 
-                  <TouchableOpacity onPress = {this.handleSubmitButton}>
+                  <TouchableOpacity onPress = {() => {}}>
           					<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:54, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
                       SUBMIT
                     </Text>

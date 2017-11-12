@@ -41,8 +41,7 @@ class Register extends Component {
 	constructor(props) {
 		super(props);
 		this.address = config.ip;
-		// this.baseUrl = "http://" + this.address + ":3000/";
-		this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
@@ -100,15 +99,15 @@ class Register extends Component {
 
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
-  _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
 	_handleDatePicked = (date) => {
 		let dateString = date.toString();
 		let formattedDate = dateString.slice(3, 13);
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
-    // console.log('Your Date of Birth is: ', date);
-    this._hideDateTimePicker();
-  }
+    	// console.log('Your Date of Birth is: ', date);
+    	this._hideDateTimePicker();
+  	}
 
 	emailCheck() {
 		let emailCheck = false;
@@ -163,7 +162,6 @@ class Register extends Component {
 				}
 				return emailCheck;
 			} else {
-				alert("A user with the email is already registered");
 				return emailCheck;
 			}
 		}, (err) => {
@@ -315,7 +313,7 @@ class Register extends Component {
 							if (res.status === 200) {
 								alert("Registration complete");
 								// on completing the registration we switch to the login page
-								Actions.login({});
+								Actions.login({type: 'reset'});
 							} else {
 								alert("Error");
 							}
@@ -342,7 +340,7 @@ class Register extends Component {
 			<ScrollView style={{backgroundColor: '#fff'}}>
 				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
 					<Body>
-						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
+						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
 					</Body>
 				</Header>
 
@@ -460,7 +458,7 @@ class Register extends Component {
 					<Item floatingLabel>
 						<Label style = {this.state.carS}>Car Model</Label>
 						<Input
-							onChangeText = {(text) => this.setState({car: text, car: {color: "grey"}})}
+							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
 						/>
 					</Item>
 				</Form>
