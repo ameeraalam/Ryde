@@ -313,7 +313,7 @@ class Register extends Component {
 							if (res.status === 200) {
 								alert("Registration complete");
 								// on completing the registration we switch to the login page
-								Actions.login({});
+								Actions.login({type: 'reset'});
 							} else {
 								alert("Error");
 							}
@@ -340,7 +340,7 @@ class Register extends Component {
 			<ScrollView style={{backgroundColor: '#fff'}}>
 				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
 					<Body>
-						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
+						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
 					</Body>
 				</Header>
 
