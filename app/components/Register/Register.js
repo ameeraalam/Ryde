@@ -27,14 +27,11 @@ import {
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
-
 import Choice from "../Choice/Choice";
-
 import styles from "./styles";
-
 import config from "./../../config";
-
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import OneSignal from 'react-native-onesignal';
 
 class Register extends Component {
 
@@ -42,7 +39,9 @@ class Register extends Component {
 		super(props);
 		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
+		this.onIds = this.onIds.bind(this);
 		this.state = {
+			deviceId: '',
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
 			firstName: "First name",
@@ -96,6 +95,21 @@ class Register extends Component {
 			}
 		}
 	}
+
+
+	componentWillMount() {
+	  OneSignal.addEventListener('ids', this.onIds);
+		OneSignal.configure();
+	}
+
+	componentWillUnmount() {
+	    OneSignal.removeEventListener('ids', this.onIds);
+	}
+
+	onIds(device) {
+		this.setState({deviceId: device.userId});
+	}
+
 
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
@@ -283,8 +297,10 @@ class Register extends Component {
 				plate: this.state.plate,
 				liscense: this.state.liscence,
 				car: this.state.car,
-				allInfoFilled: this.driverFieldsCheck()
+				allInfoFilled: this.driverFieldsCheck(),
+				deviceId: this.state.deviceId
 			}
+			console.log(this.state.deviceId);
 
 			// I want to send the object only if there are no errors
 			if (errors.length === 0) {
@@ -311,7 +327,7 @@ class Register extends Component {
 						// res means response object
 						}).then((res) => {
 							if (res.status === 200) {
-								alert("Registration complete");
+								alert("Registration complete"); // should be changed to a message bar
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
 							} else {

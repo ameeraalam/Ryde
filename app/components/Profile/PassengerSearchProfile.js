@@ -54,7 +54,7 @@ class PassengerSearchProfile extends Component {
         alert("Request succesfully sent.")
         Actions.pending({resObj});
       } else {
-        alert("Can't send a request twice.");
+        alert("Can't send a request twice."); // not added here
       }
     }, (err) => {
       if (err) {

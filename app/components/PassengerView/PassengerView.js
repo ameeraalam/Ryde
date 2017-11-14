@@ -50,10 +50,10 @@ class PassengerView extends Component {
         </Header>
         <Tabs initialPage={0} tabBarPosition='bottom' >
           <Tab heading={ <TabHeading style={{backgroundColor: 'rgb(72, 110, 255)'}}><Icon active name="checkmark-circle"/><Text style={{color:'white', fontSize: 16, fontFamily: 'sans-serif', marginLeft: 10}}>Available</Text></TabHeading>}>
-            <Available resObj />
+            <Available resObj={resObj} />
           </Tab>
           <Tab heading={ <TabHeading style={{backgroundColor: 'rgb(72, 110, 255)'}}><Icon active name="time" /><Text style={{color:'white', fontSize: 16, fontFamily: 'sans-serif', marginLeft: 10}}>Pending</Text></TabHeading>}>
-            <Pending resObj />
+            <Pending resObj={resObj} />
           </Tab>
         </Tabs>
       </Container>
