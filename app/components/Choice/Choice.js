@@ -31,6 +31,10 @@ class Choice extends Component {
     this.drawer.openDrawer();
   }
 
+	componentDidUpdate() {
+		console.log("called");
+	}
+
 	submitDriver() {
 		// Takes you to driver's home page, if all infos are filled.
 		// Otherwise a page will pop up asking for incomplete driver fields to be completed

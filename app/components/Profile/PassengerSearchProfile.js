@@ -52,7 +52,7 @@ class PassengerSearchProfile extends Component {
         let resObj = this.props.currentPassenger;
         //if request is succesfully sent then we alert the user
         alert("Request succesfully sent.")
-        Actions.pending({resObj});
+        Actions.passengerView({resObj});
       } else {
         alert("Can't send a request twice."); // not added here
       }

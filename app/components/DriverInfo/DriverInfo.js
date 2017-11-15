@@ -163,7 +163,7 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				Actions.driverView({resObj});
+				Actions.driverView({type: 'replace', resObj});
 			} else {
 				alert("Error");
 			}
@@ -225,12 +225,13 @@ class DriverInfo extends Component {
 							</Item>
 						</Form>
 
-						<TouchableOpacity onPress = {() => {this.submitButton()}}>
-							<Image
-								style = {styles.submitButton}
-								source = {require("./images/button.png")}
-								/>
-						</TouchableOpacity>
+						<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
+							<TouchableOpacity onPress = {() => {this.submitButton()}}>
+								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+									Submit
+								</Text>
+							</TouchableOpacity>
+						</View>
 
 					</View>
 				</Container>
