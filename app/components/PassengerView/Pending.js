@@ -17,8 +17,7 @@ class Pending extends Component {
 
   constructor(props){
     super(props);
-    this.address = config.ip;
-    this.baseUrl = "http://" + this.address + ":3000/";
+    this.baseUrl = config();
     this.state = {
       data: []
     }

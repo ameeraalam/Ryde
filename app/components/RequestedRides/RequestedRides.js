@@ -35,9 +35,8 @@ import CardSlide from "./CardSlide";
 class RequestedRides extends Component {
 	constructor(props) {
 		super(props);
-		this.address = config.ip;
-		this.user = this.props.resObjDriver;
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.user = this.props.resObjUser;
+		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
 		this.swipeOutButtons = [{
@@ -88,7 +87,7 @@ class RequestedRides extends Component {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({rydeId: this.props.resObjRide.rydeId})
+			body: JSON.stringify({rydeId: this.props.resObjRyde.rydeId})
 		}).then((res) => {
 			// response object being returned
 			if (res.status === 200) {
@@ -100,7 +99,7 @@ class RequestedRides extends Component {
 					let passengers = [];
 
 					for (let i = 0; i < resObj.pending.length; ++i) {
-						passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRide.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
+						passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
 					}
 
 					this.setState({pendingPassengers: passengers});

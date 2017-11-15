@@ -17,8 +17,7 @@ import config from "./../../config";
 class PassengerSearchProfile extends Component {
   constructor(props){
     super(props);
-    this.address = config.ip;
-    this.baseUrl = "http://" + this.address + ":3000/";
+    this.baseUrl = config();
     this.openMenu = this.openMenu.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
   }
@@ -129,9 +128,7 @@ class PassengerSearchProfile extends Component {
               </Content>
             </ScrollView>
             <View>
-              <Button large style={styles.button}><Text style={styles.text} onPress={() => this.requestButton()}>Request</Text></Button>
-              <Button large info style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-              <Button large disabled info style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
+              <Button large style={styles.button} onPress={() => this.requestButton()}><Text style={styles.text}>Request</Text></Button>
             </View>
           </Container>
         </Drawer>

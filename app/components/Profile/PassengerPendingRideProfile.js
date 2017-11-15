@@ -106,11 +106,6 @@ class PassengerPendingRideProfile extends Component {
 
               </Content>
             </ScrollView>
-            <View>
-              <Button large info disabled style={styles.button}><Text style={styles.text}>Request</Text></Button>
-              <Button large info disabled style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-              <Button large info disabled style={styles.chat}><Text style={styles.text}>Chat</Text></Button>
-            </View>
           </Container>
         </Drawer>
       </Notifications>

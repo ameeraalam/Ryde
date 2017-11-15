@@ -18,17 +18,13 @@ import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
-// Unique static ID that will be assigned to a Ryde each time one is created
-var rideNum = 1;
-var emptyArray = [];
 
 // Main class
 class RidePosting extends Component{
 
 	constructor(props){
 		super(props);
-		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
 		this.state = {
@@ -87,9 +83,9 @@ class RidePosting extends Component{
 					date: this.state.travelDate,
 					numPassengers: this.state.numPassengers,
 					numLuggage: this.state.numLuggage,
-					rideId: newRydeID.rydeID,
-					pending: emptyArray,
-					members: emptyArray,
+					rydeId: newRydeID.rydeID,
+					pending: [],
+					members: [],
 					currentPassengerCount: 0,
 					currentLuggageCount: 0,
 					price: "$" + this.state.ridePrice
@@ -123,7 +119,6 @@ class RidePosting extends Component{
 						}).then((res) => {
 
 							if (res.status === 200){
-								console.log("RydeID incremented");
 
 							} else {
 

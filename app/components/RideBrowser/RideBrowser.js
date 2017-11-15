@@ -21,8 +21,7 @@ class RideBrowser extends Component{
 
     constructor(props){
         super(props);
-        this.address = config.ip;
-        this.baseUrl = "http://" + this.address + ":3000/";
+        this.baseUrl = config();
         this.openMenu = this.openMenu.bind(this);
         this.openNotifications = this.openNotifications.bind(this);
         this.state = {rydes: []}

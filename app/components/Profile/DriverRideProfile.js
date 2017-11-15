@@ -19,8 +19,7 @@ class DriverRideProfile extends Component {
 
   constructor(props){
     super(props);
-    this.address = config.ip;
-    this.baseUrl = "http://" + this.address + ":3000/";
+    this.baseUrl = config();
     this.openMenu = this.openMenu.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
   }
@@ -36,8 +35,8 @@ class DriverRideProfile extends Component {
 
   render() {
 
-    let resObjDriver = this.props.resObjDriver;
-    let resObjRide = this.props.resObjRide;
+    let resObjUser = this.props.resObjDriver;
+    let resObjRyde = this.props.resObjRide;
 
     return (
       <Notifications
@@ -102,9 +101,13 @@ class DriverRideProfile extends Component {
                 <Text></Text>
                 <View style={styles.container}>
                   <Button large info onPress = {() => {
-                      Actions.requestedRides({resObjDriver, resObjRide});
+                      Actions.requestedRides({resObjUser, resObjRyde});
                     }}><Text style={styles.text}>View Requests</Text>
-                  </Button><Button large info><Text style={styles.text}>Chat</Text></Button>
+                </Button>
+                <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
+                  <Text style={styles.text}>Chat</Text>
+
+                </Button>
                 </View>
               </Content>
             </ScrollView>

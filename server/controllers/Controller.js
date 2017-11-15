@@ -449,8 +449,6 @@ class Controller {
 					}
 				}
 
-				console.log(sameDestination);
-
 				res.status(200).send(sameDestination);
 			});
 		}, () => {

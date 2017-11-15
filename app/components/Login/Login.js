@@ -23,9 +23,7 @@ let MessageBarManager = require('react-native-message-bar').MessageBarManager;
 class Login extends Component {
  	constructor(props) {
 		super(props);
-		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
-		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
+		this.baseUrl = config();
 		this.state = {
 			loading: false,
 			textEmail: "Email",
