@@ -5,8 +5,7 @@ import {
 	View,
 	TextInput,
 	Image,
-	TouchableOpacity,
-	StatusBar
+	TouchableOpacity
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
   FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
@@ -50,7 +49,7 @@ class Choice extends Component {
 		// takes you to passenger's home page
 		let resObj = this.props.resObj
 		// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
-		Actions.passengerView({resObj});
+		Actions.available({resObj});
 	}
 
 	render() {
@@ -63,10 +62,6 @@ class Choice extends Component {
 
 				<Container>
           <Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
-						<StatusBar
-				     backgroundColor="rgb(72, 110, 255)"
-				     barStyle="light-content"
-				   	/>
             <Left style={{flex: 1}}>
               <Button transparent onPress={this.openMenu}>
                 <Icon name='menu' />
@@ -74,24 +69,22 @@ class Choice extends Component {
             </Left>
 
             <Body style={{flex: 1}}>
-              <Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>CHOICE</Title>
+              <Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Choice</Title>
             </Body>
 
             <Right style={{flex: 1}}/>
           </Header>
 
 					<Content style={{backgroundColor:'#fff'}}>
-						<View style={{marginTop:200, paddingLeft:15, paddingRight: 15}}>
+						<View style={{paddingLeft:15, paddingRight: 15}}>
 							<TouchableOpacity onPress = {() => {this.submitDriver()}}>
-								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, fontFamily: 'sans-serif'}}>
+								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:200, fontFamily: 'sans-serif'}}>
 									Driver
 								</Text>
 							</TouchableOpacity>
-						</View>
 
-						<View style={{marginTop:25, paddingLeft:15, paddingRight: 15}}>
 							<TouchableOpacity onPress = {() => {this.submitPassenger()}}>
-								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, fontFamily: 'sans-serif'}}>
+								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
 									Passenger
 								</Text>
 							</TouchableOpacity>

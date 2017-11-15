@@ -39,6 +39,8 @@ module.exports = function() {
 
 	app.post("/storeChat", (req, res) => { CONTROLLER.storeChat(req, res); });
 					
+	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
+
 	app.post("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
 
 	app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); })
@@ -49,11 +51,7 @@ module.exports = function() {
 
 	app.post("/findRyde", (req, res) => { CONTROLLER.findRyde(req, res); });
 	
-	app.get("/:email/createPersonalRyde", (req, res) => { CONTROLLER.createPersonalRyde(req, res); })
-
 	app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
-
-	app.get("/:rydeId/populateDriverView", (req, res) => { CONTROLLER.populateDriverView(req, res); });
 
 	app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
 

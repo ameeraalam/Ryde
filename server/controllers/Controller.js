@@ -372,15 +372,14 @@ class Controller {
 		});
 	}
 
-	// add this to the new file
+
 	postRyde(req, res){
 		this.modelRydes.insert(req.body, () => {
 			this.modelPersonalRydes.query({"email": req.body.driver}, (doc) => {
-				doc.rydesPostedAsDriver.push(req.body.rydeId);
+				doc.rydesPostedAsDriver.push(req.body);
 				this.modelPersonalRydes.update({"email": req.body.driver}, {rydesPostedAsDriver: doc.rydesPostedAsDriver}, (doc) => {
 					res.sendStatus(200);
 				}, () => {
-					console.log("here")
 					res.sendStatus(404);
 				});
 			}, () => {
@@ -392,6 +391,7 @@ class Controller {
 	}
 
 	findRyde(req, res){
+		
 		// Looking for Rydes with same destination
 		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
 
@@ -419,13 +419,11 @@ class Controller {
 	}
 
 
-	// modified
+	//for getting posts as a driver
 	driverView(req, res){
-		// query and get the personal rydes access the rydes posted array which 
-		// contains all the ids of the rydes posted 
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let obj = [];
-			for(let i = 0; i < doc.rydesPostedAsDriver.length; i++){
+			for(let i=0;i<doc.rydesPostedAsDriver.length;i++){
 				obj.push(doc.rydesPostedAsDriver[i])
 			}
 			res.status(200).send(obj);
@@ -434,20 +432,7 @@ class Controller {
 		});
 	}
 
-
-	// add this
-	populateDriverView(req, res) {
-		// queryies the rydeDatabse and sends the object to client side
-		this.modelRydes.query({"rydeId": Number(req.params.rydeId)}, (doc) => {
-			// on successful query we send the document retrieved from mongodb
-			res.status(200).send(doc);
-		}, () => {
-			// on failure we send the 404 code
-			res.sendStatus(404);
-		});
-	}
-
-	// for getting pending requests as a passenger
+	//for getting pending requests as a passenger
 	pending(req,res){
 		console.log(req.params.email);
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {

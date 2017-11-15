@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 		color:'#fff',
 		fontSize:18,
 		paddingTop:14,
+		marginTop:10,
 		fontFamily: 'sans-serif'
 	},
 	loading: {

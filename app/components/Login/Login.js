@@ -6,9 +6,7 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
-	ActivityIndicator,
-	Keyboard,
-	StatusBar
+	ActivityIndicator
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
@@ -25,7 +23,7 @@ class Login extends Component {
 		super(props);
 		this.address = config.ip;
 		this.baseUrl = "http://" + this.address + ":3000/";
-		//this.baseUrl = "https://ryde-matb.herokuapp.com/";
+		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
 		this.state = {
 			loading: false,
 			textEmail: "Email",
@@ -39,7 +37,7 @@ class Login extends Component {
 		// The MessageBar is then declared only once, in your main component.
 		MessageBarManager.registerMessageBar(this.refs.alert);
 	}
-
+	 
 	componentWillUnmount() {
 		// Remove the alert located on this master page from the manager
 		MessageBarManager.unregisterMessageBar();
@@ -69,7 +67,6 @@ class Login extends Component {
 				// returned by the promise is used
 				resObjPromise.then(function(resObj) {
 					// We then pass the resObj as a property for the choise page
-					Keyboard.dismiss();
 					Actions.choice({resObj});
 				})
 			} else {
@@ -95,28 +92,22 @@ class Login extends Component {
 	}
 
 	registerButton() {
-		Keyboard.dismiss();
 		Actions.register({});
 	}
 
 	render() {
 		return (
 			<View style = {styles.container}>
-				<StatusBar
-		     backgroundColor="rgb(72, 110, 255)"
-		     barStyle="light-content"
-		   	/>
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = "Email"
-         	underlineColorAndroid = "transparent"
+         			underlineColorAndroid = "transparent"
 					onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
-					underlineColorAndroid = "transparent"
 					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
