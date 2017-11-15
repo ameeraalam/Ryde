@@ -7,6 +7,7 @@ let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that genera
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
+let RydeID = require("./../models/RydeID.js");
 let Config = require('../config');
 let OneSignalClient = require('node-onesignal').default; // require the module
 let client = new OneSignalClient(Config.APP_ID, Config.REST_API_KEY); // create a new clinet
@@ -23,6 +24,7 @@ class Controller {
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
+		this.rydeID = new RydeID();
 
 	}
 
@@ -624,7 +626,50 @@ class Controller {
 			}, () => {
 				res.sendStatus(404);
 			});
-		}
+	}
+
+
+	getRydeID(req, res){
+
+		this.rydeID.query({"queryField": req.body.query}, (doc) => {
+
+			console.log("Ryde ID retrieved and sent");
+			res.status(200).send(doc);
+		}, () => {
+
+			console.log("Ryde ID not retrieved");
+			res.sendStatus(404);
+		});
+	}
+
+	incrementRydeID(req, res){
+
+		// Variable that current ID value from the database will be assigned to
+		//let currentID = undefined;
+
+		// Query the DB to find the object with the Ryde ID we want to increment
+		/*this.rydeID.query({"queryField": req.body.query}, (doc) => {
+			console.log("doc.rydeID = " + doc.rydeID);
+			currentID = doc.rydeID;
+			//res.sendStatus(200);
+		}, () => {
+			//res.sendStatus(404);
+		});
+		console.log("currentID is " + currentID);
+		// Increment ID
+		currentID++;
+		*/
+
+		// Update object in DB with the incremented Ryde ID
+		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
+
+			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1));
+			res.sendStatus(200);
+		}, () => {
+			console.log("Ryde ID has not been incremented");
+			res.sendStatus(404);
+		});
+	}
 
 
 	err(req, res) {

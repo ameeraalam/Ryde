@@ -163,7 +163,8 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				Actions.driverView({type: 'replace', resObj});
+				Actions.login({type: 'reset'});
+
 			} else {
 				alert("Error");
 			}

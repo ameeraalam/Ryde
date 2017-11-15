@@ -251,7 +251,6 @@ class Register extends Component {
 				allInfoFilled: false,
 				deviceId: this.state.deviceId
 			}
-			console.log(this.state.deviceId);
 
 			// I want to send the object only if there are no errors
 			if (errors.length === 0) {

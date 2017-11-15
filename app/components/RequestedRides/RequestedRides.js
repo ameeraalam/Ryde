@@ -212,7 +212,7 @@ class RequestedRides extends Component {
 								</Button>
 							</Left>
 							<Body style={{alignItems: 'center', flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>RYDE SEARCH</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>RYDE REQUESTS</Title>
 							</Body>
 							<Right style={{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
