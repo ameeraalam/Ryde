@@ -14,6 +14,7 @@ import Pending from "../PassengerView/Pending";
 import AvailableProfile from "../Profile/PassengerAvailableRideProfile";
 import PendingProfile from "../Profile/PassengerPendingRideProfile";
 import DriverProfile from "../Profile/DriverRideProfile";
+import passengerSearchProfile from "../Profile/PassengerSearchProfile";
 //import RequestedRides from "../RequestedRides/RequestedRides";
 import RidePosting from "../RidePosting/RidePosting";
 import RideSearch from "../RideSearch/RideSearch";
@@ -38,6 +39,7 @@ export default () => (
 			<Scene key = "ridePosting" component = {RidePosting} title = "Ryde"/>
 			<Scene key = "rideSearch" component = {RideSearch} title = "Ryde"/>
 			<Scene key = "rideBrowser" component = {RideBrowser} title = "Ryde"/>
+			<Scene key = "passengerSearchProfile" component = {PassengerSearchProfile} title = "Ryde"/>
 		</Scene>
 	</Router>
 );
