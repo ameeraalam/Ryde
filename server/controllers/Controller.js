@@ -7,6 +7,10 @@ let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that genera
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
+let Config = require('../config');
+let OneSignalClient = require('node-onesignal').default; // require the module
+let client = new OneSignalClient(Config.APP_ID, Config.REST_API_KEY); // create a new clinet
+let util 	= require('util');
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -19,6 +23,7 @@ class Controller {
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
+
 	}
 
 	intro() {
@@ -29,11 +34,11 @@ class Controller {
 	login(req, res) {
 		// First thing we have to do is query mongodb and find the object
 		// using the email, after finding the object we have to compare
-		// the password hash provided by the user and the password hash in the database 
+		// the password hash provided by the user and the password hash in the database
 		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// bcrypt.compare will compare the password attribute of the object provided
 			// by the user with the document object's password field in mongodb
-			// bcrypt.compare(), takes two 3 arguments, the password in strings, the 
+			// bcrypt.compare(), takes two 3 arguments, the password in strings, the
 			// hashed password and the callback function
 			bcrypt.compare(req.body.password, doc.password, (err, result) => {
 				if (err) {
@@ -53,6 +58,7 @@ class Controller {
 						resObj.car = doc.car;
 						resObj.allInfoFilled = doc.allInfoFilled;
 						resObj.id = doc.id;
+						resObj.deviceId = doc.deviceId;
 						res.status(200).send(resObj);
 					} else {
 						res.sendStatus(404);
@@ -112,6 +118,7 @@ class Controller {
 		});
 	}
 
+
 	getPassengerRequests(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			// on successfully querying the data we sent the res object back
@@ -119,7 +126,7 @@ class Controller {
 			let resObj = {};
 			// we look for the ryde by rydeId in the personal database's rydesPostedAsDriver field
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
-			
+
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					resObj.pending = doc.rydesPostedAsDriver[i].pending;
 					// we break the loop when we find the ryde
@@ -131,6 +138,32 @@ class Controller {
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
+		});
+	}
+
+	// sends push notification to passenger when passenger has been accepted to join driver's ryde
+	sendRydeAcceptNotification(driverRideObj, passengerObj){
+		this.modelUsers.query({"email": passengerObj.email}, (doc) => {
+			let driverFirstName 	 = driverRideObj.firstName;
+			let driverLastName  	 = driverRideObj.lastName;
+			let driverfrom  			 = driverRideObj.from;
+			let driverTo  				 = driverRideObj.to;
+			let playerId 					 = doc.deviceId;
+
+			// try adding '\n' to go to next line so that notification appears on two lines
+			let message = driverFirstName + ' ' + driverLastName + ' has accepted your ride request from ' +
+										driverfrom + ' to ' + driverTo;
+
+			// let data = [];
+
+			// send a notification
+			client.sendNotification(message, {
+			  include_player_ids: [playerId]
+				});
+		console.log('notification sent to passenger');
+
+		}, () => {
+			console.log('Error retrieving passenger object ryde object');
 		});
 	}
 
@@ -151,7 +184,7 @@ class Controller {
 				// we assign the ryde object to a variable
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					rydeToModify = doc.rydesPostedAsDriver[i];
-					// we save the index of the array for which the ryde object we are modifying	
+					// we save the index of the array for which the ryde object we are modifying
 					rydeIndexModified = i;
 					// we break the loop as we no longer need to iterate the array
 					break;
@@ -221,7 +254,7 @@ class Controller {
 											// now we need to find the specific ryde object we are dealing with
 											// from the array of rydes
 											if (myRydes[j].rydeId === rydeToModify.rydeId) {
-												
+
 												// if we find the ryde we are looking for in myRydes we just
 												// assign rydeToModify which is the modified ryde to that index
 												// of the array replacing the item
@@ -266,6 +299,11 @@ class Controller {
 				// error on trying to update
 				res.sendStatus(404);
 			});
+			if(rydeToModify !== undefined) {
+				this.sendRydeAcceptNotification(rydeToModify, userMember);
+			} else {
+				console.log('Error accepting request since the ryde is full');
+			}
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
@@ -283,7 +321,7 @@ class Controller {
 				// we assign the ryde object to a variable
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					rydeToModify = doc.rydesPostedAsDriver[i];
-					// we save the index of the array for which the ryde object we are modifying	
+					// we save the index of the array for which the ryde object we are modifying
 					rydeIndexModified = i;
 					// we break the loop as we no longer need to iterate the array
 					break;
@@ -384,14 +422,14 @@ class Controller {
 				});
 			}, () => {
 				res.sendStatus(404);
-			});		
+			});
 		}, () => {
 			res.sendStatus(404);
 		});
 	}
 
 	findRyde(req, res){
-		
+
 		// Looking for Rydes with same destination
 		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
 
@@ -399,12 +437,12 @@ class Controller {
 			let sameDestination = {dest:[]};
 
 			potentialRides.then((response) => {
-				
-				console.log("Res length is " + response.length);	
+
+				console.log("Res length is " + response.length);
 				for (let i = 0; i < response.length; i++){
 
 					if (response[i].from === req.body.from && response[i].to === req.body.to){
-						console.log("Ryde found!");	
+						console.log("Ryde found!");
 						sameDestination.dest.push(response[i]);
 					}
 				}
@@ -458,6 +496,34 @@ class Controller {
 			res.sendStatus(404);
 		})
 	}
+
+
+	// sends push notification to driver when passenger requests to join driver's ryde
+	sendRydeRequestNotification(req){
+		this.modelUsers.query({"email": req.body.driverRes.driver}, (doc) => {
+			let passengerFirstName = req.body.myRes.firstName;
+			let passengerLastName  = req.body.myRes.lastName;
+			let driverfrom  			 = req.body.driverRes.from;
+			let driverTo  				 = req.body.driverRes.to;
+			let playerId 					 = doc.deviceId;
+
+			let message = passengerFirstName + ' ' + passengerLastName + ' has requested to join your ride from ' +
+										driverfrom + ' to ' + driverTo;
+
+			// let data = [];
+
+			// send a notification
+			client.sendNotification(message, {
+			  include_player_ids: [playerId]
+			});
+		console.log('Notification sent to driver');
+
+		}, () => {
+			console.log('Error retrieving driver ryde object');
+		});
+	}
+
+
 
   	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
 	//use updatePush for the request for passengers.
@@ -531,7 +597,7 @@ class Controller {
 									}
 
 										this.modelPersonalRydes.updatePush({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": rydeToModify}, () => {
-
+												this.sendRydeRequestNotification(req);
 												res.sendStatus(200);
 											}, () => {
 												res.sendStatus(404);
@@ -559,7 +625,7 @@ class Controller {
 				res.sendStatus(404);
 			});
 		}
-				
+
 
 	err(req, res) {
 		console.log("Processing error....");
@@ -587,7 +653,7 @@ class Controller {
 			})
 		});
 	}
-	
+
 	initMessages(socket, id) {
 		this.modelChat.query({"rydeId": id}, (doc) => {
 

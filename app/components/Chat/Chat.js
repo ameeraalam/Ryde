@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { GiftedChat } from "react-native-gifted-chat";
 import { 
 	Container, 
 	Header, 
@@ -37,15 +38,19 @@ class Chat extends Component {
 
 	constructor(props) {
 		super(props);
-		this.username = "Tanvir";
-		// for now rydeObject's id is just a random float, but this id will be
+		console.ignoredYellowBox = [
+			'Setting a timer'
+		];
+
+		this.username = this.props.resObjUser.firstName + " " + this.props.resObjUser.lastName;
+		this.id = this.props.resObjUser.id; 
+		// for now rydeObject's id is just an int, but this id will be
 		// the id attribute of an object that gets passed on from another page
 		// as the rydeObject will be this.props.rydeObject
-		this.rydeObject = {rydeId: 4};
-		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.rydeObject = this.props.resObjRyde;
+		this.baseUrl = config();
 		// creating the socket object specific to this client
-		this.socket = clientIO("http://" + this.address + ":3000/");
+		this.socket = clientIO(config());
 		this.state = {
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
@@ -53,7 +58,9 @@ class Chat extends Component {
 			currentText: "",
 			texts: []
 		};
+	}
 
+	componentDidMount() {
 		// initiates message on page load and keep polling for new messages
 		this.initMessages();
 
@@ -66,22 +73,7 @@ class Chat extends Component {
 
 		// socket event for receiving messages broadcasted by the server socket
 		this.socket.on(this.rydeObject.rydeId.toString() + "/broadcast", (resObj) => {
-			textComponents = [];
-			for (let i = 0; i < resObj.texts.length; ++i) {
-				// variable names are placed inside {}
-				textComponents.push(
-					<ListItem key = {i} avatar>
-						<Left>
-							<Thumbnail source = {require("./pics/default.png")} />
-						</Left>
-						<Body>
-							<Text>{resObj.texts[i].username}</Text>
-							<Text note>{resObj.texts[i].text}</Text>
-						</Body>
-					</ListItem>
-				);
-			}
-			this.setState({texts: textComponents});
+			this.setState({texts: resObj.texts});
 		});
 
 		// socket event for success of a server job
@@ -106,81 +98,88 @@ class Chat extends Component {
 		// we belong to
 		this.socket.emit("idEnquiry", this.rydeObject.rydeId);
 
-
 		// this event listener catches the path through which the socket from the
 		// server will send the all the messages related to the ride from the database
 		this.socket.on(this.rydeObject.rydeId.toString() + "/initMessages", (resObj) => {
-			let initMsgs = []; 
-			for (let i = 0; i < resObj.texts.length; ++i) {
-				initMsgs.push(
-					<ListItem avatar>
-						<Left>
-							<Thumbnail source = {require("./pics/default.png")} />
-						</Left>
-						<Body>
-							<Text>{resObj.texts[i].username}</Text>
-							<Text note>{resObj.texts[i].text}</Text>
-						</Body>
-					</ListItem>
-				);
-			}
-			console.log(resObj.texts.length);		
-			this.setState({texts: initMsgs});
+			this.setState({texts: resObj.texts});
 		});		
 
 	}
 
 
-	sendMessage() {
-		let reqObj = {
-			rydeId: this.rydeObject.rydeId,
-			text: this.state.currentText,
-			username: this.username
-		};
+	sendMessage(message = []) {
 
-		// now we have to communicate with the server by sending each chat messages
-		// and storing the objects in the database
-		// socket.emit because we are sending somthing to the server
-		this.socket.emit(this.rydeObject.rydeId.toString() + "/storeChat", reqObj);
+		this.setState({currentText: message}, () => {
+			
+			this.setState((previousState) => ({
+				texts: GiftedChat.append(previousState.texts, message),
+			}));
+
+			let reqObj = {
+				rydeId: this.rydeObject.rydeId,
+				text: this.state.currentText[0]
+			};
+
+			// now we have to communicate with the server by sending each chat messages
+			// and storing the objects in the database
+			// socket.emit because we are sending somthing to the server
+			this.socket.emit(this.rydeObject.rydeId.toString() + "/storeChat", reqObj);
+
+		});
 	}
+
+			// <ScrollView>
+			// 	<View>
+			// 		<List>
+			// 			{this.state.texts}
+			// 		</List>
+			// 	</View>
+
+			// 	<View>
+			// 		<Item rounded>
+			// 			<Input
+			// 				value = {this.state.textValue}
+			// 				onChangeText = {(text) => {
+			// 					// On press we need to wrap the function this.buttonPress inside an
+			// 					// arrow function because this object becomes unknown inside the buttonPress
+			// 					// function if not done so. This is because the buttonPress function cannot
+			// 					// access the scope of the this object and the this object is something else
+			// 					// when assigned to the onPress variable. We also set the placeholder value
+			// 					// for the TextInput to whatever is being typed everytime the text changes
+			// 					this.setState({currentText: text});
+			// 					this.setState({textValue: text});
+			// 				}}
+			// 				onFocus = {() => {
+			// 					// On focus we empty out the placeholder value which is the textValue variable
+			// 					// in the react components state. This allows the box to refresh out for another
+			// 					// input
+			// 					this.setState({textValue: ""});
+			// 				}}
+			// 			></Input>	
+			// 		</Item>
+			// 		<Button
+			// 			onPress = {() => {this.sendMessage()}}
+			// 			title = "Send"
+			// 		></Button>
+			// 	</View>
+			// </ScrollView>
+
 
 	render() {
 		return (
-			<ScrollView>
-				<View>
-					<List>
-						{this.state.texts}
-					</List>
-				</View>
+			<GiftedChat
+				messages = {this.state.texts}
+				onSend = {(message) => {
+					// message argument seems to be an array containing exactly one element
+					// which is an GiftedChat object
+					this.sendMessage(message);
+				}}
+				user = {{
+					_id: this.id,
+					name: this.username
+				}}
+			/>
 
-				<View>
-					<Item rounded>
-						<Input
-							value = {this.state.textValue}
-							onChangeText = {(text) => {
-								// On press we need to wrap the function this.buttonPress inside an
-								// arrow function because this object becomes unknown inside the buttonPress
-								// function if not done so. This is because the buttonPress function cannot
-								// access the scope of the this object and the this object is something else
-								// when assigned to the onPress variable. We also set the placeholder value
-								// for the TextInput to whatever is being typed everytime the text changes
-								this.setState({currentText: text});
-								this.setState({textValue: text});
-							}}
-							onFocus = {() => {
-								// On focus we empty out the placeholder value which is the textValue variable
-								// in the react components state. This allows the box to refresh out for another
-								// input
-								this.setState({textValue: ""});
-							}}
-						></Input>	
-					</Item>
-					<Button
-						onPress = {() => {this.sendMessage()}}
-						title = "Send"
-					></Button>
-				</View>
-			</ScrollView>
 		);
 	}
 
