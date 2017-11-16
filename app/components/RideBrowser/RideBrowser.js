@@ -41,11 +41,11 @@ class RideBrowser extends Component{
 
             currentRyde = this.props.resObj.dest[i];
             rydeForButton.push(currentRyde);
-            let testRyde = rydeForButton[indexCount];
+            let resObjRyde = rydeForButton[indexCount];
 
             allRydes.push(
                 <View key={i}>
-                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, testRyde})}>
+                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, resObjRyde})}>
                     <Body>
                     <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName}</Text>
                     <Text>Price: {currentRyde.price}</Text>
