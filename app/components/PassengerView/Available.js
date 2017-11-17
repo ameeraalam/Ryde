@@ -3,7 +3,9 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ScrollView,
+  RefreshControl
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, CardItem, Fab } from 'native-base';
@@ -17,8 +19,10 @@ class Available extends Component {
     super(props);
     this.baseUrl = config();
     this.state = {
-      data: []
+      data: [],
+      refreshing: false
     }
+
   }
 
 
@@ -26,7 +30,6 @@ class Available extends Component {
     let resObj = this.props.resObj;
     Actions.rideSearch({resObj});
   }
-
 
   retrieveAvailablePosts(){
 
@@ -45,59 +48,74 @@ class Available extends Component {
             let myRes = this.props.resObj; //passenger object
             dataSet.push(
               <View key={i}>
-                <CardItem button onPress={()=>
-                  Actions.availableProfile({resO, myRes})}>
-                  <Body>
-                    <Text>From: {resObj[i].from}</Text>
-                    <Text>To: {resObj[i].to}</Text>
-                    <Text>Date: {resObj[i].date}</Text>
-                    <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
-                  </Body>
+              <CardItem button onPress={()=>
+                Actions.availableProfile({resO, myRes})}>
+                <Body>
+                <Text>From: {resObj[i].from}</Text>
+                <Text>To: {resObj[i].to}</Text>
+                <Text>Date: {resObj[i].date}</Text>
+                <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
+                </Body>
                 </CardItem>
                 <Text></Text>
-              </View>
-            )
-          }
-          this.setState({data: dataSet})
-        })
-      }
+                </View>
+              )
+            }
+            this.setState({data: dataSet})
+          })
+        }
 
         else { alert('You do not have any available requests');
-        }
-      }, (err) => {
-        alert(err)
-      });
-    }
-
-    componentDidMount(){
-      this.retrieveAvailablePosts();
-    }
-
-    render() {
-      let resObj = this.props.resObj;
-
-      return (
-        <Container>
-          <Content>
-            {this.state.data}
-          </Content>
-          <View>
-            <Fab
-              active={this.state.active}
-              direction="up"
-              containerStyle={{ }}
-              style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-              position="bottomRight"
-              onPress={() => {this.findButton()}}>
-              <Icon name="search" />
-            </Fab>
-          </View>
-        </Container>
-
-      );
-    }
+      }
+    }, (err) => {
+      alert(err)
+    });
   }
 
-  module.exports = Available;
+  componentDidMount(){
+    this.retrieveAvailablePosts();
+  }
 
-  AppRegistry.registerComponent('Available', () => Available);
+  onRefresh(){
+    this.setState({refreshing:true});
+    this.retrieveAvailablePosts().then(()=> {
+      this.setState({refreshing:false});
+    })
+  }
+
+
+  render() {
+
+    return (
+      <Container>
+      <ScrollView
+      refreshControl={<RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh.bind(this)}
+        />
+      }>
+      <Content>
+      {this.state.data}
+      </Content>
+      </ScrollView>
+      <View>
+      <Fab
+      active={this.state.active}
+      direction="up"
+      containerStyle={{ }}
+      style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+      position="bottomRight"
+      onPress={() => {this.findButton()}}>
+      <Icon name="search" />
+      </Fab>
+      </View>
+      </Container>
+
+
+    );
+  }
+}
+
+module.exports = Available;
+
+AppRegistry.registerComponent('Available', () => Available);
