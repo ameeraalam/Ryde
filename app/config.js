@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 function config() {
 	ip = "172.17.73.254";
@@ -8,3 +9,10 @@ function config() {
 }
 
 module.exports = config
+=======
+let config = {
+	ip: "192.168.2.22"
+}
+
+module.exports = config
+>>>>>>> master

@@ -5,6 +5,10 @@ import {
 	View,
 	TextInput,
 	Image,
+<<<<<<< HEAD
+=======
+	Button,
+>>>>>>> master
 	TouchableOpacity
 } from "react-native";
 
@@ -14,6 +18,7 @@ import {
 	Label,
 	Input,
 	ListItem,
+<<<<<<< HEAD
 	Container,
 	Header,
 	Left,
@@ -22,12 +27,18 @@ import {
 	Button,
 	Right,
 	Title
+=======
+>>>>>>> master
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
+<<<<<<< HEAD
 import Drawer from '../Drawer/Drawer';
+=======
+
+>>>>>>> master
 import config from "./../../config"
 
 
@@ -35,8 +46,13 @@ class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
+=======
+		this.address = config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/";
+>>>>>>> master
 		this.state = {
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
@@ -47,11 +63,14 @@ class DriverInfo extends Component {
 		}
 	}
 
+<<<<<<< HEAD
 	openMenu() {
 		this.drawer.openDrawer();
 	}
 
 
+=======
+>>>>>>> master
 	// plate number can only contain numbers and letters
 	plateCheck() {
 
@@ -92,7 +111,11 @@ class DriverInfo extends Component {
 				formattedPlate += String.fromCharCode(this.state.plate.charCodeAt(i) - 32)
 			} else {
 				formattedPlate += this.state.plate[i];
+<<<<<<< HEAD
 			}
+=======
+			} 
+>>>>>>> master
 		}
 
 		return formattedPlate;
@@ -108,10 +131,14 @@ class DriverInfo extends Component {
 			// result in the entire expression to result to true
 			// both the expression in the smaller expersion needs to be true
 			// for the entire statement to be true
+<<<<<<< HEAD
 			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) ||
 					(this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) ||
 					(this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) ||
 					(this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
+=======
+			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) || (this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) || (this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) || (this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
+>>>>>>> master
 				check = true;
 			} else {
 				return false;
@@ -165,9 +192,13 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
+<<<<<<< HEAD
 				this.props.driverFilledObj.driverInfo()
 				Actions.driverView({type: 'replace', resObj});
 
+=======
+				Actions.driverView({resObj});
+>>>>>>> master
 			} else {
 				alert("Error");
 			}
@@ -181,6 +212,7 @@ class DriverInfo extends Component {
 
 	render() {
 		return (
+<<<<<<< HEAD
 			<Drawer
 				ref={(drawer) => this.drawer = drawer}>
 				<Container>
@@ -241,8 +273,56 @@ class DriverInfo extends Component {
 				</Container>
 			</Drawer>
 
+=======
+			<View>
+				<ListItem itemHeader>
+					<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
+				</ListItem>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.plateS}>Plate number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
+
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.liscenseS}>Liscense number</Label>
+						<Input
+							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
+
+				<Form>
+					<Item floatingLabel>
+						<Label style = {this.state.carS}>Car model</Label>
+						<Input
+							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
+						/>
+					</Item>
+				</Form>
+
+				<TouchableOpacity onPress = {() => {this.submitButton()}}>
+					<Image
+						style = {styles.submitButton}
+						source = {require("./images/button.png")}
+					/>
+				</TouchableOpacity>
+
+
+			</View>
+>>>>>>> master
 		);
 	}
 }
 
+<<<<<<< HEAD
 module.exports = DriverInfo;
+=======
+module.exports = DriverInfo;
+>>>>>>> master

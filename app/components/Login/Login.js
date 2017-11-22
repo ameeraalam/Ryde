@@ -6,9 +6,13 @@ import {
 	TextInput,
 	Image,
 	TouchableOpacity,
+<<<<<<< HEAD
 	ActivityIndicator,
 	Keyboard,
 	StatusBar
+=======
+	ActivityIndicator
+>>>>>>> master
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
@@ -19,32 +23,46 @@ import config from "./../../config";
 
 let MessageBarAlert = require('react-native-message-bar').MessageBar;
 let MessageBarManager = require('react-native-message-bar').MessageBarManager;
+<<<<<<< HEAD
 import OneSignal from 'react-native-onesignal';
+=======
+>>>>>>> master
 
 class Login extends Component {
  	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
 		this.state = {
 			deviceId: '',
+=======
+		this.address = config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/";
+		//this.baseUrl = "https://ryde-matb.herokuapp.com/"
+		this.state = {
+>>>>>>> master
 			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
 		}
 	}
 
+<<<<<<< HEAD
 	componentWillMount() {
 	  OneSignal.addEventListener('ids', this.onIds);
 		OneSignal.configure();
 	}
 
+=======
+>>>>>>> master
 	componentDidMount() {
 		// Register the alert located on this master page
 		// This MessageBar will be accessible from the current (same) component, and from its child component
 		// The MessageBar is then declared only once, in your main component.
 		MessageBarManager.registerMessageBar(this.refs.alert);
 	}
+<<<<<<< HEAD
 
 	componentWillUnmount() {
 		// Remove the alert located on this master page from the manager
@@ -56,12 +74,24 @@ class Login extends Component {
 		this.setState({deviceId: device.userId});
 	}
 
+=======
+	 
+	componentWillUnmount() {
+		// Remove the alert located on this master page from the manager
+		MessageBarManager.unregisterMessageBar();
+	}
+
+>>>>>>> master
 	submitButton() {
 		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
+<<<<<<< HEAD
 			password: this.state.textPass,
 			deviceId: this.state.deviceId
+=======
+			password: this.state.textPass
+>>>>>>> master
 		}
 		fetch(this.baseUrl + "login", {
 			method: "POST",
@@ -73,6 +103,7 @@ class Login extends Component {
 		}).then((res) => {
 			this.setState({loading: false});
 			if (res.status === 200) {
+<<<<<<< HEAD
 
 				// we do self = this cus it will be called in the callback function in
 				// the .then below i.e in this scope, resObjPromise.then(function(resObj) {} )
@@ -93,6 +124,8 @@ class Login extends Component {
 				// changeFunc function.
 				// let self = this;
 
+=======
+>>>>>>> master
 				// The response object returned contains the object being sent
 				// from the server, we need to call the function res.json() which will
 				// return the json object being sent by the server.
@@ -101,10 +134,13 @@ class Login extends Component {
 				// returned by the promise is used
 				resObjPromise.then(function(resObj) {
 					// We then pass the resObj as a property for the choise page
+<<<<<<< HEAD
 					Keyboard.dismiss();
 					// let obj = {changeUp: self.changeFunc} Remember changeFuncis defined outside this function i.e defned in class scope
 					// console.log(obj.changeUp);
 					// just pass obj as props i.e {resObj, obj}
+=======
+>>>>>>> master
 					Actions.choice({resObj});
 				})
 			} else {
@@ -130,13 +166,17 @@ class Login extends Component {
 	}
 
 	registerButton() {
+<<<<<<< HEAD
 		Keyboard.dismiss();
+=======
+>>>>>>> master
 		Actions.register({});
 	}
 
 	render() {
 		return (
 			<View style = {styles.container}>
+<<<<<<< HEAD
 				<StatusBar
 		     backgroundColor="rgb(72, 110, 255)"
 		     barStyle="light-content"
@@ -145,13 +185,22 @@ class Login extends Component {
 					style = {styles.inputBox}
 					placeholder = "Email"
          	underlineColorAndroid = "transparent"
+=======
+				<TextInput
+					style = {styles.inputBox}
+					placeholder = "Email"
+         			underlineColorAndroid = "transparent"
+>>>>>>> master
 					onChangeText = {(text) => this.setState({textEmail: text})}
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
+<<<<<<< HEAD
 					underlineColorAndroid = "transparent"
+=======
+>>>>>>> master
 					onChangeText = {(text) => this.setState({textPass: text})}
 				/>
 
@@ -179,4 +228,8 @@ class Login extends Component {
 
 module.exports = Login;
 
+<<<<<<< HEAD
 AppRegistry.registerComponent("Login", () => Login);
+=======
+AppRegistry.registerComponent("Login", () => Login);
+>>>>>>> master

@@ -8,6 +8,7 @@ import {
 	TouchableOpacity
 } from "react-native";
 
+<<<<<<< HEAD
 import {
 	View,
 	Card,
@@ -21,13 +22,25 @@ import {
 	Button,
 	Right,
 	Title
+=======
+import {  
+	View,  
+	Card, 
+	CardItem,  
+	Text,
+	Icon
+>>>>>>> master
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
+<<<<<<< HEAD
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
+=======
+
+>>>>>>> master
 import config from "./../../config";
 
 import CardSlide from "./CardSlide";
@@ -35,10 +48,16 @@ import CardSlide from "./CardSlide";
 class RequestedRides extends Component {
 	constructor(props) {
 		super(props);
+<<<<<<< HEAD
 		this.user = this.props.resObjUser;
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
+=======
+		this.address = config.ip;
+		this.user = this.props.resObjDriver;
+		this.baseUrl = "http://" + this.address + ":3000/";
+>>>>>>> master
 		this.swipeOutButtons = [{
 			text: "Accept",
 			backgroundColor: "#86e079",
@@ -55,6 +74,7 @@ class RequestedRides extends Component {
 		this.getPassengerRequests();
 
 		// THIS IS IMPORTANT
+<<<<<<< HEAD
 		// this.acceptPassenger is our function within that class you can pass function logic from one
 		// from one scope to another by passing it in as a prop
 		// when it is passed in as a prop the this variable inside the function changes to whatever
@@ -63,12 +83,23 @@ class RequestedRides extends Component {
 		// forever binds the scope where .bind(this) is called to the function for life. Now no matter how
 		// many times the function is passed around from and to different component, the this variable will
 		// always be the this of the scope where .bind(this) was called
+=======
+		// this.acceptPassenger is our function within that class you can pass function logic from one 
+		// from one scope to another by passing it in as a prop
+		// when it is passed in as a prop the this variable inside the function changes to whatever
+		// scope you are passing the function to
+		// This is when .bing(this); comes into place, what .bind(this) does is whenever it is called it
+		// forever binds the scope where .bind(this) is called to the function for life. Now no matter how
+		// many times the function is passed around from and to different component, the this variable will
+		// always be the this of the scope where .bind(this) was called 
+>>>>>>> master
 		// Whenever you do .bind(this); the function this.acceptPassenger
 		this.acceptPassenger = this.acceptPassenger.bind(this);
 		this.rejectPassenger = this.rejectPassenger.bind(this);
 
 	}
 
+<<<<<<< HEAD
 	openNotifications(){
 		this.notifications.openDrawer();
 	}
@@ -78,6 +109,8 @@ class RequestedRides extends Component {
 	}
 
 
+=======
+>>>>>>> master
 	// we query to get the passengers who have applied to our rydes
 	getPassengerRequests() {
 		// we sent a query string to the server with the email of the driver
@@ -87,12 +120,17 @@ class RequestedRides extends Component {
 				"Accept": "application/json",
 				"Content-Type": "application/json"
 			},
+<<<<<<< HEAD
 			body: JSON.stringify({rydeId: this.props.resObjRyde.rydeId})
+=======
+			body: JSON.stringify({rydeId: this.props.resObjRide.rydeId})
+>>>>>>> master
 		}).then((res) => {
 			// response object being returned
 			if (res.status === 200) {
 				resPromise = res.json();
 				resPromise.then((resObj) => {
+<<<<<<< HEAD
 
 
 					// holds the array of cards with the details with passengers requesting to join the ride
@@ -104,6 +142,19 @@ class RequestedRides extends Component {
 
 					this.setState({pendingPassengers: passengers});
 
+=======
+				
+			
+				// holds the array of cards with the details with passengers requesting to join the ride
+				let passengers = [];
+				
+				for (let i = 0; i < resObj.pending.length; ++i) {
+					passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRide.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
+				}
+
+				this.setState({pendingPassengers: passengers});
+				
+>>>>>>> master
 				}, (err) => {
 					alert("Promise error");
 				});
@@ -160,7 +211,11 @@ class RequestedRides extends Component {
 
 	// self is the this of the child component
 	rejectPassenger(self) {
+<<<<<<< HEAD
 		// now we need to send this array of passengers to the server for the
+=======
+		// now we need to send this array of passengers to the server for the 
+>>>>>>> master
 		// server to update the personalRyde objects
 		let passengers = this.state.pendingPassengers;
 
@@ -199,6 +254,7 @@ class RequestedRides extends Component {
 
 	render() {
 		return(
+<<<<<<< HEAD
 			<Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
@@ -226,10 +282,19 @@ class RequestedRides extends Component {
 				</Drawer>
 			</Notifications>
 
+=======
+			<ScrollView>
+				{this.state.pendingPassengers}
+			</ScrollView>
+>>>>>>> master
 		);
 	}
 }
 
 module.exports = RequestedRides;
 
+<<<<<<< HEAD
 AppRegistry.registerComponent("RequestedRides", () => RequestedRides);
+=======
+AppRegistry.registerComponent("RequestedRides", () => RequestedRides);
+>>>>>>> master
