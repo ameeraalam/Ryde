@@ -32,11 +32,11 @@ class PassengerSearchProfile extends Component {
 
 
   requestButton(){
-    let resObj = this.props.currentRyde;
+    let resObj = this.props.resObjRyde;
     let reqObj = {
 
       myRes: this.props.currentPassenger,
-      driverRes: this.props.currentRyde
+      driverRes: this.props.resObjRyde
     }
 
     fetch(this.baseUrl + "passengerSearch", {
@@ -98,31 +98,31 @@ class PassengerSearchProfile extends Component {
                   />
 
                 <CardItem>
-                  <Text>Driver E-mail: {this.props.currentRyde.driver}</Text>
+                  <Text>Driver E-mail: {this.props.resObjRyde.driver}</Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>Rating: {this.props.currentRyde.rating}</Text>
+                  <Text>Rating: {this.props.resObjRyde.rating}</Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>Luggage: {this.props.currentRyde.numLuggage} </Text>
+                  <Text>Luggage: {this.props.resObjRyde.numLuggage} </Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>Passengers: {this.props.currentRyde.numPassengers}</Text>
+                  <Text>Passengers: {this.props.resObjRyde.numPassengers}</Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>Price: {this.props.currentRyde.price}</Text>
+                  <Text>Price: {this.props.resObjRyde.price}</Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>From: {this.props.currentRyde.from}</Text>
+                  <Text>From: {this.props.resObjRyde.from}</Text>
                 </CardItem>
                 <Text></Text>
                 <CardItem>
-                  <Text>To: {this.props.currentRyde.to}</Text>
+                  <Text>To: {this.props.resObjRyde.to}</Text>
                 </CardItem>
                 <Text></Text>
               </Content>

@@ -4,7 +4,9 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar
+  StatusBar,
+  ScrollView,
+  RefreshControl
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, CardItem, Fab } from 'native-base';
@@ -19,10 +21,10 @@ class Pending extends Component {
     super(props);
     this.baseUrl = config();
     this.state = {
-      data: []
+      data: [],
+      refreshing: false
     }
   }
-
 
   findButton(){
 
@@ -47,16 +49,17 @@ class Pending extends Component {
 
             dataSet.push(
               <View key={i}>
-                <CardItem button onPress={()=>
-                    Actions.pendingProfile({resO, myRes})}>
-                    <Body>
-                      <Text>From: {resObj[i].from}</Text>
-                      <Text>To: {resObj[i].to}</Text>
-                      <Text>Date: {resObj[i].date}</Text>
-                      <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
-                    </Body>
-                  </CardItem>
-                  <Text></Text>
+              <CardItem button
+              onPress={()=>
+                Actions.pendingProfile({resO, myRes})}>
+                <Body>
+                <Text>From: {resObj[i].from}</Text>
+                <Text>To: {resObj[i].to}</Text>
+                <Text>Date: {resObj[i].date}</Text>
+                <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
+                </Body>
+                </CardItem>
+                <Text></Text>
                 </View>
               )
             }
@@ -72,26 +75,43 @@ class Pending extends Component {
       this.retrievePendingPosts();
     }
 
+    onRefresh(){
+      this.setState({refreshing: true});
+      this.retrievePendingPosts().then(() => {
+        this.setState({refreshing:false});
+      });
+    }
+
+
     render() {
       let resObj = this.props.resObj;
+      //this.retrievePendingPosts();
 
       return (
-            <Container>
-              <Content>
-                {this.state.data}
-              </Content>
-              <View>
-                <Fab
-                  active={this.state.active}
-                  direction="up"
-                  containerStyle={{ }}
-                  style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-                  position="bottomRight"
-                  onPress={() => {this.findButton()}}>
-                  <Icon name="search" />
-                </Fab>
-              </View>
-            </Container>
+        <Container>
+        <ScrollView
+        refreshControl={<RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this.onRefresh.bind(this)}
+          />
+        }>
+        <Content>
+        {this.state.data}
+        </Content>
+        </ScrollView>
+        <View>
+        <Fab
+        active={this.state.active}
+        direction="up"
+        containerStyle={{ }}
+        style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+        position="bottomRight"
+        onPress={() => {this.findButton()}}>
+        <Icon name="search" />
+        </Fab>
+        </View>
+        </Container>
+
 
       );
     }

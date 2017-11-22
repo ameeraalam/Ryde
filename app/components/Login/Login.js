@@ -19,16 +19,24 @@ import config from "./../../config";
 
 let MessageBarAlert = require('react-native-message-bar').MessageBar;
 let MessageBarManager = require('react-native-message-bar').MessageBarManager;
+import OneSignal from 'react-native-onesignal';
 
 class Login extends Component {
  	constructor(props) {
 		super(props);
 		this.baseUrl = config();
+		this.onIds = this.onIds.bind(this);
 		this.state = {
+			deviceId: '',
 			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
 		}
+	}
+
+	componentWillMount() {
+	  OneSignal.addEventListener('ids', this.onIds);
+		OneSignal.configure();
 	}
 
 	componentDidMount() {
@@ -40,14 +48,20 @@ class Login extends Component {
 
 	componentWillUnmount() {
 		// Remove the alert located on this master page from the manager
+		OneSignal.removeEventListener('ids', this.onIds);
 		MessageBarManager.unregisterMessageBar();
+	}
+
+	onIds(device) {
+		this.setState({deviceId: device.userId});
 	}
 
 	submitButton() {
 		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
-			password: this.state.textPass
+			password: this.state.textPass,
+			deviceId: this.state.deviceId
 		}
 		fetch(this.baseUrl + "login", {
 			method: "POST",
@@ -59,6 +73,26 @@ class Login extends Component {
 		}).then((res) => {
 			this.setState({loading: false});
 			if (res.status === 200) {
+
+				// we do self = this cus it will be called in the callback function in
+				// the .then below i.e in this scope, resObjPromise.then(function(resObj) {} )
+				// and the .then function doesn't have access to the 'this' of the class.
+				// This means that when we do this.changeFunc, we only have access to
+				// the 'this' of .then's function's scope which doesn't have any
+				// changeFunc function so ofcourse the function is unddefined.
+				// The way around this is to store this class's 'this' in a variable
+				// and use that variable to access the changeFunc function in the
+				// class scope
+
+				// another work around is using ES6 arrow callback functions instead of
+				// the traditional function i.e use .then( (resObj) => {} ) instead of
+				// .then( function(resObj) {} )
+				// Arrow functions work cus arrow functions automatically bind the function
+				// to this (which the 'this' of the class) but normal functions don't.
+				// Thus, with arrow functions, we will be able to access the class's
+				// changeFunc function.
+				// let self = this;
+
 				// The response object returned contains the object being sent
 				// from the server, we need to call the function res.json() which will
 				// return the json object being sent by the server.
@@ -68,6 +102,9 @@ class Login extends Component {
 				resObjPromise.then(function(resObj) {
 					// We then pass the resObj as a property for the choise page
 					Keyboard.dismiss();
+					// let obj = {changeUp: self.changeFunc} Remember changeFuncis defined outside this function i.e defned in class scope
+					// console.log(obj.changeUp);
+					// just pass obj as props i.e {resObj, obj}
 					Actions.choice({resObj});
 				})
 			} else {

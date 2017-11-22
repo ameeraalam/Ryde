@@ -45,14 +45,18 @@ class RideBrowser extends Component{
         let allRydes = [];
         let currentPassenger = this.props.passedResObj;
         let currentRyde = null;
+        let indexCount = 0;
+        let rydeForButton = [];
 
         for (let i = 0; i < this.props.resObj.dest.length;  i++){
 
             currentRyde = this.props.resObj.dest[i];
+            rydeForButton.push(currentRyde);
+            let resObjRyde = rydeForButton[indexCount];
 
             allRydes.push(
                 <View key={i}>
-                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, currentRyde})}>
+                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, resObjRyde})}>
                     <Body>
                     <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName}</Text>
                     <Text>Price: {currentRyde.price}</Text>
@@ -60,6 +64,8 @@ class RideBrowser extends Component{
                     </CardItem>
                 </View>
             );
+
+            indexCount++;
         }
 
         this.setState({rydes: allRydes});
