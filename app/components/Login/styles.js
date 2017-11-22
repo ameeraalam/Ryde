@@ -36,10 +36,6 @@ const styles = StyleSheet.create({
 		color:'#fff',
 		fontSize:18,
 		paddingTop:14,
-<<<<<<< HEAD
-=======
-		marginTop:10,
->>>>>>> master
 		fontFamily: 'sans-serif'
 	},
 	loading: {
@@ -54,8 +50,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-<<<<<<< HEAD
 module.exports = styles;
-=======
-module.exports = styles;
->>>>>>> master

@@ -7,14 +7,11 @@ let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that genera
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
-<<<<<<< HEAD
 let RydeID = require("./../models/RydeID.js");
 let Config = require('../config');
 let OneSignalClient = require('node-onesignal').default; // require the module
 let client = new OneSignalClient(Config.APP_ID, Config.REST_API_KEY); // create a new clinet
 let util 	= require('util');
-=======
->>>>>>> master
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing
@@ -27,11 +24,8 @@ class Controller {
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
-<<<<<<< HEAD
 		this.rydeID = new RydeID();
 
-=======
->>>>>>> master
 	}
 
 	intro() {
@@ -42,19 +36,11 @@ class Controller {
 	login(req, res) {
 		// First thing we have to do is query mongodb and find the object
 		// using the email, after finding the object we have to compare
-<<<<<<< HEAD
 		// the password hash provided by the user and the password hash in the database
 		this.modelUsers.query({"email": req.body.email}, (doc) => {
 			// bcrypt.compare will compare the password attribute of the object provided
 			// by the user with the document object's password field in mongodb
 			// bcrypt.compare(), takes two 3 arguments, the password in strings, the
-=======
-		// the password hash provided by the user and the password hash in the database 
-		this.modelUsers.query({"email": req.body.email}, (doc) => {
-			// bcrypt.compare will compare the password attribute of the object provided
-			// by the user with the document object's password field in mongodb
-			// bcrypt.compare(), takes two 3 arguments, the password in strings, the 
->>>>>>> master
 			// hashed password and the callback function
 			bcrypt.compare(req.body.password, doc.password, (err, result) => {
 				if (err) {
@@ -62,7 +48,6 @@ class Controller {
 				} else {
 					// if result is true it means that both the passwords match
 					if (result === true) {
-<<<<<<< HEAD
 						// Before sending back a response object that will be passed around
 						// as props, we need to compare the deviceId of the current deviceId
 						// been used to login and the deviceId stored in the database.
@@ -103,21 +88,6 @@ class Controller {
 								}
 							}
 						});
-=======
-						// creating a response object to send back to the client
-						let resObj = {};
-						resObj.firstName = doc.firstName;
-						resObj.lastName = doc.lastName;
-						resObj.email = doc.email;
-						resObj.dob = doc.dob;
-						resObj.phone = doc.phone;
-						resObj.gender = doc.gender;
-						resObj.plate = doc.plate;
-						resObj.car = doc.car;
-						resObj.allInfoFilled = doc.allInfoFilled;
-						resObj.id = doc.id;
-						res.status(200).send(resObj);
->>>>>>> master
 					} else {
 						res.sendStatus(404);
 					}
@@ -128,7 +98,6 @@ class Controller {
 		});
 	}
 
-<<<<<<< HEAD
 	// Function compares current deviceId and deviceId stroed in the database
 	// If different, update the stored one with the new one and return the
 	// updated user object
@@ -147,8 +116,6 @@ class Controller {
 		}
 	}
 
-=======
->>>>>>> master
 	// contains the logic for the register feature of the app
 	register(req, res) {
 		bcrypt.genSalt(SALT, (err, salt) => {
@@ -197,10 +164,7 @@ class Controller {
 		});
 	}
 
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 	getPassengerRequests(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			// on successfully querying the data we sent the res object back
@@ -208,11 +172,7 @@ class Controller {
 			let resObj = {};
 			// we look for the ryde by rydeId in the personal database's rydesPostedAsDriver field
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> master
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					resObj.pending = doc.rydesPostedAsDriver[i].pending;
 					// we break the loop when we find the ryde
@@ -227,7 +187,6 @@ class Controller {
 		});
 	}
 
-<<<<<<< HEAD
 	// sends push notification to passenger when passenger has been accepted to join driver's ryde
 	sendRydeAcceptNotification(driverRideObj, passengerObj){
 		this.modelUsers.query({"email": passengerObj.email}, (doc) => {
@@ -254,8 +213,6 @@ class Controller {
 		});
 	}
 
-=======
->>>>>>> master
 
 	acceptedUpdatedRydes(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
@@ -273,11 +230,7 @@ class Controller {
 				// we assign the ryde object to a variable
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					rydeToModify = doc.rydesPostedAsDriver[i];
-<<<<<<< HEAD
 					// we save the index of the array for which the ryde object we are modifying
-=======
-					// we save the index of the array for which the ryde object we are modifying	
->>>>>>> master
 					rydeIndexModified = i;
 					// we break the loop as we no longer need to iterate the array
 					break;
@@ -347,11 +300,7 @@ class Controller {
 											// now we need to find the specific ryde object we are dealing with
 											// from the array of rydes
 											if (myRydes[j].rydeId === rydeToModify.rydeId) {
-<<<<<<< HEAD
 
-=======
-												
->>>>>>> master
 												// if we find the ryde we are looking for in myRydes we just
 												// assign rydeToModify which is the modified ryde to that index
 												// of the array replacing the item
@@ -396,14 +345,11 @@ class Controller {
 				// error on trying to update
 				res.sendStatus(404);
 			});
-<<<<<<< HEAD
 			if(rydeToModify !== undefined) {
 				this.sendRydeAcceptNotification(rydeToModify, userMember);
 			} else {
 				console.log('Error accepting request since the ryde is full');
 			}
-=======
->>>>>>> master
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
@@ -421,11 +367,7 @@ class Controller {
 				// we assign the ryde object to a variable
 				if (doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
 					rydeToModify = doc.rydesPostedAsDriver[i];
-<<<<<<< HEAD
 					// we save the index of the array for which the ryde object we are modifying
-=======
-					// we save the index of the array for which the ryde object we are modifying	
->>>>>>> master
 					rydeIndexModified = i;
 					// we break the loop as we no longer need to iterate the array
 					break;
@@ -526,22 +468,14 @@ class Controller {
 				});
 			}, () => {
 				res.sendStatus(404);
-<<<<<<< HEAD
 			});
-=======
-			});		
->>>>>>> master
 		}, () => {
 			res.sendStatus(404);
 		});
 	}
 
 	findRyde(req, res){
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> master
 		// Looking for Rydes with same destination
 		this.modelRydes.findAll({"to": req.body.to}, (cursor) => {
 
@@ -549,30 +483,16 @@ class Controller {
 			let sameDestination = {dest:[]};
 
 			potentialRides.then((response) => {
-<<<<<<< HEAD
 
 				console.log("Res length is " + response.length);
 				for (let i = 0; i < response.length; i++){
 
 					if (response[i].from === req.body.from && response[i].to === req.body.to){
 						console.log("Ryde found!");
-=======
-				
-				console.log("Res length is " + response.length);	
-				for (let i = 0; i < response.length; i++){
-
-					if (response[i].from === req.body.from && response[i].to === req.body.to){
-						console.log("Ryde found!");	
->>>>>>> master
 						sameDestination.dest.push(response[i]);
 					}
 				}
 
-<<<<<<< HEAD
-=======
-				console.log(sameDestination);
-
->>>>>>> master
 				res.status(200).send(sameDestination);
 			});
 		}, () => {
@@ -596,10 +516,6 @@ class Controller {
 
 	//for getting pending requests as a passenger
 	pending(req,res){
-<<<<<<< HEAD
-=======
-		console.log(req.params.email);
->>>>>>> master
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let obj = [];
 			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
@@ -624,7 +540,6 @@ class Controller {
 		})
 	}
 
-<<<<<<< HEAD
 
 	// sends push notification to driver when passenger requests to join driver's ryde
 	sendRydeRequestNotification(req){
@@ -797,125 +712,6 @@ class Controller {
 		console.log("Connection received from " +  socket.id + "...");
 	}
 
-=======
-  	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
-	//use updatePush for the request for passengers.
-	//update the ryde collection, requests [] with the passenger info
-	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
-	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
-
-
-
-	passengerSearch(req,res) {
-		this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (doc) => {
-			//doesn't let user request twice
-			for(let i = 0; i < doc.pending.length; ++i){
-				if(doc.pending[i].email === req.body.myRes.email){
-					res.sendStatus(404);
-					return;
-				}
-			}
-			//doesn't let a user who have been accepted request again
-			for(let i = 0; i < doc.members.length; ++i){
-				if(doc.members[i].email === req.body.myRes.email){
-					res.sendStatus(404);
-					return;
-				}
-			}
-
-			this.modelRydes.updatePush({"rydeId": req.body.driverRes.rydeId}, {"pending":req.body.myRes},() => {
-
-				this.modelPersonalRydes.query({"email": req.body.driverRes.driver}, (doc)=> {
-
-					let rydeToModify = undefined;
-					// we also need a variable to save the index of rydesPostedAsDriver array which was going to be modified
-					let indexModified = 0;
-					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
-						// we find the specific ryde from the array of rydes that the driver posted
-						if (doc.rydesPostedAsDriver[i].rydeId === req.body.driverRes.rydeId) {
-							rydeToModify = doc.rydesPostedAsDriver[i];
-							indexModified = i;
-						}
-					}
-
-					rydeToModify.pending.push(req.body.myRes);
-
-					doc.rydesPostedAsDriver[indexModified] = rydeToModify;
-
-					this.modelPersonalRydes.update({"email": req.body.driverRes.driver}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
-
-						this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (docs) => {
-
-							for(let j=0;j<docs.pending.length;++j){
-
-								this.modelPersonalRydes.query({"email": docs.pending[j].email}, (docss)=> {
-									let appliedRydes = docss.rydesAppliedToAsPassenger;
-
-									for(let i=0;i<appliedRydes.length;++i){
-
-										if(appliedRydes[i].rydeId === rydeToModify.rydeId){
-
-											appliedRydes[i] = rydeToModify;
-
-											//adds the object again
-											this.modelPersonalRydes.update({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": appliedRydes}, () => {
-
-												//res.sendStatus(200);
-											}, () => {
-												res.sendStatus(404);
-											});
-
-											return;
-										}
-									}
-
-										this.modelPersonalRydes.updatePush({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": rydeToModify}, () => {
-
-												res.sendStatus(200);
-											}, () => {
-												res.sendStatus(404);
-											});
-										}, () => {
-											res.sendStatus(404);
-										});
-									}
-								}, () => {
-									res.sendStatus(404);
-								});
-							}, () => {
-							res.sendStatus(404);
-						});
-
-					}, () => {
-						res.sendStatus(404);
-					});
-
-				}, () => {
-					res.sendStatus(404);
-				});
-
-			}, () => {
-				res.sendStatus(404);
-			});
-		}
-				
-
-	err(req, res) {
-		console.log("Processing error....");
-		res.sendStatus(404);
-	}
-
-
-	socketIntro() {
-		console.log("Socket is open on port 4000...");
-	}
-
-
-	connection(socket) {
-		console.log("Connection received from " +  socket.id + "...");
-	}
-
->>>>>>> master
 	idEnquiry(socket) {
 		console.log("Id has been sent by the socket...");
 		// creating a promise for the async socket event
@@ -927,11 +723,7 @@ class Controller {
 			})
 		});
 	}
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> master
 	initMessages(socket, id) {
 		this.modelChat.query({"rydeId": id}, (doc) => {
 
@@ -957,11 +749,7 @@ class Controller {
 			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
 				// we update the text array in the database by adding the new messages to it
 				// from the request objects body containing the new text
-<<<<<<< HEAD
 				doc.texts.unshift(reqObj.text);
-=======
-				doc.texts.push({username: reqObj.username, text: reqObj.text});
->>>>>>> master
 				// if we find the object we then update it
 				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, (doc) => {
 					// sending socket connection for success in the job
@@ -985,11 +773,7 @@ class Controller {
 				}
 				// pushing the message received to the db object's texts attribute
 				// which is an array
-<<<<<<< HEAD
 				dbObj.texts.unshift(reqObj.text);
-=======
-				dbObj.texts.push({username: reqObj.username, text: reqObj.text});
->>>>>>> master
 				this.modelChat.insert(dbObj, () => {
 					// sending socket connection for success in the job
 					console.log("Success emission...");

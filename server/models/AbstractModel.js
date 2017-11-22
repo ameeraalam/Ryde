@@ -1,16 +1,12 @@
 "use strict";
 
-
 /*
-
-/*	
 	NOTE** - The reason that the successCallBack and failureCallBack will work and can
 	successfully access the variables is because the class Users has a composition relationship
 	with the Controller, this means that because of lexical scoping the Users class can access
 	the variables scoped within the Controller class. I am specifying this to remind you that
 	the function that invokes has to supply all the variables and resources for the function being
 	passed on to do the job!
-	passed on to do the job!		
 
 */
 
@@ -170,8 +166,6 @@ class AbstractModel {
 		return this.MongoClient.connect(this.db, (err, db) => {
 
 			if (err){
-			
-			if (err){	
 				console.log("Failed...");
 				if (failureCallBack){
 					failureCallBack();
@@ -198,12 +192,3 @@ class AbstractModel {
 }
 
 module.exports = AbstractModel;
-			
-			db.close();
-			
-		});
-	}
-}
-
-module.exports = AbstractModel;
->>>>>>> master

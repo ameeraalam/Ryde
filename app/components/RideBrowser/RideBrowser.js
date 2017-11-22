@@ -5,10 +5,6 @@ import {
   Text,
   View,
   Image,
-<<<<<<< HEAD
-=======
-  Button,
->>>>>>> master
   Alert,
   TextInput,
   TouchableOpacity
@@ -16,20 +12,15 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
-<<<<<<< HEAD
 import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
-=======
-import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
->>>>>>> master
 import config from "./../../config";
 
 class RideBrowser extends Component{
 
     constructor(props){
         super(props);
-<<<<<<< HEAD
         this.baseUrl = config();
         this.openMenu = this.openMenu.bind(this);
         this.openNotifications = this.openNotifications.bind(this);
@@ -45,13 +36,6 @@ class RideBrowser extends Component{
     }
 
 
-=======
-        this.address = config.ip;
-        this.baseUrl = "http://" + this.address + ":3000/";
-        this.state = {rydes: []}
-    }
-
->>>>>>> master
     componentDidMount(){
         this.loadRydes();
     }
@@ -61,28 +45,18 @@ class RideBrowser extends Component{
         let allRydes = [];
         let currentPassenger = this.props.passedResObj;
         let currentRyde = null;
-<<<<<<< HEAD
         let indexCount = 0;
         let rydeForButton = [];
-=======
->>>>>>> master
 
         for (let i = 0; i < this.props.resObj.dest.length;  i++){
 
             currentRyde = this.props.resObj.dest[i];
-<<<<<<< HEAD
             rydeForButton.push(currentRyde);
             let resObjRyde = rydeForButton[indexCount];
 
             allRydes.push(
                 <View key={i}>
                     <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, resObjRyde})}>
-=======
-
-            allRydes.push(
-                <View key={i}>
-                    <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, currentRyde})}>
->>>>>>> master
                     <Body>
                     <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName}</Text>
                     <Text>Price: {currentRyde.price}</Text>
@@ -90,11 +64,8 @@ class RideBrowser extends Component{
                     </CardItem>
                 </View>
             );
-<<<<<<< HEAD
 
             indexCount++;
-=======
->>>>>>> master
         }
 
         this.setState({rydes: allRydes});
@@ -104,7 +75,6 @@ class RideBrowser extends Component{
 
     return(
 
-<<<<<<< HEAD
       <Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
@@ -132,11 +102,6 @@ class RideBrowser extends Component{
   </Drawer>
 </Notifications>
 
-=======
-        <View>
-            {this.state.rydes}
-      </View>
->>>>>>> master
     );
   }
 }

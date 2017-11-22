@@ -12,8 +12,4 @@ const styles = StyleSheet.create({
   }
 });
 
-<<<<<<< HEAD
 module.exports = styles;
-=======
-module.exports = styles;
->>>>>>> master

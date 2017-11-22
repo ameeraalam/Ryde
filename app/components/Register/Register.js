@@ -27,37 +27,20 @@ import {
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
-<<<<<<< HEAD
 import Choice from "../Choice/Choice";
 import styles from "./styles";
 import config from "./../../config";
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import OneSignal from 'react-native-onesignal';
-=======
-
-import Choice from "../Choice/Choice";
-
-import styles from "./styles";
-
-import config from "./../../config";
-
-import DateTimePicker from 'react-native-modal-datetime-picker';
->>>>>>> master
 
 class Register extends Component {
 
 	constructor(props) {
 		super(props);
-<<<<<<< HEAD
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
 		this.state = {
 			deviceId: '',
-=======
-		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
-		this.state = {
->>>>>>> master
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
 			firstName: "First name",
@@ -67,13 +50,7 @@ class Register extends Component {
 			dob: "Date of birth",
 			phone: "Mobile phone number",
 			gender: "Gender",
-<<<<<<< HEAD
 
-=======
-			plate: "Car plate number",
-			liscense: "Driver's liscense number",
-			car: "Car model number",
->>>>>>> master
 			firstNameS: {
 				color: "grey"
 			},
@@ -100,7 +77,6 @@ class Register extends Component {
 
 			genderS: {
 				color: "grey"
-<<<<<<< HEAD
 			}
 		}
 	}
@@ -120,24 +96,6 @@ class Register extends Component {
 	}
 
 
-=======
-			},
-
-			plateS: {
-				color: "grey"
-			},
-
-			liscenseS: {
-				color: "grey"
-			},
-
-			carS: {
-				color: "grey"
-			}
-		}
-	}
-
->>>>>>> master
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
 	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
@@ -227,44 +185,6 @@ class Register extends Component {
 		return phoneCheck;
 	}
 
-<<<<<<< HEAD
-=======
-	driverFieldsCheck() {
-		let plateCounter = 0;
-		let liscenseCounter = 0;
-		let carCounter = 0;
-
-		for (let i = 0; i < this.state.plate.length; ++i) {
-			// The expression has an and because the letter has to be WITHIN 64 and 123 and only way
-			// it can be within is if it is both greater than 64 and less than 123, also if the char code is a space
-			// the whole expression will be true. Either one of these expression needs to be true in order for the entire
-			// expression to evaluate to true. And both the inner expression needs to be true in order for the inner expression
-			// to evaluate to true
-			if ((this.state.plate.charCodeAt(i) > 64 && this.state.plate.charCodeAt(i) < 123) || this.state.plate.charCodeAt(i) === 32) {
-				++plateCounter;
-			}
-		}
-
-		for (let i = 0; i < this.state.liscense.length; ++i) {
-			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 123) || this.state.liscense.charCodeAt(i) === 32) {
-				++liscenseCounter;
-			}
-		}
-
-		for (let i = 0; i < this.state.car.length; ++i) {
-			if ((this.state.car.charCodeAt(i) > 64 && this.state.car.charCodeAt(i) < 123) || this.state.car.charCodeAt(i) === 32) {
-				++carCounter;
-			}
-		}
-
-		if (plateCounter === this.state.plate.length || liscenseCounter === this.state.liscense.length || carCounter === this.state.car.length) {
-			return false;
-		}
-
-		return true;
-	}
-
->>>>>>> master
 	firstNameChecker() {
 		if (this.state.firstName.length === 0) {
 			return false;
@@ -324,18 +244,11 @@ class Register extends Component {
 				dob: this.state.dob,
 				phone: this.state.phone,
 				gender: this.state.gender,
-<<<<<<< HEAD
 				plate: '',
 				liscense: '',
 				car: '',
 				allInfoFilled: false,
 				deviceId: this.state.deviceId
-=======
-				plate: this.state.plate,
-				liscense: this.state.liscence,
-				car: this.state.car,
-				allInfoFilled: this.driverFieldsCheck()
->>>>>>> master
 			}
 
 			// I want to send the object only if there are no errors
@@ -363,15 +276,9 @@ class Register extends Component {
 						// res means response object
 						}).then((res) => {
 							if (res.status === 200) {
-<<<<<<< HEAD
 								alert("Registration complete"); // should be changed to a message bar
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
-=======
-								alert("Registration complete");
-								// on completing the registration we switch to the login page
-								Actions.login({});
->>>>>>> master
 							} else {
 								alert("Error");
 							}
@@ -398,11 +305,7 @@ class Register extends Component {
 			<ScrollView style={{backgroundColor: '#fff'}}>
 				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
 					<Body>
-<<<<<<< HEAD
 						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
-=======
-						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>Register</Title>
->>>>>>> master
 					</Body>
 				</Header>
 
@@ -485,49 +388,6 @@ class Register extends Component {
 					</Picker>
 				</Form>
 
-<<<<<<< HEAD
-=======
-
-
-
-				<Text>  </Text>
-
-				<ListItem itemDivider>
-					<Text>OPTIONAL</Text>
-				</ListItem>
-
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.plateS}>Plate number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.liscenseS}>Liscense number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.carS}>Car Model</Label>
-						<Input
-							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
->>>>>>> master
 				<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
 					<TouchableOpacity onPress = {() => {this.submitButton()}}>
 						<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
@@ -543,8 +403,4 @@ class Register extends Component {
 
 module.exports = Register;
 
-<<<<<<< HEAD
 AppRegistry.registerComponent("Register", () => Register);
-=======
-AppRegistry.registerComponent("Register", () => Register);
->>>>>>> master
