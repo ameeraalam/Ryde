@@ -5,7 +5,6 @@ import {
 	View,
 	TextInput,
 	Image,
-	Button,
 	TouchableOpacity
 } from "react-native";
 
@@ -15,12 +14,20 @@ import {
 	Label,
 	Input,
 	ListItem,
+	Container,
+	Header,
+	Left,
+	Icon,
+	Body,
+	Button,
+	Right,
+	Title
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
 
 import styles from "./styles";
-
+import Drawer from '../Drawer/Drawer';
 import config from "./../../config"
 
 
@@ -28,8 +35,8 @@ class DriverInfo extends Component {
 
 	constructor(props) {
 		super(props);
-		this.address = config.ip;
-		this.baseUrl = "http://" + this.address + ":3000/";
+		this.baseUrl = config();
+		this.openMenu = this.openMenu.bind(this);
 		this.state = {
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
@@ -39,6 +46,11 @@ class DriverInfo extends Component {
 			carS: {color: "grey"}
 		}
 	}
+
+	openMenu() {
+		this.drawer.openDrawer();
+	}
+
 
 	// plate number can only contain numbers and letters
 	plateCheck() {
@@ -80,7 +92,7 @@ class DriverInfo extends Component {
 				formattedPlate += String.fromCharCode(this.state.plate.charCodeAt(i) - 32)
 			} else {
 				formattedPlate += this.state.plate[i];
-			} 
+			}
 		}
 
 		return formattedPlate;
@@ -96,7 +108,10 @@ class DriverInfo extends Component {
 			// result in the entire expression to result to true
 			// both the expression in the smaller expersion needs to be true
 			// for the entire statement to be true
-			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) || (this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) || (this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) || (this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
+			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) ||
+					(this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) ||
+					(this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) ||
+					(this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
 				check = true;
 			} else {
 				return false;
@@ -150,7 +165,9 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				Actions.driverView({resObj});
+				this.props.driverFilledObj.driverInfo()
+				Actions.driverView({type: 'replace', resObj});
+
 			} else {
 				alert("Error");
 			}
@@ -164,48 +181,66 @@ class DriverInfo extends Component {
 
 	render() {
 		return (
-			<View>
-				<ListItem itemHeader>
-					<Text>The infromation below are mandatory in order to access functionalities of a driver</Text>
-				</ListItem>
+			<Drawer
+				ref={(drawer) => this.drawer = drawer}>
+				<Container>
+					<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+						<Left style={{flex: 1}}>
+							<Button transparent onPress={this.openMenu}>
+								<Icon name='menu' />
+							</Button>
+						</Left>
+						<Body style={{alignItems: 'center', flex: 1}}>
+							<Title style={{fontFamily: 'sans-serif'}}>DRIVER INFO</Title>
+						</Body>
+						<Right style={{flex: 1}} />
+					</Header>
 
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.plateS}>Plate number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
+					<View>
+						<ListItem itemHeader>
+							<Text>The information below are mandatory in order to access functionalities of a driver</Text>
+						</ListItem>
 
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.liscenseS}>Liscense number</Label>
-						<Input
-							onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-				<Form>
-					<Item floatingLabel>
-						<Label style = {this.state.carS}>Car model</Label>
-						<Input
-							onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
-						/>
-					</Item>
-				</Form>
-
-				<TouchableOpacity onPress = {() => {this.submitButton()}}>
-					<Image
-						style = {styles.submitButton}
-						source = {require("./images/button.png")}
-					/>
-				</TouchableOpacity>
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.plateS}>Plate number</Label>
+								<Input
+									onChangeText = {(text) => this.setState({plate: text, plateS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
 
 
-			</View>
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.liscenseS}>Liscense number</Label>
+								<Input
+									onChangeText = {(text) => this.setState({liscense: text, liscenseS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
+
+						<Form>
+							<Item floatingLabel>
+								<Label style = {this.state.carS}>Car model</Label>
+								<Input
+									onChangeText = {(text) => this.setState({car: text, carS: {color: "grey"}})}
+									/>
+							</Item>
+						</Form>
+
+						<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
+							<TouchableOpacity onPress = {() => {this.submitButton()}}>
+								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+									Submit
+								</Text>
+							</TouchableOpacity>
+						</View>
+
+					</View>
+				</Container>
+			</Drawer>
+
 		);
 	}
 }

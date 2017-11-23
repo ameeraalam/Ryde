@@ -1,9 +1,9 @@
 'use strict'
 
-var routes = require('./controllers/routing.js')
+var Routes = require('./controllers/routing.js')
 
 function main() {
-	routes()
+	Routes.setRoutes();
 }
 
 if (!module.parent) {
