@@ -101,6 +101,8 @@ class DriverView extends Component {
 			<Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
+					isPassenger={false}
+					resObj = {this.props.resObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>

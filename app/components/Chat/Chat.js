@@ -125,12 +125,12 @@ class Chat extends Component {
 	// triggered they try to manipulate a DOM element that does not exist.
 	// Example of how to unregister events:
 
-componentWillUnmount() {
-	this.socket.off(this.rydeObject.rydeId.toString() + "/broadcast");
-	this.socket.off(this.rydeObject.rydeId.toString() + "/success");
-	this.socket.off(this.rydeObject.rydeId.toString() + "/failure");
-	this.socket.off(this.rydeObject.rydeId.toString() + "/initMessages");
-}
+	componentWillUnmount() {
+		this.socket.off(this.rydeObject.rydeId.toString() + "/broadcast");
+		this.socket.off(this.rydeObject.rydeId.toString() + "/success");
+		this.socket.off(this.rydeObject.rydeId.toString() + "/failure");
+		this.socket.off(this.rydeObject.rydeId.toString() + "/initMessages");
+	}
 
 
 	sendMessage(message = []) {
@@ -176,21 +176,23 @@ componentWillUnmount() {
 								</Button>
 							</Right>
 						</Header>
-			<GiftedChat
-				messages = {this.state.texts}
-				onSend = {(message) => {
-					// message argument seems to be an array containing exactly one element
-					// which is an GiftedChat object
-					this.sendMessage(message);
-				}}
-				user = {{
-					_id: this.id,
-					name: this.username
-				}}
-			/>
-		</Container>
-	</Drawer>
-</Notifications>
+						<View style={{flex: 1, backgroundColor:'#fff'}}>
+						<GiftedChat
+							messages = {this.state.texts}
+							onSend = {(message) => {
+								// message argument seems to be an array containing exactly one element
+								// which is a GiftedChat object
+								this.sendMessage(message);
+							}}
+							user = {{
+								_id: this.id,
+								name: this.username
+							}}
+							/>
+						</View>
+					</Container>
+				</Drawer>
+			</Notifications>
 
 
 		);

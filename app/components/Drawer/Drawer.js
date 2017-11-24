@@ -10,20 +10,53 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
       super(props);
       this.openDrawer = this.openDrawer.bind(this);
       this.switchRole = this.switchRole.bind(this);
+      this.setRoleName = this.setRoleName.bind(this);
+      this.setUserName = this.setUserName.bind(this);
+      this.state = {
+        roleName: '',
+        username: `pass me resObj props`
+      }
     }
 
     openDrawer() {
       this.drawer.openDrawer();
     }
 
+    componentDidMount() {
+      this.setRoleName();
+      this.setUserName();
+    }
+
+    setUserName() {
+      if(this.props.resObj) {
+        const {firstName, lastName} = this.props.resObj;
+        this.setState({username: `${firstName} ${lastName}`});
+      } else {
+        this.setState({username: `pass me resObj props`});
+      }
+    }
+
     // If a function uses "this", make sure to bind it in the constructor becauseit loses it's this when the function is called
     switchRole() { //check if this.props.isPassenger is undefined first
+      const {resObj} = this.props;
       if (this.props.isPassenger !== undefined) {
         if (this.props.isPassenger) {
-          Actions.driverView({type: 'reset'});
+          Actions.driverView({type: 'replace', resObj});
         } else {
-          Actions.available({type: 'reset'});
+          Actions.passengerView({type: 'replace', resObj});
         }
+      }
+    }
+
+    setRoleName() {
+      if(this.props.isPassenger !== undefined) {
+        if (this.props.isPassenger) {
+          this.setState({roleName: 'to Driver'});
+        } else {
+          this.setState({roleName: 'to Passenger'});
+        }
+      } else {
+        this.setState({roleName: 'Role'});
       }
     }
 
@@ -44,7 +77,7 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
           <View style={styles.profile}>
             <Image style={styles.userPlaceholderImage}
               source={require('./images/user_placeholder.png')} />
-            <Text style={styles.userName}>Brian West</Text>
+            <Text style={styles.userName}>{this.state.username}</Text>
 
             <View style={styles.rating}>
               <Image style={styles.star}
@@ -60,7 +93,7 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
                   <Icon name="swap" style={styles.drawerIcons} />
                 </Left>
                 <Body>
-                  <Text disabled style={styles.drawerItems}>Switch {this.props.role}</Text>
+                  <Text disabled style={styles.drawerItems}>Switch {this.state.roleName}</Text>
                 </Body>
                 <Right />
               </ListItem>

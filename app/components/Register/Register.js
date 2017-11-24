@@ -39,8 +39,8 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
+		this.deviceId = '';
 		this.state = {
-			deviceId: '',
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
 			firstName: "First name",
@@ -92,7 +92,7 @@ class Register extends Component {
 	}
 
 	onIds(device) {
-		this.setState({deviceId: device.userId});
+		this.deviceId = device.userId;
 	}
 
 
@@ -248,7 +248,7 @@ class Register extends Component {
 				liscense: '',
 				car: '',
 				allInfoFilled: false,
-				deviceId: this.state.deviceId
+				deviceId: this.deviceId
 			}
 
 			// I want to send the object only if there are no errors

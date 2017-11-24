@@ -26,8 +26,8 @@ class Login extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
+		this.deviceId = '';
 		this.state = {
-			deviceId: '',
 			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
@@ -53,7 +53,7 @@ class Login extends Component {
 	}
 
 	onIds(device) {
-		this.setState({deviceId: device.userId});
+		this.deviceId = device.userId;
 	}
 
 	submitButton() {
@@ -61,7 +61,7 @@ class Login extends Component {
 		let reqObj = {
 			email: this.state.textEmail,
 			password: this.state.textPass,
-			deviceId: this.state.deviceId
+			deviceId: this.deviceId
 		}
 		fetch(this.baseUrl + "login", {
 			method: "POST",

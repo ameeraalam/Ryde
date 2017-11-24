@@ -24,7 +24,6 @@ import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 			this.submitPassenger = this.submitPassenger.bind(this);
 			this.setDriverInfoFilled = this.setDriverInfoFilled.bind(this);
 			this.state = {
-				isPassenger: undefined,
 				allDriverInfoFilled: false
 			}
 		}
@@ -64,8 +63,6 @@ import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 		render() {
 			return (
 				<Drawer
-					isPassenger = {this.state.isPassenger}
-					role = {'role'}
 					resObj = {this.props.resObj}
 					ref={(_drawer) => this.drawer = _drawer}>
 

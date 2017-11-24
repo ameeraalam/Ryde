@@ -129,7 +129,7 @@ class RidePosting extends Component{
 							alert("Server Error with Ryde ID");
 						});
 
-						Actions.driverView({resObj});
+						Actions.driverView({type: 'replace', resObj});
 
 					} else {
 
@@ -155,6 +155,8 @@ class RidePosting extends Component{
 			<Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
+					isPassenger={false}
+					resObj = {this.props.resObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>

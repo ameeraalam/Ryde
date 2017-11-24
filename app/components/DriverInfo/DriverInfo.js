@@ -15,6 +15,7 @@ import {
 	Input,
 	ListItem,
 	Container,
+	Content,
 	Header,
 	Left,
 	Icon,
@@ -182,6 +183,7 @@ class DriverInfo extends Component {
 	render() {
 		return (
 			<Drawer
+				resObj = {this.props.resObj}
 				ref={(drawer) => this.drawer = drawer}>
 				<Container>
 					<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -196,7 +198,7 @@ class DriverInfo extends Component {
 						<Right style={{flex: 1}} />
 					</Header>
 
-					<View>
+					<Content style={{backgroundColor: '#fff'}}>
 						<ListItem itemHeader>
 							<Text>The information below are mandatory in order to access functionalities of a driver</Text>
 						</ListItem>
@@ -237,7 +239,7 @@ class DriverInfo extends Component {
 							</TouchableOpacity>
 						</View>
 
-					</View>
+					</Content>
 				</Container>
 			</Drawer>
 
