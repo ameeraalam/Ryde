@@ -11,11 +11,11 @@ import {
 	Body,
 	List,
 	ListItem,
+	Button,
 	Left,
 	Right,
 	Thumbnail,
 	Icon,
-	Button,
 	Title
 } from "native-base";
 import {
@@ -30,7 +30,7 @@ import {
 } from "react-native";
 import { Actions } from "react-native-router-flux";
 import styles from "./styles";
-import clientIO from "socket.io-client";
+import clientIO from "socket.io-client"; /////?????????Add drawer and notification???????????///////////////////////////////////////////////////////////
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config"
@@ -41,24 +41,23 @@ class Chat extends Component {
 		super(props);
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
-		console.ignoredYellowBox = [
-			'Setting a timer'
-		];
-		this.username = this.props.resObjUser.firstName + ' ' + this.props.resObjUser.lastName;
-		// for now rydeObject's id is just a random float, but this id will be
+		this.username = this.props.resObjUser.firstName + " " + this.props.resObjUser.lastName;
+		this.id = this.props.resObjUser.id;
+		// for now rydeObject's id is just an int, but this id will be
 		// the id attribute of an object that gets passed on from another page
 		// as the rydeObject will be this.props.rydeObject
 		this.rydeObject = this.props.resObjRyde;
+		this.baseUrl = config();
 		// creating the socket object specific to this client
 		this.socket = clientIO(config());
+		this.initMessages = this.initMessages.bind(this);
+		this.registerSocketEvents = this.registerSocketEvents.bind(this);
 		this.state = {
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
 			textValue: "",
-			currentText: "",
 			texts: []
 		};
-
 	}
 
 	openNotifications(){
@@ -69,7 +68,10 @@ class Chat extends Component {
 		this.drawer.openDrawer();
 	}
 
-	componentDidMount() {
+	componentWillMount() {
+		console.ignoredYellowBox = [ // if you still get the mounted warning, put this in componentDidMount
+			'Setting a timer'
+		];
 		// initiates message on page load and keep polling for new messages
 		this.initMessages();
 
@@ -107,7 +109,6 @@ class Chat extends Component {
 		// we belong to
 		this.socket.emit("idEnquiry", this.rydeObject.rydeId);
 
-
 		// this event listener catches the path through which the socket from the
 		// server will send the all the messages related to the ride from the database
 		this.socket.on(this.rydeObject.rydeId.toString() + "/initMessages", (resObj) => {
@@ -116,25 +117,36 @@ class Chat extends Component {
 
 	}
 
+	// All the events registered to a React DOM element that manipulate that
+	// particular DOM element must be unregistered whenever the DOM element gets
+	// unmounted. When a DOM element in react gets unmounted, it essentially gets
+	// popped of the stack and gets destroyed, but the event listeners are still
+	// attached to that React DOM element and when these event listeners get
+	// triggered they try to manipulate a DOM element that does not exist.
+	// Example of how to unregister events:
+
+componentWillUnmount() {
+	this.socket.off(this.rydeObject.rydeId.toString() + "/broadcast");
+	this.socket.off(this.rydeObject.rydeId.toString() + "/success");
+	this.socket.off(this.rydeObject.rydeId.toString() + "/failure");
+	this.socket.off(this.rydeObject.rydeId.toString() + "/initMessages");
+}
+
 
 	sendMessage(message = []) {
-		this.setState({currentText: message}, () => {
 
-			this.setState((previousState) => ({
-				texts: GiftedChat.append(previousState.texts, message),
-			}));
+		GiftedChat.append(this.state.texts, message);
 
-			let reqObj = {
-				rydeId: this.rydeObject.rydeId,
-				text: this.state.currentText[0]
-			};
+		let reqObj = {
+			rydeId: this.rydeObject.rydeId,
+			text: message[0]
+		};
 
-			// now we have to communicate with the server by sending each chat messages
-			// and storing the objects in the database
-			// socket.emit because we are sending somthing to the server
-			this.socket.emit(this.rydeObject.rydeId.toString() + "/storeChat", reqObj);
+		// now we have to communicate with the server by sending each chat messages
+		// and storing the objects in the database
+		// socket.emit because we are sending somthing to the server
+		this.socket.emit(this.rydeObject.rydeId.toString() + "/storeChat", reqObj);
 
-		});
 	}
 
 	render() {
@@ -156,7 +168,7 @@ class Chat extends Component {
 								</Button>
 							</Left>
 							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>CHAT</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -164,21 +176,23 @@ class Chat extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<GiftedChat
-							messages = {this.state.texts}
-							onSend = {(message) => {
-								// message argument seems to be an array containing exactly one element
-								// which is an GiftedChat object
-								this.sendMessage(message);
-							}}
-							user = {{
-								_id: this.id,
-								name: this.username
-							}}
-						/>
-					</Container>
-				</Drawer>
-			</Notifications>
+			<GiftedChat
+				messages = {this.state.texts}
+				onSend = {(message) => {
+					// message argument seems to be an array containing exactly one element
+					// which is an GiftedChat object
+					this.sendMessage(message);
+				}}
+				user = {{
+					_id: this.id,
+					name: this.username
+				}}
+			/>
+		</Container>
+	</Drawer>
+</Notifications>
+
+
 		);
 	}
 

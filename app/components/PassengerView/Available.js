@@ -48,16 +48,16 @@ class Available extends Component {
             let myRes = this.props.resObj; //passenger object
             dataSet.push(
               <View key={i}>
-              <CardItem button onPress={()=>
-                Actions.availableProfile({resO, myRes})}>
-                <Body>
-                <Text>From: {resObj[i].from}</Text>
-                <Text>To: {resObj[i].to}</Text>
-                <Text>Date: {resObj[i].date}</Text>
-                <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
-                </Body>
-                </CardItem>
-                <Text></Text>
+                <CardItem button onPress={()=>
+                    Actions.availableProfile({resO, myRes})}>
+                    <Body>
+                      <Text>From: {resObj[i].from}</Text>
+                      <Text>To: {resObj[i].to}</Text>
+                      <Text>Date: {resObj[i].date}</Text>
+                      <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
+                    </Body>
+                  </CardItem>
+                  <Text></Text>
                 </View>
               )
             }
@@ -66,56 +66,56 @@ class Available extends Component {
         }
 
         else { alert('You do not have any available requests');
+        }
+      }, (err) => {
+        alert(err)
+      });
+    }
+
+    componentDidMount(){
+      this.retrieveAvailablePosts();
+    }
+
+    onRefresh(){
+      this.setState({refreshing:true});
+      this.retrieveAvailablePosts().then(()=> {
+        this.setState({refreshing:false});
+      })
+    }
+
+
+    render() {
+
+      return (
+        <Container>
+          <ScrollView
+            refreshControl={<RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh.bind(this)}
+            />}
+          >
+            <Content>
+              {this.state.data}
+            </Content>
+          </ScrollView>
+          <View>
+            <Fab
+              active={this.state.active}
+              direction="up"
+              containerStyle={{ }}
+              style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+              position="bottomRight"
+              onPress={() => {this.findButton()}}>
+              <Icon name="search" />
+            </Fab>
+          </View>
+        </Container>
+
+
+        );
       }
-    }, (err) => {
-      alert(err)
-    });
-  }
+    }
 
-  componentDidMount(){
-    this.retrieveAvailablePosts();
-  }
+    module.exports = Available;
 
-  onRefresh(){
-    this.setState({refreshing:true});
-    this.retrieveAvailablePosts().then(()=> {
-      this.setState({refreshing:false});
-    })
-  }
-
-
-  render() {
-
-    return (
-      <Container>
-      <ScrollView
-      refreshControl={<RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh.bind(this)}
-        />
-      }>
-      <Content>
-      {this.state.data}
-      </Content>
-      </ScrollView>
-      <View>
-      <Fab
-      active={this.state.active}
-      direction="up"
-      containerStyle={{ }}
-      style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-      position="bottomRight"
-      onPress={() => {this.findButton()}}>
-      <Icon name="search" />
-      </Fab>
-      </View>
-      </Container>
-
-
-    );
-  }
-}
-
-module.exports = Available;
-
-AppRegistry.registerComponent('Available', () => Available);
+    AppRegistry.registerComponent('Available', () => Available);

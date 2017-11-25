@@ -1,10 +1,10 @@
 
 function config() {
-	ip = "172.17.47.78";
+	ip = "172.17.73.254";
 	localUrl = "http://" + ip + ":3000/";
 	globalUrl = "https://ryde-matb.herokuapp.com/";
 
-	return globalUrl;
+	return localUrl;
 }
 
 module.exports = config

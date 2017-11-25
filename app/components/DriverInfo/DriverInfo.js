@@ -108,7 +108,10 @@ class DriverInfo extends Component {
 			// result in the entire expression to result to true
 			// both the expression in the smaller expersion needs to be true
 			// for the entire statement to be true
-			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) || (this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) || (this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) || (this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
+			if ((this.state.liscense.charCodeAt(i) > 64 && this.state.liscense.charCodeAt(i) < 91) ||
+					(this.state.liscense.charCodeAt(i) > 96 && this.state.liscense.charCodeAt(i) < 123) ||
+					(this.state.liscense.charCodeAt(i) > 47 && this.state.liscense.charCodeAt(i) < 58) ||
+					(this.state.liscense.charCodeAt(i) === 32) || (this.state.liscense.charCodeAt(i) === 45)) {
 				check = true;
 			} else {
 				return false;
@@ -162,7 +165,8 @@ class DriverInfo extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				Actions.login({type: 'reset'});
+				this.props.driverFilledObj.driverInfo()
+				Actions.driverView({type: 'replace', resObj});
 
 			} else {
 				alert("Error");
