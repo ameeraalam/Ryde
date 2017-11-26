@@ -28,27 +28,7 @@ class DriverRideProfile extends Component {
       buttonMessage: "Start Trip",
       red: false,
       green: true,
-      rydeObject: undefined
     }
-  }
-
-  // we need to do this before component mounts as we need to set the state as the variable is used int he render function
-  componentWillMount() {
-    // makes a get request using the rydeId and the url
-    fetch(this.baseUrl + this.props.resObjRide.rydeId + "/requestFromDriverRideProfile").then((res) => {
-      if (res.status === 200) {
-        let resPromise = res.json();
-        resPromise.then((resObj) => {
-          // we set the new ryde object
-          this.setState({rydeObject: resObj})
-        })
-
-      } else {
-        alert("server returned an error")
-      }
-    }, (err) => {
-      alert(err);
-    });
   }
 
   openNotifications(){
@@ -104,7 +84,7 @@ class DriverRideProfile extends Component {
   render() {
 
     let resObjUser = this.props.resObjDriver;
-    let resObjRyde = this.state.rydeObject;
+    let resObjRyde = this.props.resObjRide;
 
     return (
       <Notifications

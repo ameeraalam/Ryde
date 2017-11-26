@@ -5,7 +5,8 @@ import React, { Component } from "react";
 import {
 	AppRegistry,
 	ScrollView,
-	TouchableOpacity
+	TouchableOpacity,
+	BackHandler
 } from "react-native";
 
 import {
@@ -67,6 +68,34 @@ class RequestedRides extends Component {
 		this.acceptPassenger = this.acceptPassenger.bind(this);
 		this.rejectPassenger = this.rejectPassenger.bind(this);
 
+	}
+
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', () => {
+			// this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+			// Typically you would use the navigator here to go to the last state.
+
+			this.goBack();
+			return true;
+
+		});
+	}
+	goBack() {
+		fetch(this.baseUrl + this.props.resObjRyde.rydeId + "/getUpdatedRyde").then((res) => {
+	    	if (res.status === 200) {
+				let resPromise = res.json();
+				resPromise.then((resObj) => {
+					// we set the new ryde object
+				   	let resObjDriver = this.props.resObjUser;
+					let resObjRide = resObj;
+					Actions.driverRideProfile({resObjDriver, resObjRide});
+	        	})
+			} else {
+	        	alert("server returned an error")
+	      	}
+		}, (err) => {
+	      		alert(err);
+	    });
 	}
 
 	openNotifications(){

@@ -648,7 +648,7 @@ class Controller {
 		});
 	}
 
-	requestFromDriverRideProfile(req, res) {
+	getUpdatedRyde(req, res) {
 		// the variable in the param is a string which needs to be converted into a number
 		this.modelRydes.query({"rydeId": Number(req.params.rydeId)}, (doc) => {
 			res.status(200).send(doc)
