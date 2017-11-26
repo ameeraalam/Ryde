@@ -50,7 +50,6 @@ class ViewMembers extends Component {
 			          </Card>
 				  )
 		}
-
 		// set the state
 		this.setState({members: memberCards});
 

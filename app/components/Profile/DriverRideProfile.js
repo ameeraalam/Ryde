@@ -5,7 +5,8 @@ import {
   View,
   Image,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
@@ -38,47 +39,47 @@ class DriverRideProfile extends Component {
     this.drawer.openDrawer();
   }
 
-  buttonPress() {
+  endTrip() {
     if (this.state.trip === true) {
       this.setState({trip: !this.state.trip, buttonMessage: "End Trip", red: true, green: false});
     } else {
-
-      reqObj = {
-        driver: this.props.resObjDriver,
-        ryde: this.props.resObjRide
-      }
-
-      // this is when we press the end trip button
-      fetch(this.baseUrl + "endTrip", {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(reqObj)
-      }).then((res) => {
-        if (res.status === 200) {
-          // if success we view the ratings page
-
-
-
-
-          // RATING IMPLEMENTATION
-
-
-
-
-
-
-
-        } else {
-          alert("Server sent an error");
-        }
-      }, (err) => {
-        alert(err)
-      });
+      this.deletePost();
     }
   }
+
+  deletePost(redirect) {
+
+    reqObj = {
+      driver: this.props.resObjDriver,
+      ryde: this.props.resObjRide
+    }
+
+    // this is when we press the end trip button
+    fetch(this.baseUrl + "endTrip", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(reqObj)
+    }).then((res) => {
+      if (res.status === 200) {
+        // if success we view the ratings page
+
+        // Redirect
+        if (redirect) {
+          redirect();
+        }
+
+      } else {
+        alert("Server sent an error");
+      }
+    }, (err) => {
+      alert(err)
+    });
+
+  }
+
 
   render() {
 
@@ -147,23 +148,59 @@ class DriverRideProfile extends Component {
                 </CardItem>
                 <Text></Text>
                 <View style={styles.container}>
-                  <Button large info onPress = {() => {
+                  <Button small info onPress = {() => {
                       Actions.requestedRides({resObjUser, resObjRyde});
                     }}><Text style={styles.text}>View Requests</Text>
                   </Button>
-                  <Button large info onPress = {() => {
+                  <Button small info onPress = {() => {
                       Actions.viewMembers({resObjRyde});
                     }}><Text style={styles.text}>View Members</Text>
                   </Button>
-                <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
+                <Button small info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
                   <Text style={styles.text}>Chat</Text>
+                </Button>
+                <Button small info onPress={ () => {
+                  // Prompt the user if he actually wants to delete the post
+
+                  Alert.alert(
+                    "Are you sure you want to delete this ride?",
+                    "",
+                    [
+                      {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                      {text: 'OK', onPress: () => {
+                        this.deletePost()
+
+                        ////////
+
+                        // AFTER DELETEING THE POST, THE PAGE SHOULD AUTOMATICALLY
+                        // REDIRECT TO THE driver's view
+
+                        ////////
+
+
+                      }},
+                    ],
+                    { cancelable: false }
+                  )
+                }}>
+                  <Text style={styles.text}>Delete Post</Text>
                 </Button>
                 </View>
               </Content>
             </ScrollView>
             <Footer>
               <FooterTab>
-                <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {this.buttonPress()}}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
+                <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
+                  this.endTrip();
+
+                  ////////
+
+                  // AFTER ENDING THE TRIP, THE PAGE SHOULD AUTOMATICALLY
+                  // REDIRECT TO THE rating's page
+
+                  ////////
+
+                }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
               </FooterTab>
             </Footer>
           </Container>
