@@ -39,6 +39,7 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
+		this.userMs = undefined;
 		this.state = {
 			deviceId: '',
 			date: 'Date of Birth',
@@ -68,7 +69,8 @@ class Register extends Component {
 			},
 
 			dobS: {
-				color: "grey"
+				color: "grey",
+				fontSize: 16
 			},
 
 			phoneS: {
@@ -95,18 +97,26 @@ class Register extends Component {
 		this.setState({deviceId: device.userId});
 	}
 
-
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
 	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
 	_handleDatePicked = (date) => {
-		let dateString = date.toString();
-		let formattedDate = dateString.slice(3, 13);
+
+		this.userMs = date.getTime();
+
+		let day = date.getDate();
+		// the month that you get is from 0 to 11
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+
+		let formattedDate = day + "/" + month + "/" + year;
+
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
     	// console.log('Your Date of Birth is: ', date);
     	this._hideDateTimePicker();
-  	}
+
+		}
 
 	emailCheck() {
 		let emailCheck = false;
@@ -186,54 +196,128 @@ class Register extends Component {
 	}
 
 	firstNameChecker() {
-		if (this.state.firstName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.firstName.length === 0 || this.state.firstName === "First name") {
 			return false;
 		}
 		return true;
 	}
 
 	lastNameChecker() {
-		if (this.state.lastName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.lastName.length === 0 || this.state.lastName === "Last name") {
 			return false;
 		}
 		return true;
 	}
 
+	dobCheck() {
+		// if it is undefined we immedietly know that nothing was filled in
+		if (this.userMs === undefined) {
+			return false;
+		}
+		// create the date object which represents the current time
+		let currentDate = new Date();
+		// converting the date into millisecons, gives the time from 1 Jan 1970 to now
+		let currentMs = currentDate.getTime()
+		let msDiff = currentMs - this.userMs;
+		// ms to seconds to minutes to hours to days to year
+		age = ((((msDiff / 1000) / 60) / 60) / 24) / 365;
+		// if the age is less than 18 then return false meaning to young to use the app
+		if (age < 18) {
+			return false;
+		}
+		return true;
+	}
+
+	genderCheck() {
+		if (this.state.gender === "Gender") {
+			return false;
+		}
+		return true;
+	}
+
+	// passwords must contains numbers
+	passwordCheck() {
+		// password below the length of 6 is false
+		if (this.state.password.length < 6) {
+			return false;
+		}
+
+		let containsNumbers = false
+		let containsLetters = false
+		for (let i = 0; i < this.state.password.length; ++i) {
+			// function to check if a data type is NaN
+			if (isNaN(Number(this.state.password[i]))) {
+				containsNumbers = true;
+			} else {
+				containsLetters = true;
+			}
+		}
+
+		// if only contains numbers and letters true is returned
+		if (containsNumbers == true && containsLetters == true) {
+			return true;
+		}
+
+		// by default I return false
+		return false;
+
+	}
+
 	submitButton() {
+		let emailCheck = this.emailCheck();
 		let errors = [];
 
-		let emailCheck = this.emailCheck();
-
 		emailCheck.then((val) => {
-
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
-				errors.push("email");
+				errors.push(0);
 			} else {
 				this.setState({emailS: {color: "grey"}});
+			}
+			if (this.dobCheck() === false) {
+				this.setState({dobS: {color: "red", fontSize: 16}})
+				errors.push(0);
+			} else {
+				this.setState({dobS: {color: "grey", fontSize: 16}});
 			}
 
 			let phoneCheck = this.phoneCheck();
 
 			if (phoneCheck === false) {
 				this.setState({phoneS: {color: "red"}})
-				errors.push("phone");
+				errors.push(0);
 			} else {
 				this.setState({phoneS: {color: "grey"}});
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
-				errors.push("firstName");
+				errors.push(0);
 			} else {
 				this.setState({firstNameS: {color: "grey"}})
 			}
 
-			if (this.lastNameChecker() == false) {
+			if (this.lastNameChecker() === false) {
 				this.setState({lastNameS: {color: "red"}});
-				errors.push("lastName");
+				errors.push(0);
 			} else {
 				this.setState({lastNameS: {color: "grey"}});
+			}
+
+			if (this.genderCheck() === false) {
+				this.setState({genderS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({genderS: {color: "grey"}});
+			}
+
+			if (this.passwordCheck() === false) {
+				this.setState({passwordS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({passwordS: {color: "grey"}});
 			}
 
 			let reqObj = {
@@ -356,7 +440,7 @@ class Register extends Component {
 
 				<ListItem icon style={{marginTop:28}} onPress={this._showDateTimePicker}>
 					<Body>
-						<Text style={{fontSize: 16}}>{this.state.date}</Text>
+						<Text style={this.state.dobS}>{this.state.date}</Text>
 					</Body>
 				</ListItem>
 				<DateTimePicker
@@ -377,10 +461,11 @@ class Register extends Component {
 
 				<Form style={{paddingLeft:15, marginTop:28, marginBottom: 28}}>
 					<Picker
+						style = {this.state.genderS}
 						mode="dropdown"
 						placeholder="Gender"
 						selectedValue={this.state.gender}
-						onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}
+						onValueChange={(value) => this.setState({gender: value, genderS: {color: "grey"}})}
 					>
 						<Item label="Gender" value="gender" />
 						<Item label="Male" value="male" />
