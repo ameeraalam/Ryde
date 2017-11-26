@@ -24,7 +24,9 @@ class DriverRideProfile extends Component {
     this.openNotifications = this.openNotifications.bind(this);
     this.state = {
       trip: true,
-      buttonMessage: "Start Trip"
+      buttonMessage: "Start Trip",
+      red: false,
+      green: true
     }
   }
 
@@ -37,10 +39,32 @@ class DriverRideProfile extends Component {
   }
 
   buttonPress() {
-    if (this.state.trip) {
-      this.setState({trip: !this.state.trip, buttonMessage: "End Trip"});
+    if (this.state.trip === true) {
+      this.setState({trip: !this.state.trip, buttonMessage: "End Trip", red: true, green: false});
     } else {
-      this.setState({trip: !this.state.trip, buttonMessage: "Start Trip"});
+
+      reqObj = {
+        driver: this.props.resObjDriver,
+        ryde: this.props.resObjRide
+      }
+
+      // this is when we press the end trip button
+      fetch(this.baseUrl + "endTrip", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(reqObj)
+      }).then((res) => {
+        if (res.status === 200) {
+
+        } else {
+          alert("Server sent an error");
+        }
+      }, (err) => {
+        alert(err)
+      });
     }
   }
 
@@ -123,7 +147,7 @@ class DriverRideProfile extends Component {
             </ScrollView>
             <Footer>
               <FooterTab>
-                <Button success onPress = {() => {this.buttonPress}}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
+                <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {this.buttonPress()}}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
               </FooterTab>
             </Footer>
           </Container>

@@ -456,6 +456,11 @@ class Controller {
 		});
 	}
 
+	endTrip(req, res) {
+		console.log(req.body);
+		res.sendStatus(200);
+	}
+
 
 	postRyde(req, res){
 		this.modelRydes.insert(req.body, () => {
