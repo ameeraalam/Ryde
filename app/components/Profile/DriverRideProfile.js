@@ -32,17 +32,15 @@ class DriverRideProfile extends Component {
     this.rydeObject = undefined;
   }
 
+  // when component is done mounting we make a get request to the server
   componentDidMount() {
     // makes a get request using the rydeId and the url
     fetch(this.baseUrl + this.props.resObjRide.rydeId + "/requestFromDriverRideProfile").then((res) => {
       if (res.status === 200) {
         let resPromise = res.json();
-
         resPromise.then((resObj) => {
           // we set the new ryde object
           this.rydeObject = resObj;
-
-          alert(JSON.stringify(resObj));
         })
 
       } else {
@@ -106,7 +104,7 @@ class DriverRideProfile extends Component {
   render() {
 
     let resObjUser = this.props.resObjDriver;
-    let resObjRyde = this.props.resObjRide;
+    let resObjRyde = this.rydeObject;
 
     return (
       <Notifications
