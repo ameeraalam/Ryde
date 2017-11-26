@@ -39,7 +39,7 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
-		this.userMs = 0;
+		this.userMs = undefined;
 		this.state = {
 			deviceId: '',
 			date: 'Date of Birth',
@@ -196,55 +196,58 @@ class Register extends Component {
 	}
 
 	firstNameChecker() {
-		if (this.state.firstName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.firstName.length === 0 || this.state.firstName === "First name") {
 			return false;
 		}
 		return true;
 	}
 
 	lastNameChecker() {
-		if (this.state.lastName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.lastName.length === 0 || this.state.lastName === "Last name") {
 			return false;
 		}
 		return true;
 	}
 
 	dobCheck() {
+		// if it is undefined we immedietly know that nothing was filled in
+		if (this.userMs === undefined) {
+			return false;
+		}
 		// create the date object which represents the current time
 		let currentDate = new Date();
-
 		// converting the date into millisecons, gives the time from 1 Jan 1970 to now
 		let currentMs = currentDate.getTime()
-
 		let msDiff = currentMs - this.userMs;
-
 		// ms to seconds to minutes to hours to days to year
 		age = ((((msDiff / 1000) / 60) / 60) / 24) / 365;
-
 		// if the age is less than 18 then return false meaning to young to use the app
 		if (age < 18) {
 			return false;
 		}
-
 		return true;
+	}
 
+	genderCheck() {
+		if (this.state.gender === "gender") {
+			return false;
+		}
+		return true;
 	}
 
 	submitButton() {
-
 		let emailCheck = this.emailCheck();
-
 		let errors = [];
 
 		emailCheck.then((val) => {
-
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
 				errors.push(0);
 			} else {
 				this.setState({emailS: {color: "grey"}});
 			}
-
 			if (this.dobCheck() === false) {
 				this.setState({dobS: {color: "red", fontSize: 16}})
 				errors.push(0);
@@ -419,7 +422,7 @@ class Register extends Component {
 						mode="dropdown"
 						placeholder="Gender"
 						selectedValue={this.state.gender}
-						onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}
+						onValueChange={(value) => this.setState({gender: value, genderS: {color: "grey"}})}
 					>
 						<Item label="Gender" value="gender" />
 						<Item label="Male" value="male" />
