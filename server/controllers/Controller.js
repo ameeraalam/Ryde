@@ -458,6 +458,51 @@ class Controller {
 
 	endTrip(req, res) {
 		console.log(req.body);
+
+		// Step - 1 - Find the ryde object from mongodb
+		// Step - 2 - List all the user in the ryde and pending users in the ryde
+
+		this.modelRydes.query({"rydeId": req.body.ryde.rydeId}, (doc) => {
+
+			// Step - 1 and Step - 2 complete
+			let members = doc.members
+			let pending = doc.pendings
+
+			// all the members of the ryde will have their own personalRyde object
+			// where they will have the rydeObject in rydesAcceptedToAsPassenger
+
+			// Step - 3 - all these rydes from each passenger must be removed
+
+			for (let i = 0; i < members.length; ++i) {
+				// retrieveing the personal ryde objects of each member
+				this.modelPersonalRydes.query({"email": members[i].email}, (doc) => {
+					// find the ryde from the array of rydes
+					for (let i = 0; i < doc.rydesAcceptedToAsPassenger.length; ++i) {
+						if (doc.rydesAcceptedToAsPassenger[i].rydeId === req.body.ryde.rydeId) {
+							// splice will remove the element at that index from the array
+							// and slice will just extract that element
+							doc.rydesAcceptedToAsPassenger.splice(i, 1)
+							break;
+						}
+					}
+					this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAcceptedToAsPassenger": doc.rydesAcceptedToAsPassenger});
+				});
+			}
+
+			// Step - 3 complete
+
+			// all the pending users will have their own personalRyde object where they
+			// will have the rydeObject in their rydesAppliedToAsPassenger
+
+			// Step - 4 - all these rydes from each pending user must be removed
+
+			
+
+		}, () => {
+			// on failure the 404 code is sent
+			res.sendStatus(404);
+		});
+
 		res.sendStatus(200);
 	}
 
