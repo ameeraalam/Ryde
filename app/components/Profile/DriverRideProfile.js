@@ -58,6 +58,8 @@ class DriverRideProfile extends Component {
         body: JSON.stringify(reqObj)
       }).then((res) => {
         if (res.status === 200) {
+          // if success we view the ratings page
+
 
         } else {
           alert("Server sent an error");
@@ -138,7 +140,11 @@ class DriverRideProfile extends Component {
                   <Button large info onPress = {() => {
                       Actions.requestedRides({resObjUser, resObjRyde});
                     }}><Text style={styles.text}>View Requests</Text>
-                </Button>
+                  </Button>
+                  <Button large info onPress = {() => {
+                      Actions.viewMembers({resObjRyde});
+                    }}><Text style={styles.text}>View Members</Text>
+                  </Button>
                 <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
                   <Text style={styles.text}>Chat</Text>
                 </Button>
