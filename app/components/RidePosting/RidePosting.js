@@ -18,7 +18,10 @@ import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
+
+// Main class
 class RidePosting extends Component{
+
 	constructor(props){
 		super(props);
 		this.baseUrl = config();
@@ -116,7 +119,6 @@ class RidePosting extends Component{
 						}).then((res) => {
 
 							if (res.status === 200){
-								console.log("RydeID incremented");
 
 							} else {
 
@@ -140,6 +142,7 @@ class RidePosting extends Component{
 			})
 
 		}, (err) => {
+
 			console.log("Error getting Ryde ID");
 		});
 	}

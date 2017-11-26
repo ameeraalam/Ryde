@@ -40,7 +40,7 @@ class RideBrowser extends Component{
         this.loadRydes();
     }
 
-   loadRydes(){
+    loadRydes(){
 
         let allRydes = [];
         let currentPassenger = this.props.passedResObj;

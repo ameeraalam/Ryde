@@ -4,7 +4,9 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	StatusBar
+	StatusBar,
+	RefreshControl,
+	ScrollView
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 
@@ -21,9 +23,10 @@ class DriverView extends Component {
 		super(props);
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
-		this.baseUrl = config();
+		this.baseUrl = config()
 		this.state = {
-			data: []
+			data: [],
+			refreshing: false
 		}
 	}
 
@@ -79,10 +82,21 @@ class DriverView extends Component {
 		this.retrievePosts();
 	}
 
+	onRefresh(){
+		this.setState({refreshing:true});
+		this.retrievePosts().then(()=> {
+			this.setState({refreshing:false});
+		})
+	}
+
+	// <View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
+	// <Content style={{backgroundColor: '#fff'}}>
+	// </Content>
+
 	render() {
 		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
 		let resObj = this.props.resObj;
-
+		// try putting statusbar after Notifications tag
 		return (
 			<Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
@@ -110,46 +124,52 @@ class DriverView extends Component {
 							</Right>
 						</Header>
 						<View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
-						<Content style={{backgroundColor: '#fff'}}>
-							{this.state.data}
-						</Content>
-						<View>
-							<Fab
-								active={this.state.active}
-								direction="up"
-								containerStyle={{ }}
-								style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-								position="bottomRight"
-								onPress={() => {this.postButton()}}>
-								<Icon name="add" />
-							</Fab>
-						</View>
-					</Container>
-				</Drawer>
-			</Notifications>
-		);
+						<ScrollView
+							refreshControl={<RefreshControl
+							refreshing={this.state.refreshing}
+							onRefresh={this.onRefresh.bind(this)}
+							/>}
+							style={{backgroundColor: '#fff'}}
+							>
+								{this.state.data}
+						</ScrollView>
+							<View>
+								<Fab
+									active={this.state.active}
+									direction="up"
+									containerStyle={{ }}
+									style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+									position="bottomRight"
+									onPress={() => {this.postButton()}}>
+									<Icon name="add" />
+								</Fab>
+							</View>
+						</Container>
+					</Drawer>
+				</Notifications>
+			);
+		}
 	}
-}
 
-const styles = StyleSheet.create({
-	text: {
-		color: 'white',
-		fontSize: 16,
-	},
+	const styles = StyleSheet.create({
+		text: {
+			color: 'white',
+			fontSize: 16,
+		},
 
-	flatlist: {
-		marginTop: 25,
+		flatlist: {
+			marginTop: 25,
 
-		flex: 1
-	},
+			flex: 1
+		},
 
-	price: {
-		marginRight: 15,
-		textAlign: 'right'
+		price: {
+			marginRight: 15,
+			textAlign: 'right'
 
-	}
-});
+		}
+	});
 
-module.exports = DriverView;
+	module.exports = DriverView;
 
-AppRegistry.registerComponent("DriverView", () => DriverView);
+	AppRegistry.registerComponent("DriverView", () => DriverView);

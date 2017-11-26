@@ -31,7 +31,7 @@ class PassengerSearchProfile extends Component {
   }
 
 
- requestButton(){
+  requestButton(){
     let resObj = this.props.resObjRyde;
     let reqObj = {
 
@@ -62,7 +62,6 @@ class PassengerSearchProfile extends Component {
     });
   }
 
-  
   render() {
 
     return (
@@ -129,7 +128,7 @@ class PassengerSearchProfile extends Component {
               </Content>
             </ScrollView>
             <View>
-              <Button large style={styles.button}><Text style={styles.text} onPress={() => this.requestButton()}>Request</Text></Button>
+              <Button large style={styles.button} onPress={() => this.requestButton()}><Text style={styles.text}>Request</Text></Button>
             </View>
           </Container>
         </Drawer>

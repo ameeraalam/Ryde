@@ -36,7 +36,7 @@ class DriverRideProfile extends Component {
   render() {
 
     let resObjUser = this.props.resObjDriver;
-    let resObjRide = this.props.resObjRide;
+    let resObjRyde = this.props.resObjRide;
 
     return (
       <Notifications
@@ -101,11 +101,13 @@ class DriverRideProfile extends Component {
                 <Text></Text>
                 <View style={styles.container}>
                   <Button large info onPress = {() => {
-                      Actions.requestedRides({resObjUser, resObjRide});
+                      Actions.requestedRides({resObjUser, resObjRyde});
                     }}><Text style={styles.text}>View Requests</Text>
-                  </Button><Button large info><Text style={styles.text} onPress = {() => {
-                    Actions.chat({resObjUser, resObjRyde});
-                  }}>Chat</Text></Button>
+                </Button>
+                <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
+                  <Text style={styles.text}>Chat</Text>
+
+                </Button>
                 </View>
               </Content>
             </ScrollView>

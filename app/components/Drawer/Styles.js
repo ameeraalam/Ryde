@@ -1,53 +1,53 @@
 import {StyleSheet} from "react-native";
 
 const styles = StyleSheet.create({
-  firstDivision: {
-    flex: 1
-  },
+	firstDivision: {
+		flex: 1
+	},
 
   profile: {
-    flex: 1,
+		flex: 1,
     backgroundColor: 'rgb(72, 110, 255)',
     alignItems:'center'
-  },
+	},
 
   userPlaceholderImage: {
-    height:90,
+		height:90,
     width: 90,
     borderRadius: 64,
     marginTop:30
-  },
+	},
 
   userName: {
-    color:'#fff',
-    fontSize:20,
-    marginTop:20,
-    fontFamily: 'sans-serif'
-  },
+		color:'#fff',
+		fontSize:20,
+		marginTop:20,
+		fontFamily: 'sans-serif'
+	},
 
   rating: {
-    flexDirection:'row',
-  flexWrap:'wrap'
-  },
+		flexDirection:'row',
+	flexWrap:'wrap'
+	},
 
   star: {
     height:15,
-    width: 15,
-    marginTop:6
+		width: 15,
+		marginTop:6
   },
 
   ratingNum: {
     color:'#fff',
-    marginTop:5.5,
-    fontSize:14,
-    marginLeft:2,
-    fontFamily: 'sans-serif'
+		marginTop:5.5,
+		fontSize:14,
+		marginLeft:2,
+		fontFamily: 'sans-serif'
   },
 
   drawerOptions: {
     flex: 2,
-    backgroundColor: '#fff',
-    marginTop:50
+		backgroundColor: '#fff',
+		marginTop:50
   },
 
   drawerIcons: {
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
 
   drawerItems: {
     color:'black',
-    fontSize:18,
-    fontFamily: 'sans-serif' // Corbert
+		fontSize:18,
+		fontFamily: 'sans-serif' // Corbert
   },
 
 });

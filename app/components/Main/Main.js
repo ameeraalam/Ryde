@@ -9,8 +9,6 @@ import DriverInfo from "../DriverInfo/DriverInfo";
 import Chat from "../Chat/Chat";
 import DriverView from "../DriverView/DriverView";
 import PassengerView from "../PassengerView/PassengerView";
-import Available from "../PassengerView/Available";
-import Pending from "../PassengerView/Pending";
 import RequestedRides from "../RequestedRides/RequestedRides";
 import ContactUs from "../ContactUs/ContactUs";
 import AvailableProfile from "../Profile/PassengerAvailableRideProfile";
@@ -20,6 +18,8 @@ import DriverProfile from "../Profile/DriverRideProfile";
 import RidePosting from "../RidePosting/RidePosting";
 import RideSearch from "../RideSearch/RideSearch";
 import RideBrowser from "../RideBrowser/RideBrowser";
+
+// ***IMPORTANT*** REMOVE ALL STYLING IN ROUTER AND MAKE HEADER IN LOGIN COMPONENT. MAYBE STATUSBAR WILL THEN WORK FOR EVERY COMPONENT
 
 export default () => (
 	<Router navigationBarStyle={styles.navbarContainer} titleStyle={styles.navbarTitle}>

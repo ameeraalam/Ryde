@@ -94,13 +94,12 @@ class PassengerAvailableRideProfile extends Component {
             </ScrollView>
             <View>
               <Button large info style={styles.viewmap}><Text style={styles.text}>View Map</Text></Button>
-              <Button large info style={styles.chat} onPress = {
-                () => {
-                  let resObjRyde = this.props.resO;
-                  let resObjUser = this.props.myRes;
-                  Actions.chat({resObjUser, resObjRyde});
-                }
-              } ><Text style={styles.text}>Chat</Text></Button>
+              <Button large info style={styles.chat} onPress={ () => {
+                    let resObjRyde = this.props.resO;
+                    let resObjUser = this.props.myRes;
+                    Actions.chat({resObjUser, resObjRyde})}
+                }>
+                <Text style={styles.text}>Chat</Text></Button>
             </View>
           </Container>
         </Drawer>

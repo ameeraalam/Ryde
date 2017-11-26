@@ -7,6 +7,7 @@ let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that genera
 let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
+let RydeID = require("./../models/RydeID.js");
 let Config = require('../config');
 let OneSignalClient = require('node-onesignal').default; // require the module
 let client = new OneSignalClient(Config.APP_ID, Config.REST_API_KEY); // create a new clinet
@@ -23,6 +24,7 @@ class Controller {
 		this.modelChat = new Chat();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
+		this.rydeID = new RydeID();
 
 	}
 
@@ -46,20 +48,46 @@ class Controller {
 				} else {
 					// if result is true it means that both the passwords match
 					if (result === true) {
-						// creating a response object to send back to the client
-						let resObj = {};
-						resObj.firstName = doc.firstName;
-						resObj.lastName = doc.lastName;
-						resObj.email = doc.email;
-						resObj.dob = doc.dob;
-						resObj.phone = doc.phone;
-						resObj.gender = doc.gender;
-						resObj.plate = doc.plate;
-						resObj.car = doc.car;
-						resObj.allInfoFilled = doc.allInfoFilled;
-						resObj.id = doc.id;
-						resObj.deviceId = doc.deviceId;
-						res.status(200).send(resObj);
+						// Before sending back a response object that will be passed around
+						// as props, we need to compare the deviceId of the current deviceId
+						// been used to login and the deviceId stored in the database.
+						// If they are the same then we use the already stored doc.deviceId.
+						// If they're different we update the deviceId in the database with
+						// the new(current) one.
+
+						// We needed to make this function a callback because of javascripts
+						// asynchronous nature the rest of the code will run before this
+						// function returns, i.e resObj attributes were being set before the
+						// function returns.
+						this.compareAndUpdateDeviceId(req, doc, (err, updatedDoc) => {
+							if(err) {
+								// console.log("Err: " + err);
+								res.sendStatus(err);
+							} else {
+								// creating a response object to send back to the client
+								let resObj = {};
+								resObj.firstName = doc.firstName;
+								resObj.lastName = doc.lastName;
+								resObj.email = doc.email;
+								resObj.dob = doc.dob;
+								resObj.phone = doc.phone;
+								resObj.gender = doc.gender;
+								resObj.plate = doc.plate;
+								resObj.car = doc.car;
+								resObj.allInfoFilled = doc.allInfoFilled;
+								resObj.id = doc.id;
+
+								// check to know if deviceId was updated so that we can put
+								// the right deviceId in resObj
+								if(updatedDoc.deviceId !== doc.deviceId) {
+									resObj.deviceId = updatedDoc.deviceId;
+									res.status(200).send(resObj);
+								} else {
+									resObj.deviceId = doc.deviceId;
+									res.status(200).send(resObj);
+								}
+							}
+						});
 					} else {
 						res.sendStatus(404);
 					}
@@ -68,6 +96,24 @@ class Controller {
 		}, () => {
 			res.sendStatus(404);
 		});
+	}
+
+	// Function compares current deviceId and deviceId stroed in the database
+	// If different, update the stored one with the new one and return the
+	// updated user object
+	// else return the old one
+	compareAndUpdateDeviceId(req, doc, callback) {
+		if(req.body.deviceId !== doc.deviceId){
+			this.modelUsers.update({"email": req.body.email}, {deviceId: req.body.deviceId}, (userDocObj) => {
+				console.log('deviceId successfully updated');
+				callback(null, userDocObj);
+			},() => {
+				callback(404, null);
+			});
+		} else {
+			console.log('deviceId the same. No need for an update');
+			callback(null, doc);
+		}
 	}
 
 	// contains the logic for the register feature of the app
@@ -447,8 +493,6 @@ class Controller {
 					}
 				}
 
-				console.log(sameDestination);
-
 				res.status(200).send(sameDestination);
 			});
 		}, () => {
@@ -472,7 +516,6 @@ class Controller {
 
 	//for getting pending requests as a passenger
 	pending(req,res){
-		console.log(req.params.email);
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let obj = [];
 			for(let i =0; i< doc.rydesAppliedToAsPassenger.length; i++){
@@ -624,7 +667,34 @@ class Controller {
 			}, () => {
 				res.sendStatus(404);
 			});
-		}
+	}
+
+
+	getRydeID(req, res){
+
+		this.rydeID.query({"queryField": req.body.query}, (doc) => {
+
+			console.log("Ryde ID retrieved and sent");
+			res.status(200).send(doc);
+		}, () => {
+
+			console.log("Ryde ID not retrieved");
+			res.sendStatus(404);
+		});
+	}
+
+	incrementRydeID(req, res){
+
+		// Update object in DB with the incremented Ryde ID
+		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
+
+			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1));
+			res.sendStatus(200);
+		}, () => {
+			console.log("Ryde ID has not been incremented");
+			res.sendStatus(404);
+		});
+	}
 
 
 	err(req, res) {
@@ -634,7 +704,7 @@ class Controller {
 
 
 	socketIntro() {
-		console.log("Socket is open on port 4000...");
+		console.log("Socket is open on port 4000..."); // ???????? DO WE NEED THIS ???????????
 	}
 
 
@@ -679,7 +749,7 @@ class Controller {
 			this.modelChat.query({"rydeId": Number(id)}, (doc) => {
 				// we update the text array in the database by adding the new messages to it
 				// from the request objects body containing the new text
-				doc.texts.push({username: reqObj.username, text: reqObj.text});
+				doc.texts.unshift(reqObj.text);
 				// if we find the object we then update it
 				this.modelChat.update({"rydeId": reqObj.rydeId}, {rydeId: reqObj.rydeId, texts: doc.texts}, (doc) => {
 					// sending socket connection for success in the job
@@ -703,7 +773,7 @@ class Controller {
 				}
 				// pushing the message received to the db object's texts attribute
 				// which is an array
-				dbObj.texts.push({username: reqObj.username, text: reqObj.text});
+				dbObj.texts.unshift(reqObj.text);
 				this.modelChat.insert(dbObj, () => {
 					// sending socket connection for success in the job
 					console.log("Success emission...");
