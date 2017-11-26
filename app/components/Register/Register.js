@@ -95,14 +95,18 @@ class Register extends Component {
 		this.setState({deviceId: device.userId});
 	}
 
-
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
 	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
 	_handleDatePicked = (date) => {
-		let dateString = date.toString();
-		let formattedDate = dateString.slice(3, 13);
+
+		let day = date.getDay();
+		let month = date.getMonth();
+		let year = date.getFullYear();
+
+		let formattedDate = day + "/" + month + "/" + year;
+
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
     	// console.log('Your Date of Birth is: ', date);
     	this._hideDateTimePicker();
