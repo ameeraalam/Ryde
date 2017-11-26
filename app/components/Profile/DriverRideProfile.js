@@ -61,6 +61,16 @@ class DriverRideProfile extends Component {
           // if success we view the ratings page
 
 
+
+
+          // RATING IMPLEMENTATION
+
+
+
+
+
+
+
         } else {
           alert("Server sent an error");
         }

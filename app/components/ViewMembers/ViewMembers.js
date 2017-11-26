@@ -19,11 +19,43 @@ class ViewMembers extends Component {
 	constructor(props) {
 		super(props);
 		this.openMenu = this.openMenu.bind(this);
+		this.state = {
+			members: []
+		}
 	}
 
 	openMenu() {
 		this.drawer.openDrawer();
 	}
+
+	// when the component is about to mount we set the state
+	componentWillMount() {
+		let ryde = this.props.resObjRyde;
+
+		// contains cards of the members
+		let memberCards = []
+
+		// TO DO LINK CARDS TO PASSENGER PROFILE
+
+		// we loop over the members of the ryde members and populate the cards
+		for (let i = 0; i < ryde.members.length; ++i) {
+			memberCards.push(<Card key = {i}>
+			            <CardItem>
+			              <Body>
+			                <Text>
+								Name: {ryde.members[i].firstName} {ryde.members[i].lastName}, Phone: {ryde.members[i].phone}, Email: {ryde.members[i].email}
+			                </Text>
+			              </Body>
+			            </CardItem>
+			          </Card>
+				  )
+		}
+
+		// set the state
+		this.setState({members: memberCards});
+
+	}
+
 	render() {
 		return (
 			<Notifications
@@ -43,7 +75,7 @@ class ViewMembers extends Component {
 								</Button>
 							</Left>
 							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>Members</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -51,9 +83,7 @@ class ViewMembers extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<Text>
-							Magic will happen here
-						</Text>
+						{this.state.members}
 					</Container>
 			</Drawer>
 		</Notifications>
