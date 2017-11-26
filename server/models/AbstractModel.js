@@ -108,6 +108,7 @@ class AbstractModel {
 							failureCallBack();
 						}
 					} else {
+						console.log("Removed an entry from Ryde database collection");
 						// undefined parameter variable check
 						if (successCallBack) {
 							successCallBack(doc);

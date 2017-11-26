@@ -471,6 +471,8 @@ class Controller {
 
 			// Step - 3 - all these rydes from each passenger must be removed
 
+			console.log(members);
+
 			// looping over the members of the ryde
 			for (let i = 0; i < members.length; ++i) {
 				// retrieveing the personal ryde objects of each member
@@ -494,7 +496,6 @@ class Controller {
 			// will have the rydeObject in their rydesAppliedToAsPassenger
 
 			// Step - 4 - all these rydes from each pending user must be removed
-
 			// looping over the pending users
 			for (let i = 0; i < pendings.length; ++i) {
 				this.modelPersonalRydes.query({"email": pendings[i].email}, (doc) => {
@@ -504,7 +505,7 @@ class Controller {
 							break;
 						}
 					}
-					this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAppliedToAsPassenger": doc.rydesAppliedToAsPassenger});
+					this.modelPersonalRydes.update({"email": pendings[i].email}, {"rydesAppliedToAsPassenger": doc.rydesAppliedToAsPassenger});
 				});
 			}
 			// step - 4 - complete
@@ -512,7 +513,6 @@ class Controller {
 			// step - 5 - remove ryde from driver's personal ryde which means it will be inside
 			// the drivers rydesPostedAsDriver
 			this.modelPersonalRydes.query({"email": req.body.driver.email}, (doc) => {
-
 				// lets now loop over the rydesPostedAsDriver array
 				for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
 					if (doc.rydesPostedAsDriver[i].rydeId === req.body.ryde.rydeId) {
@@ -529,6 +529,8 @@ class Controller {
 			// step - 6 - now finally we remove the universal ryde object
 
 			this.modelRydes.remove({"rydeId": req.body.ryde.rydeId});
+
+			// step - 6 - complete
 
 			res.sendStatus(200);
 
