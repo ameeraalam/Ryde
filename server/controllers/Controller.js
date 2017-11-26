@@ -457,16 +457,14 @@ class Controller {
 	}
 
 	endTrip(req, res) {
-		console.log(req.body);
 
 		// Step - 1 - Find the ryde object from mongodb
 		// Step - 2 - List all the user in the ryde and pending users in the ryde
-
 		this.modelRydes.query({"rydeId": req.body.ryde.rydeId}, (doc) => {
 
 			// Step - 1 and Step - 2 complete
 			let members = doc.members
-			let pending = doc.pendings
+			let pendings = doc.pending
 
 			// all the members of the ryde will have their own personalRyde object
 			// where they will have the rydeObject in rydesAcceptedToAsPassenger
@@ -509,16 +507,35 @@ class Controller {
 					this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAppliedToAsPassenger": doc.rydesAppliedToAsPassenger});
 				});
 			}
-
 			// step - 4 - complete
 
+			// step - 5 - remove ryde from driver's personal ryde which means it will be inside
+			// the drivers rydesPostedAsDriver
+			this.modelPersonalRydes.query({"email": req.body.driver.email}, (doc) => {
+
+				// lets now loop over the rydesPostedAsDriver array
+				for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+					if (doc.rydesPostedAsDriver[i].rydeId === req.body.ryde.rydeId) {
+						doc.rydesPostedAsDriver.splice(i, 1)
+						break;
+					}
+				}
+
+				this.modelPersonalRydes.update({"email": req.body.driver.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver})
+			});
+
+			// step - 5 - complete
+
+			// step - 6 - now finally we remove the universal ryde object
+
+			this.modelRydes.remove({"rydeId": req.body.ryde.rydeId});
+
+			res.sendStatus(200);
 
 		}, () => {
 			// on failure the 404 code is sent
 			res.sendStatus(404);
 		});
-
-		res.sendStatus(200);
 	}
 
 
