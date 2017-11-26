@@ -11,7 +11,7 @@ let RydeID = require("./../models/RydeID.js");
 let Config = require('../config');
 let OneSignalClient = require('node-onesignal').default; // require the module
 let client = new OneSignalClient(Config.APP_ID, Config.REST_API_KEY); // create a new clinet
-let util 	= require('util');
+let util = require('util');
 
 /* Constants */
 const SALT = 10; // salt for bycrpt password hashing

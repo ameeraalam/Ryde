@@ -22,6 +22,10 @@ class DriverRideProfile extends Component {
     this.baseUrl = config();
     this.openMenu = this.openMenu.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
+    this.state = {
+      trip: true,
+      buttonMessage: "Start Trip"
+    }
   }
 
   openNotifications(){
@@ -32,6 +36,13 @@ class DriverRideProfile extends Component {
     this.drawer.openDrawer();
   }
 
+  buttonPress() {
+    if (this.state.trip) {
+      this.setState({trip: !this.state.trip, buttonMessage: "End Trip"});
+    } else {
+      this.setState({trip: !this.state.trip, buttonMessage: "Start Trip"});
+    }
+  }
 
   render() {
 
@@ -106,15 +117,13 @@ class DriverRideProfile extends Component {
                 </Button>
                 <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
                   <Text style={styles.text}>Chat</Text>
-
                 </Button>
                 </View>
               </Content>
             </ScrollView>
             <Footer>
               <FooterTab>
-                <Button success><Text style={styles.text}>Start Trip</Text></Button>
-                <Button disabled><Text style={styles.text}>End Trip</Text></Button>
+                <Button success onPress = {() => {this.buttonPress}}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
               </FooterTab>
             </Footer>
           </Container>
@@ -143,12 +152,6 @@ const styles = StyleSheet.create({
   starttrip: {
     position: 'absolute',
     bottom: 80,
-    left: 30
-  },
-
-  endtrip: {
-    position: 'absolute',
-    bottom: 20,
     left: 30
   },
 

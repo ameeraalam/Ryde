@@ -247,6 +247,7 @@ class Register extends Component {
 		let containsNumbers = false
 		let containsLetters = false
 		for (let i = 0; i < this.state.password.length; ++i) {
+			// function to check if a data type is NaN
 			if (isNaN(Number(this.state.password[i]))) {
 				containsNumbers = true;
 			} else {
