@@ -231,10 +231,37 @@ class Register extends Component {
 	}
 
 	genderCheck() {
-		if (this.state.gender === "gender") {
+		if (this.state.gender === "Gender") {
 			return false;
 		}
 		return true;
+	}
+
+	// passwords must contains numbers
+	passwordCheck() {
+		// password below the length of 6 is false
+		if (this.state.password.length < 6) {
+			return false;
+		}
+
+		let containsNumbers = false
+		let containsLetters = false
+		for (let i = 0; i < this.state.password.length; ++i) {
+			if (isNaN(Number(this.state.password[i]))) {
+				containsNumbers = true;
+			} else {
+				containsLetters = true;
+			}
+		}
+
+		// if only contains numbers and letters true is returned
+		if (containsNumbers == true && containsLetters == true) {
+			return true;
+		}
+
+		// by default I return false
+		return false;
+
 	}
 
 	submitButton() {
@@ -276,6 +303,20 @@ class Register extends Component {
 				errors.push(0);
 			} else {
 				this.setState({lastNameS: {color: "grey"}});
+			}
+
+			if (this.genderCheck() === false) {
+				this.setState({genderS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({genderS: {color: "grey"}});
+			}
+
+			if (this.passwordCheck() === false) {
+				this.setState({passwordS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({passwordS: {color: "grey"}});
 			}
 
 			let reqObj = {
@@ -419,6 +460,7 @@ class Register extends Component {
 
 				<Form style={{paddingLeft:15, marginTop:28, marginBottom: 28}}>
 					<Picker
+						style = {this.state.genderS}
 						mode="dropdown"
 						placeholder="Gender"
 						selectedValue={this.state.gender}
