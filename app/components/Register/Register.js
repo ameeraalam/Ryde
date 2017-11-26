@@ -102,7 +102,8 @@ class Register extends Component {
 	_handleDatePicked = (date) => {
 
 		let day = date.getDay();
-		let month = date.getMonth();
+		// the month that you get is from 0 to 11
+		let month = date.getMonth() + 1;
 		let year = date.getFullYear();
 
 		let formattedDate = day + "/" + month + "/" + year;
@@ -110,7 +111,8 @@ class Register extends Component {
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
     	// console.log('Your Date of Birth is: ', date);
     	this._hideDateTimePicker();
-  	}
+
+		}
 
 	emailCheck() {
 		let emailCheck = false;
@@ -203,8 +205,15 @@ class Register extends Component {
 		return true;
 	}
 
+	dobCheck() {
+		// create the date object which represents the current time
+		let currentDate = new Date();
+
+
+
+	}
+
 	submitButton() {
-		let errors = [];
 
 		let emailCheck = this.emailCheck();
 
@@ -212,7 +221,6 @@ class Register extends Component {
 
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
-				errors.push("email");
 			} else {
 				this.setState({emailS: {color: "grey"}});
 			}
@@ -221,21 +229,18 @@ class Register extends Component {
 
 			if (phoneCheck === false) {
 				this.setState({phoneS: {color: "red"}})
-				errors.push("phone");
 			} else {
 				this.setState({phoneS: {color: "grey"}});
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
-				errors.push("firstName");
 			} else {
 				this.setState({firstNameS: {color: "grey"}})
 			}
 
 			if (this.lastNameChecker() == false) {
 				this.setState({lastNameS: {color: "red"}});
-				errors.push("lastName");
 			} else {
 				this.setState({lastNameS: {color: "grey"}});
 			}
