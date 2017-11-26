@@ -473,15 +473,16 @@ class Controller {
 
 			// Step - 3 - all these rydes from each passenger must be removed
 
+			// looping over the members of the ryde
 			for (let i = 0; i < members.length; ++i) {
 				// retrieveing the personal ryde objects of each member
 				this.modelPersonalRydes.query({"email": members[i].email}, (doc) => {
 					// find the ryde from the array of rydes
-					for (let i = 0; i < doc.rydesAcceptedToAsPassenger.length; ++i) {
-						if (doc.rydesAcceptedToAsPassenger[i].rydeId === req.body.ryde.rydeId) {
+					for (let j = 0; j < doc.rydesAcceptedToAsPassenger.length; ++j) {
+						if (doc.rydesAcceptedToAsPassenger[j].rydeId === req.body.ryde.rydeId) {
 							// splice will remove the element at that index from the array
 							// and slice will just extract that element
-							doc.rydesAcceptedToAsPassenger.splice(i, 1)
+							doc.rydesAcceptedToAsPassenger.splice(j, 1)
 							break;
 						}
 					}
@@ -496,7 +497,21 @@ class Controller {
 
 			// Step - 4 - all these rydes from each pending user must be removed
 
-			
+			// looping over the pending users
+			for (let i = 0; i < pendings.length; ++i) {
+				this.modelPersonalRydes.query({"email": pendings[i].email}, (doc) => {
+					for (let j = 0; j < doc.rydesAppliedToAsPassenger.length; ++j) {
+						if (doc.rydesAppliedToAsPassenger[j].rydeId === req.body.ryde.rydeId) {
+							doc.rydesAppliedToAsPassenger.splice(j, 1);
+							break;
+						}
+					}
+					this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAppliedToAsPassenger": doc.rydesAppliedToAsPassenger});
+				});
+			}
+
+			// step - 4 - complete
+
 
 		}, () => {
 			// on failure the 404 code is sent
