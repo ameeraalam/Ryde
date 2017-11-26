@@ -648,6 +648,16 @@ class Controller {
 		});
 	}
 
+	requestFromDriverRideProfile(req, res) {
+		// the variable in the param is a string which needs to be converted into a number
+		this.modelRydes.query({"rydeId": Number(req.params.rydeId)}, (doc) => {
+			res.status(200).send(doc)
+		}, () => {
+			// on error the 404 code is sent
+			res.sendStatus(404);
+		})
+	}
+
 
 
   	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js

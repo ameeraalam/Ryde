@@ -29,6 +29,28 @@ class DriverRideProfile extends Component {
       red: false,
       green: true
     }
+    this.rydeObject = undefined;
+  }
+
+  componentDidMount() {
+    // makes a get request using the rydeId and the url
+    fetch(this.baseUrl + this.props.resObjRide.rydeId + "/requestFromDriverRideProfile").then((res) => {
+      if (res.status === 200) {
+        let resPromise = res.json();
+
+        resPromise.then((resObj) => {
+          // we set the new ryde object
+          this.rydeObject = resObj;
+
+          alert(JSON.stringify(resObj));
+        })
+
+      } else {
+        alert("server returned an error")
+      }
+    }, (err) => {
+      alert(err);
+    });
   }
 
   openNotifications(){
@@ -185,6 +207,7 @@ class DriverRideProfile extends Component {
                 }}>
                   <Text style={styles.text}>Delete Post</Text>
                 </Button>
+
                 </View>
               </Content>
             </ScrollView>
@@ -201,6 +224,11 @@ class DriverRideProfile extends Component {
                   ////////
 
                 }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
+                <Button small info onPress={ () => { Actions.rating({resObjRyde}); }}>
+                  <Text> Rate Me </Text>
+                </Button>
+
+
               </FooterTab>
             </Footer>
           </Container>

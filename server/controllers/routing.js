@@ -72,6 +72,8 @@ class Routing {
 
 		app.post("/endTrip", (req, res) => { CONTROLLER.endTrip(req, res); });
 
+		app.get("/:rydeId/requestFromDriverRideProfile", (req, res) => { CONTROLLER.requestFromDriverRideProfile(req, res); });
+
 		// Error get request must always be processed at the very end after all options
 		// have been exhausting in resolving the request. This happens because of the
 		// next() middleware being used

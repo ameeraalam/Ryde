@@ -15,7 +15,7 @@ import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 
-class ViewMembers extends Component {
+class Rating extends Component {
 	constructor(props) {
 		super(props);
 		this.openMenu = this.openMenu.bind(this);
@@ -43,8 +43,8 @@ class ViewMembers extends Component {
 			            <CardItem key = {i}>
 			              <Body>
 			                <Text>
-								Name: {ryde.members[i].firstName} {ryde.members[i].lastName}, Phone: {ryde.members[i].phone}, Email: {ryde.members[i].email}
-			                </Text>
+								some Text
+						    </Text>
 			              </Body>
 			            </CardItem>
 				  )
@@ -73,7 +73,7 @@ class ViewMembers extends Component {
 								</Button>
 							</Left>
 							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>Members</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>Rating</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -93,6 +93,6 @@ class ViewMembers extends Component {
 
 }
 
-module.exports = ViewMembers;
+module.exports = Rating;
 
-AppRegistry.registerComponent("ViewMembers", () => ViewMembers);
+AppRegistry.registerComponent("Rating", () => Rating);
