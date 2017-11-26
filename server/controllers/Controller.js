@@ -471,8 +471,6 @@ class Controller {
 
 			// Step - 3 - all these rydes from each passenger must be removed
 
-			console.log(members);
-
 			// looping over the members of the ryde
 			for (let i = 0; i < members.length; ++i) {
 				// retrieveing the personal ryde objects of each member
