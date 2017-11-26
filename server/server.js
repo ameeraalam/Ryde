@@ -1,6 +1,6 @@
 'use strict'
 
-var Routes = require('./controllers/routing.js')
+var Routes = require('./controllers/Routing.js')
 
 function main() {
 	Routes.setRoutes();
