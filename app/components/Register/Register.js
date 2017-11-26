@@ -39,6 +39,7 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
+		this.userMs = 0;
 		this.state = {
 			deviceId: '',
 			date: 'Date of Birth',
@@ -68,7 +69,8 @@ class Register extends Component {
 			},
 
 			dobS: {
-				color: "grey"
+				color: "grey",
+				fontSize: 16
 			},
 
 			phoneS: {
@@ -101,7 +103,9 @@ class Register extends Component {
 
 	_handleDatePicked = (date) => {
 
-		let day = date.getDay();
+		this.userMs = date.getTime();
+
+		let day = date.getDate();
 		// the month that you get is from 0 to 11
 		let month = date.getMonth() + 1;
 		let year = date.getFullYear();
@@ -209,7 +213,20 @@ class Register extends Component {
 		// create the date object which represents the current time
 		let currentDate = new Date();
 
+		// converting the date into millisecons, gives the time from 1 Jan 1970 to now
+		let currentMs = currentDate.getTime()
 
+		let msDiff = currentMs - this.userMs;
+
+		// ms to seconds to minutes to hours to days to year
+		age = ((((msDiff / 1000) / 60) / 60) / 24) / 365;
+
+		// if the age is less than 18 then return false meaning to young to use the app
+		if (age < 18) {
+			return false;
+		}
+
+		return true;
 
 	}
 
@@ -217,30 +234,43 @@ class Register extends Component {
 
 		let emailCheck = this.emailCheck();
 
+		let errors = [];
+
 		emailCheck.then((val) => {
 
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
+				errors.push(0);
 			} else {
 				this.setState({emailS: {color: "grey"}});
+			}
+
+			if (this.dobCheck() === false) {
+				this.setState({dobS: {color: "red", fontSize: 16}})
+				errors.push(0);
+			} else {
+				this.setState({dobS: {color: "grey", fontSize: 16}});
 			}
 
 			let phoneCheck = this.phoneCheck();
 
 			if (phoneCheck === false) {
 				this.setState({phoneS: {color: "red"}})
+				errors.push(0);
 			} else {
 				this.setState({phoneS: {color: "grey"}});
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
+				errors.push(0);
 			} else {
 				this.setState({firstNameS: {color: "grey"}})
 			}
 
-			if (this.lastNameChecker() == false) {
+			if (this.lastNameChecker() === false) {
 				this.setState({lastNameS: {color: "red"}});
+				errors.push(0);
 			} else {
 				this.setState({lastNameS: {color: "grey"}});
 			}
@@ -365,7 +395,7 @@ class Register extends Component {
 
 				<ListItem icon style={{marginTop:28}} onPress={this._showDateTimePicker}>
 					<Body>
-						<Text style={{fontSize: 16}}>{this.state.date}</Text>
+						<Text style={this.state.dobS}>{this.state.date}</Text>
 					</Body>
 				</ListItem>
 				<DateTimePicker
