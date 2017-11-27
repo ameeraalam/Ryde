@@ -43,6 +43,11 @@ class DriverRideProfile extends Component {
     if (this.state.trip === true) {
       this.setState({trip: !this.state.trip, buttonMessage: "End Trip", red: true, green: false});
     } else {
+
+        // THIS IS WHERE EVERYTHING HAPPENS, PUSH NOTIFICATION NEEDS TO BE SENT HERE
+
+
+
       this.deletePost();
     }
   }
