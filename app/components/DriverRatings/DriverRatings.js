@@ -23,6 +23,8 @@ const images = {
   starUnfilled: require('./star_unfilled.png')
 }
 
+// THIS PAGE ONLY NEEDS THE RYDE OBJECT TO FUNCTION
+
 class DriverRatings extends Component {
 	constructor(props) {
 		super(props);
@@ -53,6 +55,8 @@ class DriverRatings extends Component {
 			if (res.status === 200) {
 
 
+
+				// ON SUBMIT SHOULD TAKE YOU BACK TO THE PREVIOUS PAGE YOU WERE
 
 
 

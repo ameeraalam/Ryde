@@ -99,7 +99,25 @@ class PassengerAvailableRideProfile extends Component {
                     let resObjUser = this.props.myRes;
                     Actions.chat({resObjUser, resObjRyde})}
                 }>
-                <Text style={styles.text}>Chat</Text></Button>
+                <Text style={styles.text}>Chat</Text>
+              </Button>
+              <Button large info  onPress={ () => {
+
+
+
+
+                    // THIS NEEDS TO BE REMOVED LATER
+
+
+                    // THE DRIVER PAGE ONLY NEEDS THE RYDEOBJECT TO FUNCTION
+
+
+                    let resObjRyde = this.props.resO;
+                    let resObjUser = this.props.myRes;
+                    Actions.driverRatings({resObjUser, resObjRyde})}
+                }>
+                <Text >Rate Driver</Text>
+              </Button>
             </View>
           </Container>
         </Drawer>
