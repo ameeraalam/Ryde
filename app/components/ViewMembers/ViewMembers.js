@@ -7,7 +7,8 @@ import {
 	Image,
 	TouchableOpacity,
 	StatusBar,
-	ScrollView
+	ScrollView,
+	BackHandler
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
@@ -21,6 +22,7 @@ import config from "./../../config";
 class ViewMembers extends Component {
 	constructor(props) {
 		super(props);
+		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		// binds the function as it will get passed around to a child environment, where the child will be
 		// triggering the function and it is important that the this of the function remains of that of the parents scope
@@ -34,29 +36,81 @@ class ViewMembers extends Component {
 		this.drawer.openDrawer();
 	}
 
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', () => {
+			// this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+			// Typically you would use the navigator here to go to the last state.
+			this.goBack();
+			return true;
+
+		});
+	}
+
+	goBack() {
+		fetch(this.baseUrl + this.props.resObjRyde.rydeId + "/getUpdatedRyde").then((res) => {
+			if (res.status === 200) {
+				let resPromise = res.json();
+				resPromise.then((resObj) => {
+					// we set the new ryde object
+					let resObjDriver = this.props.resObjUser;
+					let resObjRide = resObj;
+					Actions.driverRideProfile({resObjDriver, resObjRide});
+				})
+			} else {
+				alert("server returned an error")
+			}
+		}, (err) => {
+				alert(err);
+		});
+	}
+
 	// the self is the this of the CardSlide
 	removePassenger(self) {
-
 		// this array is a placeholder for the state.members array
 		// this array will get modified, and then I will change the member state to this array
-		let members = this.state.members;
+		let mems = this.state.members;
+
+		let memberRemoved = undefined;
 
 		// we loop over the members in this scope
-		for (let i = 0; i < members.length; ++i) {
+		for (let i = 0; i < mems.length; ++i) {
 			// if the card selected has the id which matches one of the member's array's id
 			// that means we found the card selected and we remove that card from the list of cards stored in an array as a state
-			if (members[i].props.id == self.props.id) {
-				alert(self.props.id);
-
-				members.splice(members[i].props.id, 1)
-
+			if (mems[i].props.id == self.props.id) {
+				memberRemoved = this.props.resObjRyde.members[i].email
+				mems.splice(mems[i].props.id, 1)
 				// we have found what we wanted using the loop and no longer need the loop to continue
 				// and therefore we exit the loop
 				break;
 			}
 		}
 
+		// Now after the splicing bussiness is taken care of I will take care of the backend
+		// and when the backend job is done I will update the newly removed array by setting the state
 
+		let reqObj = {
+			rydeId: this.props.resObjRyde.rydeId,
+			memberRemoved: memberRemoved
+		};
+
+		// weirdness - 1: if within a child fetch cannot sent the this.props.resObjRyde object
+		// weirdness - 2: if within a child assigning state attribute to a variable and changing it
+		//                automatically changes the state without using setState.
+
+		fetch(this.baseUrl + "removePassenger", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(reqObj)
+		}).then((res) => {
+			if (res.status !== 200) {
+				alert("Server sent an error");
+			}
+		}, (err) => {
+			alert(err)
+		});
 	}
 
 	// when the component is about to mount we set the state

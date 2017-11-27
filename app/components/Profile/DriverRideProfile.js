@@ -154,7 +154,7 @@ class DriverRideProfile extends Component {
                     }}><Text style={styles.text}>View Requests</Text>
                   </Button>
                   <Button small info onPress = {() => {
-                      Actions.viewMembers({resObjRyde});
+                      Actions.viewMembers({resObjUser, resObjRyde});
                     }}><Text style={styles.text}>View Members</Text>
                   </Button>
                 <Button small info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>

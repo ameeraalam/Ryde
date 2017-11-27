@@ -1,7 +1,6 @@
 /* Author: Md. Tanvir Islam */
 
 import React, { Component } from "react";
-
 import {
 	AppRegistry,
 	ScrollView
