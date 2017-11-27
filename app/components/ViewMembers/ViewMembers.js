@@ -40,13 +40,15 @@ class ViewMembers extends Component {
 		// we loop over the members of the ryde members and populate the cards
 		for (let i = 0; i < ryde.members.length; ++i) {
 			memberCards.push(
-			            <CardItem key = {i}>
-			              <Body>
-			                <Text>
-								Name: {ryde.members[i].firstName} {ryde.members[i].lastName}, Phone: {ryde.members[i].phone}, Email: {ryde.members[i].email}
-			                </Text>
-			              </Body>
-			            </CardItem>
+						<Card key = {i}>
+				            <CardItem>
+				              <Body>
+				                <Text>
+									Name: {ryde.members[i].firstName} {ryde.members[i].lastName}, Phone: {ryde.members[i].phone}, Email: {ryde.members[i].email}
+				                </Text>
+				              </Body>
+				            </CardItem>
+						</Card>
 				  )
 		}
 		// set the state
@@ -81,9 +83,7 @@ class ViewMembers extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<Card>
-							{this.state.members}
-						</Card>
+						{this.state.members}
 					</Container>
 			</Drawer>
 		</Notifications>

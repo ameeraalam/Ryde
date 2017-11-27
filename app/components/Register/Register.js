@@ -332,6 +332,9 @@ class Register extends Component {
 				liscense: '',
 				car: '',
 				allInfoFilled: false,
+				seen: false,
+				totalRating: 0,
+				numRating: 0,
 				deviceId: this.state.deviceId
 			}
 

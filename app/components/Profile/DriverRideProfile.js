@@ -47,8 +47,7 @@ class DriverRideProfile extends Component {
     }
   }
 
-  deletePost(redirect) {
-
+  deletePost() {
     reqObj = {
       driver: this.props.resObjDriver,
       ryde: this.props.resObjRide
@@ -65,12 +64,9 @@ class DriverRideProfile extends Component {
     }).then((res) => {
       if (res.status === 200) {
         // if success we view the ratings page
-
-        // Redirect
-        if (redirect) {
-          redirect();
-        }
-
+        let resObjUser = this.props.resObjDriver;
+        let resObjRyde = this.props.resObjRide;
+        Actions.passengerRatings({resObjUser, resObjRyde});
       } else {
         alert("Server sent an error");
       }
@@ -168,16 +164,7 @@ class DriverRideProfile extends Component {
                     [
                       {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                       {text: 'OK', onPress: () => {
-                        this.deletePost()
-
-                        ////////
-
-                        // AFTER DELETEING THE POST, THE PAGE SHOULD AUTOMATICALLY
-                        // REDIRECT TO THE driver's view
-
-                        ////////
-
-
+                        this.deletePost();
                       }},
                     ],
                     { cancelable: false }
@@ -193,20 +180,7 @@ class DriverRideProfile extends Component {
               <FooterTab>
                 <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
                   this.endTrip();
-
-                  ////////
-
-                  // AFTER ENDING THE TRIP, THE PAGE SHOULD AUTOMATICALLY
-                  // REDIRECT TO THE rating's page
-
-                  ////////
-
                 }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
-                <Button small info onPress={ () => { Actions.ratings({resObjRyde}); }}>
-                  <Text> Rate Me </Text>
-                </Button>
-
-
               </FooterTab>
             </Footer>
           </Container>
