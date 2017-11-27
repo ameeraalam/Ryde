@@ -90,12 +90,9 @@ class ViewMembers extends Component {
 
 		let reqObj = {
 			rydeId: this.props.resObjRyde.rydeId,
+			driverEmail: this.props.resObjRyde.driver,
 			memberRemoved: memberRemoved
 		};
-
-		// weirdness - 1: if within a child fetch cannot sent the this.props.resObjRyde object
-		// weirdness - 2: if within a child assigning state attribute to a variable and changing it
-		//                automatically changes the state without using setState.
 
 		fetch(this.baseUrl + "removePassenger", {
 			method: "POST",
@@ -105,7 +102,9 @@ class ViewMembers extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status !== 200) {
+			if (res.status == 200) {
+				this.setState({members: mems});
+			} else {
 				alert("Server sent an error");
 			}
 		}, (err) => {
