@@ -19,7 +19,8 @@ import RidePosting from "../RidePosting/RidePosting";
 import RideSearch from "../RideSearch/RideSearch";
 import RideBrowser from "../RideBrowser/RideBrowser";
 import ViewMembers from "../ViewMembers/ViewMembers";
-import PassengerRatings from "../PassengerRatings/PassengerRatings"
+import PassengerRatings from "../PassengerRatings/PassengerRatings";
+import DriverRatings from "../DriverRatings/DriverRatings";
 
 // ***IMPORTANT*** REMOVE ALL STYLING IN ROUTER AND MAKE HEADER IN LOGIN COMPONENT. MAYBE STATUSBAR WILL THEN WORK FOR EVERY COMPONENT
 
@@ -44,6 +45,7 @@ export default () => (
 			<Scene key = "rideBrowser" 						component = {RideBrowser} 					 	hideNavBar/>
 			<Scene key = "viewMembers" 						component = {ViewMembers} 					 	hideNavBar/>
 			<Scene key = "passengerRatings"					component = {PassengerRatings}					hideNavBar/>
+			<Scene key = "driverRatings"					component = {DriverRatings}						hideNavBar/>
 		</Scene>
 	</Router>
 );
