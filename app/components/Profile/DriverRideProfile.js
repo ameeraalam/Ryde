@@ -202,7 +202,7 @@ class DriverRideProfile extends Component {
                   ////////
 
                 }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
-                <Button small info onPress={ () => { Actions.rating({resObjRyde}); }}>
+                <Button small info onPress={ () => { Actions.ratings({resObjRyde}); }}>
                   <Text> Rate Me </Text>
                 </Button>
 
