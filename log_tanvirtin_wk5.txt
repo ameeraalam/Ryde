@@ -1,0 +1,15 @@
+Week - 5
+========
+
+Duties
+======
+1. Finish login component
+
+Achievement
+===========
+1. Users can now securely login to the app and authenticate themselves
+2. Mlabs setup complete which hosts our database remotely
+
+Time Spent
+==========
+Roughly 8 hours

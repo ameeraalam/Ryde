@@ -1,0 +1,28 @@
+Week - 10
+========
+
+Duties
+======
+1. Finish working on view members of a ryde functionality
+2. Finish working on remove members of a ryde funcftionality
+3. Finish working on rating system functionality
+4. Finish working on start trip functionality
+5. Finish working on end trip functionality 
+6. Finish Age restriction functionality of an app
+7. Work on Deliverable-4
+
+Achievement
+===========
+1. Completed view members functionality
+2. Completed remove members funcftionality
+3. Completed working on rating functionality
+4. Completed start trip functionality
+5. Completed end trip functionality 
+6. Completed Age restriction functionality of an app
+7. Improved UI for Chat
+8. Helped group member improve overall UI for the app
+9. Completed Deliverable-4
+
+Time Spent
+==========
+Roughly 40 hours

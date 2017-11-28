@@ -1,0 +1,24 @@
+Week - 3
+========
+
+Duties
+======
+1. Set up folder structure for server side in repository
+2. Set up folder structure for the client in repository
+3. Set up the Express JS framework for the project
+4. Configure React-Native on the client side for the project
+5. Create models for data to interact with the database
+6. Reseach more on React-Native
+
+Achievement
+===========
+1. Folder structure for the server created
+2. Folder structure for client side created
+3. Set up Express JS environment on the server side
+4. Set up React-Native environment on the client side
+5. Created Users model, Ryde model and PersonalRydes model
+6. Sufficient research on React-Native done
+
+Time Spent
+==========
+Roughly 8 hours

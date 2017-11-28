@@ -1,0 +1,21 @@
+Week - 2
+========
+
+Duties
+======
+1. Decide on architecturul ideas and design patterns with the group
+2. Decide on how the app will look when completed
+3. Research on how to achieve the functionality proposed by the app
+4. Design the database
+
+Achievement
+===========
+1. Architecture of the system decided which is MVC
+2. Decivded on how the app will look when completed
+3. Good grasp on what methods and API's to use to achieve the functionalities proposed
+4. Database design completed, where 5 collection was proposed for the system which are Uers, Rydes, PersonalRydes,
+   Chat and RydeId.
+
+Time Spent
+==========
+Roughly 9 hours

@@ -1,0 +1,19 @@
+Week - 6
+========
+
+Duties
+======
+1. Work on Deliverable-2
+2. Change database models to use Template design pattern, to improve system design and to make code reusable
+3. Start working on Chat component
+
+Achievement
+===========
+1. Work on Deliverable-2 completed
+2. All the models now inherite from an Abstract model class, which implements most of the functionalities of the login,
+   so now the models, Users, PersonalRydes, Rydes and Chat model all inherite from one base class.
+3. Socket.io setup complete and algorithm created through which group members of a ride can communicate with each other.
+
+Time Spent
+==========
+Roughly 14 hours

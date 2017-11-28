@@ -1,0 +1,15 @@
+Week - 8
+========
+
+Duties
+======
+1. Finish RequestedRydes component
+
+Achievement
+===========
+1. Finished RequestedRydes component where a driver can view all the request passengers have made for that ryde and
+   decide to deline or accept the Ryde, this results in heavy modifcations of the database in the server
+
+Time Spent
+==========
+Roughly 10 hours

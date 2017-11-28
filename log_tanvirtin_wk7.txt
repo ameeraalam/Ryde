@@ -1,0 +1,16 @@
+Week - 7
+========
+
+Duties
+======
+1. Finish Chat component
+
+Achievement
+===========
+1. Changed Chat algorithm
+2. Finished Chat component
+3. Started helping team members by offloading their weight in project by starting working on RequestedRydes component
+
+Time Spent
+==========
+Roughly 11 hours

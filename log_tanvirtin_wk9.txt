@@ -1,0 +1,21 @@
+Week - 9
+========
+
+Duties
+======
+1. Work on Deliverable-3 completed
+
+Achievement
+===========
+1. Deliverable-3 completed
+2. Server hosted on Heroku hosting site
+3. Started working on view members of a ryde functionality
+4. Started working on remove members of a ryde funcftionality
+5. Started working on rating system functionality
+6. Started working on start trip functionality
+7. Started working on end trip functionality 
+8. Started Age restriction functionality of an app
+
+Time Spent
+==========
+Roughly 20 hours

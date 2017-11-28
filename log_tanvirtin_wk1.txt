@@ -1,0 +1,17 @@
+Week - 1
+========
+
+Duties
+======
+1. Decide on language and framework to develop the system with
+2. Familiarize yourself with the languages, and framework that was decided
+
+Achievement
+===========
+1. Decided on React-Native framework for the android app, Express JS framework for the server and MongoDB as the
+   database.
+2. Looked up various documentations on React-Native, Express JS and Framework 
+
+Time Spent
+==========
+Roughly 8 hours
