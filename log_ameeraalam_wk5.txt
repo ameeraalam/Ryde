@@ -1,0 +1,18 @@
+Week 5
+======
+
+Duties
+------
+1. Learn about the mongoDB database and how to run it
+2. Learn how to manipulate the server to achieve functionalities
+
+Achievements
+------------
+1. Learnt more about mongoDB commands
+2. Attained basic understanding of AJAX requests to the server to retrieve data
+3. Most of the back-end functionalities were working. Passenger and Driver can view posts and available and pending rides. 
+4.A passenger could also request to join a ride.
+
+Time Spent
+----------
+~ 12 hours

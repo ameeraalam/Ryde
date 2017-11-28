@@ -1,0 +1,16 @@
+Week 9
+======
+
+Duties
+------
+1. Discuss and gain an understanding of the architecture styles and design patterns for D3
+2. Finish off report and diagrams for D3
+
+Achievements
+------------
+1. Completed and submitted D3
+
+Time Spent
+----------
+
+~15 hours

@@ -1,0 +1,17 @@
+Week 2
+======
+
+Duties
+------
+1. Decide on the layout of the app
+2. Decide on the architecture design of the app
+3. Decide on the database design for the app
+
+Achievements
+------------
+1. Decided on MVC and Object-Oriented architecture
+2. Decided on mongoDB for the database
+
+Time Spent
+----------
+~ 11 hours

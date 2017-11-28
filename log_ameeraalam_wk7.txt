@@ -1,0 +1,17 @@
+Week 7
+======
+
+Duties
+------
+1. Finish off any remaining back-end or attributes of the app
+2. Fix bugs regarding back-end
+3. Improve UI
+
+Achievements
+------------
+
+1. Fixed bugs
+
+Time Spent
+----------
+~ 4 hours

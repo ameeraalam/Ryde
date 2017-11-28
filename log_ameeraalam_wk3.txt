@@ -1,0 +1,17 @@
+Week 3
+======
+
+Duties
+------
+1. Learn React-Native
+2. Start working on the layouts for the driver and passenger views
+
+Achievements
+------------
+1. Learnt basics of react-native (mostly related to styling)
+2. Learnt to use native-base
+3. Created the Driver and Passenger views
+
+Time Spent
+----------
+~ 6 hours

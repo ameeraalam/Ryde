@@ -1,0 +1,23 @@
+Week 10
+======
+
+Duties
+------
+1. Re-do the UI
+2. Fix any bugs in the app 
+3. Write report for D4
+4. Create Video for D4
+5. Prepare for final demo
+
+Achievements
+------------
+1. UI improved and refactored
+2. Bugs caught and fixed such as requesting a ride was causing the server to crash. Realized was sending a 200 response in a for loop.
+3. Report completed.
+4. Video completed.
+5. Completed app
+
+Time Spent
+----------
+
+~13 hours

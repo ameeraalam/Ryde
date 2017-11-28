@@ -1,0 +1,15 @@
+Week 8
+======
+
+Duties
+------
+1. Fix bugs around back-end and from-end
+2.Improve UI
+
+Achievements
+------------
+1. Fixed bugs
+
+Time Spent
+----------
+~5 hours

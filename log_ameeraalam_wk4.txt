@@ -1,0 +1,16 @@
+Week 4
+======
+
+Duties
+------
+1. Finish off the front-end components of the app
+
+Achievements
+------------
+
+1. Created the different profiles (driver and passenger)
+2. Created profiles containing details of the ride
+
+Time Spent
+----------
+~ 5 hours
