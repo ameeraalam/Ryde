@@ -1,0 +1,22 @@
+Week 7
+======
+
+
+
+Duties
+—————-
+1. Meet with group and finish D2 documentation.
+2. Merge everyone’s code  to one project in preparation for D2
+
+
+
+Achievements
+———————————-
+1. We finished and submitted D2 documentation.
+2. We pulled 2 days of all-nighters to finish our tasks and merge the code
+3. Merging was not completed as we encountered a lot of bugs in the process which slowed the merging process immensely
+
+
+Time Spent
+——————————
+I spent approximately 40 hours this week

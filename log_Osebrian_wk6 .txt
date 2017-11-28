@@ -1,0 +1,24 @@
+Week 6
+======
+
+
+
+Duties
+—————-
+(Reading week)
+1. Finish up react native tutorial on code academy
+2. Fully devote time everyday to have drawer working first before maps
+
+
+
+Achievements
+———————————-
+1. Completed react native tutorial on code academy
+2. Finally implemented drawer after so much hours put everyday with some all-nighters during this week(reading week)
+3. Improved the whole UI of the app(front-end) in the process of implementing drawer
+4. Learnt so much about react native and became a lot  more familiar with he framework and usage (Considered as most valuable week for me)
+
+
+Time Spent
+——————————
+I spent atleast 30 hours this week
