@@ -3,14 +3,17 @@ Week 3
 
 Duties
 ------
-1.
+1. Assigned RidePosting, RideSearching, and RideBrowser pages of the app
+2. Setup GitHub account and learn to use GitHub
 
 
 Achievements
 ------------
-1.
+1. Began researching examples of how to implement some of the functionality I will be
+requiring for my pages
+2. Created GitHub account and learned how to use terminal commands to work on project
 
 
 Time Spent
 ----------
-
+~8 hours

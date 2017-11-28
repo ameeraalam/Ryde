@@ -3,14 +3,19 @@ Week 8
 
 Duties
 ------
-1.
+1. Complete client side for RideBrowser page
+2. Implement server and database functionality for RideBrowser page
+3. Create a new collection in database for RydeIDs and implement server side functionality
+for this. Update client side pages aswell
 
 
 Achievements
 ------------
-1.
+1. Client side implementation completed for RideBrowser (not filtering system)
+2. Server side and database functionality completed for RideBrowser
+3. RydeID move to database completed
 
 
 Time Spent
 ----------
-
+~8 hours

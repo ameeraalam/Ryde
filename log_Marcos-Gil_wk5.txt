@@ -3,15 +3,18 @@ Week 5
 
 Duties
 ------
-1.
+1. Finish RidePosting page client side
+2. Implement server side and database functionality for RidePosting
+3. Begin working on RideSearch page
 
 
 Achievements
 ------------
-1.
-
+1. Finished RidePosting page
+2. Implemented server side and database functionality for this page
+3. Basic layout for RideSeach client side page complete
 
 
 Time Spent
 ----------
-
+~8 hours

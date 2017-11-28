@@ -1,16 +1,20 @@
 Week 10
 =======
-d4
+
 Duties
 ------
-1.
+1. Work on deliverable #4 with group
+2. Test and debug any issues RidePosting, RideSearch, or RideBrowser might have for final product
+3. Clean up UI and match look with other group members pages to give the application a uniform look
 
 
 Achievements
 ------------
-1.
+1. Met with group multiple times and completed deliverable #4
+2. Debugged issues found with pages and prepared for final demo
+3. UI cleaned up and matched with all pages in application
 
 
 Time Spent
 ----------
-
+~14 hours

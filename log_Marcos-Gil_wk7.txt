@@ -3,14 +3,18 @@ Week 7
 
 Duties
 ------
-1.
+1. Begin working on RideBrowser page layout on client side
+2. Debug issues with RidePosting and RideSearch pages with object creating and storage in
+database
 
 
 Achievements
 ------------
-1.
+1. Basic layout for RideBrowser page client side implemented
+2. Fixed issues with RidePosting and RideSearch pages such as users seeing their own ads
+in the browser
 
 
 Time Spent
 ----------
-
+~6 hours

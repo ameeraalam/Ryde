@@ -1,16 +1,18 @@
 Week 9
 ======
-d3
+
 Duties
 ------
-1.
+1. Work on deliverable #3 with group
+2. Implement filtering system for the RideBrowser page
 
 
 Achievements
 ------------
-1.
+1. Met with group multiple times to work on and complete deliverable #3
+2. Filtering system implemented into RideBrowser page
 
 
 Time Spent
 ----------
-
+~14 hours

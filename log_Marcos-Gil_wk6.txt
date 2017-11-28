@@ -1,16 +1,21 @@
 Week 6
 ======
-d2
+
 Duties
 ------
-1.
+1. Work on deliverable #2 with group
+2. Finish RideSearch page client side
+3. Implement server side and database functionality for RideSearch
 
 
 Achievements
 ------------
-1.
+1. Met with group multiple times to bring what pages we have together and prepare 
+for deliverable #2
+2. Finished RideSearch page client side
+3. Implemented server side and database functionality for RideSearch
 
 
 Time Spent
 ----------
-
+~12 hours

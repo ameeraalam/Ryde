@@ -3,14 +3,16 @@ Week 4
 
 Duties
 ------
-1.
+1. Begin working on RidePosting app page
+2. Begin to research how to work with a server and database for app requirements
 
 
 Achievements
 ------------
-1.
+1. Basic layout of RidePosting complete
+2. Learned how to work with MongoDB and server setup by Tanvir
 
 
 Time Spent
 ----------
-
+~10 hours
