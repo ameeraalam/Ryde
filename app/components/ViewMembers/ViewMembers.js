@@ -85,6 +85,8 @@ class ViewMembers extends Component {
 			}
 		}
 
+		this.setState({members: mems});
+
 		// Now after the splicing bussiness is taken care of I will take care of the backend
 		// and when the backend job is done I will update the newly removed array by setting the state
 
@@ -102,9 +104,7 @@ class ViewMembers extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status == 200) {
-				this.setState({members: mems});
-			} else {
+			if (res.status !== 200) {
 				alert("Server sent an error");
 			}
 		}, (err) => {

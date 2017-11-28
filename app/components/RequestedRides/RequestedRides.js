@@ -128,7 +128,7 @@ class RequestedRides extends Component {
 					let passengers = [];
 
 					for (let i = 0; i < resObj.pending.length; ++i) {
-						passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
+						passengers.push(<CardSlide id = {i} key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
 					}
 
 					this.setState({pendingPassengers: passengers});
@@ -156,8 +156,11 @@ class RequestedRides extends Component {
 			if (passengers[i].props.id === self.props.id) {
 				// returns an array of elements that are being removed
 				var cardObjArr = passengers.splice(i, 1);
+				break;
 			}
 		}
+
+		this.setState({pendingPassengers: passengers});
 
 		let reqObj = {
 			rydeId: cardObjArr[0].props.rydeId,
@@ -174,9 +177,7 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status === 200) {
-				this.setState({pendingPassengers: passengers});
-			} else if (res.status === 404) {
+			if (res.status === 404) {
 				alert("Server error");
 			} else {
 				alert("The ryde cannot take in anymore passengers");
@@ -199,8 +200,11 @@ class RequestedRides extends Component {
 			if (passengers[i].props.id === self.props.id) {
 				// returns an array of elements being removed
 				var cardObjArr = passengers.splice(i, 1);
+				break;
 			}
 		}
+
+		this.setState({pendingPassengers: passengers});
 
 		let reqObj = {
 			rydeId: cardObjArr[0].props.rydeId,
@@ -215,9 +219,7 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
-			if (res.status === 200) {
-				this.setState({pendingPassengers: passengers});
-			} else if (res.status === 404) {
+			if (res.status !== 200) {
 				alert("Server error");
 			}
 		}, (err) => {

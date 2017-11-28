@@ -8,7 +8,8 @@ import {
 	TouchableOpacity,
 	StatusBar,
 	Easing,
-	ScrollView
+	ScrollView,
+	BackHandler
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
@@ -36,6 +37,18 @@ class DriverRatings extends Component {
 	openMenu() {
 		this.drawer.openDrawer();
 	}
+
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', () => {
+			// this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+			// Typically you would use the navigator here to go to the last state.
+			let resObj = this.props.resObjUser;
+			Actions.passengerView({resObj});
+			return true;
+
+		});
+	}
+
 
 	submitRatings() {
 		let reqObj = {
