@@ -1,5 +1,0 @@
-Week 3
-------
-
-1. Began working on the RidePosting page
-2. Researching how to have additional functionality on pages such as scrolling for the RideBrowser
