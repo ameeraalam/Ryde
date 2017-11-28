@@ -1,0 +1,20 @@
+Week 2
+======
+
+Duties
+------
+1. Decide on a layout for the applications structure
+2. Come up with a rough idea of how the application will look like in its final state
+
+
+Achievements
+------------
+
+1. Decided to use MVC architecture
+2. Planned out the pages our application will have
+3. Planned out how we will layout our information in the database
+
+
+Time Spent
+----------
+~8 hours
