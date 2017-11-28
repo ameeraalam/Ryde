@@ -1,37 +1,19 @@
-1st week:
+Week 1
+======
 
-Created repository
-Added collaborators
-Create group
+Duties
+------
+1. Decide on the platform to be used, languages and frameworks to develop with
+2. Start research on the languages and frameworks we chose
 
-2nd week:
+Achievements
+------------
+1. Decided on using the React-Native framework for our Android application
+2. Decided on experessJS for the back-end
+3. Created repository
+4. Added collaborators
 
-Completed and submitted D1.
 
-3rd week:
-
-Discussed and finalised about database design
-Finalised on architecture of the app
-Learnt basics of react-native and expressjs
-
-4th week:
-
-Designed front end view of Driver View and Passenger view using native-base
-
-5th Week:
-
-Designed front end view of Ride profiles. 
-Completed front-end components.
-
-6th Week:
-
--
-
-7th week:
-
-Started working on back-end. 
-Retrieve ride information and display it as a list for both passenger and driver.
-Still need to figure out how to separate pending and available requests for the passenger.
-Need to figure out how to retrieve user and ride information from server and display it in the ride profiles (driverrideprofile and passengerrideprofile)
-Started working on the report for D2.
-
+Time Spent
+----------
+~ 8 hours
