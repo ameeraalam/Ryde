@@ -12,7 +12,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem} from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -56,12 +56,15 @@ class RideBrowser extends Component{
 
             allRydes.push(
                 <View key={i}>
+                  <Card style={{marginBottom: 20, marginLeft: 5, marginRight: 5}}>
                     <CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, resObjRyde})}>
                     <Body>
-                    <Text>Driver: {currentRyde.firstName + " " + currentRyde.lastName}</Text>
-                    <Text>Price: {currentRyde.price}</Text>
+                    <Icon name = 'person' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.firstName + " " + currentRyde.lastName}</Text></Icon>
+                    <Icon name='calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0,51,153)'}}> {currentRyde.date}</Text></Icon>
+                    <Icon name='cash' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.price}</Text></Icon>
                     </Body>
                     </CardItem>
+                  </Card>
                 </View>
             );
 
@@ -80,14 +83,14 @@ class RideBrowser extends Component{
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 0}}>
 								<Button transparent onPress={this.openMenu}>
 									<Icon name='menu' />
 								</Button>
 							</Left>
 							<Body style={{alignItems: 'center', flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>SEARCH RESULTS</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>Rides</Title>
 							</Body>
 							<Right style={{flex: 0}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>

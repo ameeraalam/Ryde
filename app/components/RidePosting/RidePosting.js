@@ -312,17 +312,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white'
 
 	},
-	backgroundImage: {
-		width: 200,
-		height: 100,
-		marginTop: 10
-	},
-	logo: {
-		alignSelf: 'center',
-		width: 50,
-		height: 50,
 
-	},
 	content: {
 		alignItems: 'center',
 		backgroundColor: 'white',

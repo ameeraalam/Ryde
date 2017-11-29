@@ -61,7 +61,7 @@ class DriverView extends Component {
 						dataSet.push(
 							<View key={i}>
 							<Card style={{marginBottom: 20, marginLeft: 5, marginRight: 5}}>
-							<CardItem bordered={true} button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
+							<CardItem button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
 							<Body>
 							<Icon name='pin' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {resObj[i].from} - {resObj[i].to}</Text></Icon>
 							<Icon name='calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}>  {resObj[i].date}</Text></Icon>
@@ -97,9 +97,6 @@ class DriverView extends Component {
 		})
 	}
 
-	// <View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
-	// <Content style={{backgroundColor: '#fff'}}>
-	// </Content>
 
 	render() {
 		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
@@ -108,29 +105,40 @@ class DriverView extends Component {
 		return (
 			<Notifications
 			ref={(notifications) => (this.notifications = notifications)}>
+
 			<Drawer
 			ref={(drawer) => this.drawer = drawer}>
+
 			<Container>
+
 			<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
+
 			<StatusBar
 			backgroundColor="rgb(0, 51, 153)"
 			barStyle="light-content"
 			hidden = {false}
 			/>
+
 			<Left style = {{flex: 1}}>
+
 			<Button transparent onPress={this.openMenu}>
+
 			<Icon name='menu' />
+
 			</Button>
 			</Left>
+
 			<Body style={{flex: 1}}>
 			<Title style={{fontFamily: 'sans-serif'}}>Dashboard</Title>
 			</Body>
+
 			<Right style = {{flex: 1}}>
 			<Button onPress = {() => {this.openNotifications()}} transparent>
 			<Icon name='notifications' />
 			</Button>
 			</Right>
 			</Header>
+
 			<View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
 			<ScrollView
 			refreshControl={<RefreshControl
