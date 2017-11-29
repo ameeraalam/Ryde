@@ -8,7 +8,9 @@ import {
 	Image,
 	Alert,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity,
+	ScrollView,
+	ActivityIndicator
 } from 'react-native';
 import {
 	Actions
@@ -16,8 +18,8 @@ import {
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
-
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Item, Input, Toast, Picker} from 'native-base';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 // Main class
 class RidePosting extends Component{
@@ -28,12 +30,15 @@ class RidePosting extends Component{
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
 		this.state = {
-			fromLocation: "From:",
-			toLocation: "To:",
-			travelDate: "Date: (DD/MM)",
-			numPassengers: "Passenger Spots:",
-			numLuggage: "Luggage Space:",
-			ridePrice: "Price per seat:"
+			fromLocation: "From",
+			toLocation: "To",
+			travelDate: "Date",
+			numPassengers: "Passenger Spots",
+			numLuggage: "Luggage Space",
+			ridePrice: "Price",
+			loading: false,
+			showToast: false,
+			isDateTimePickerVisible: false
 		}
 	}
 
@@ -45,12 +50,33 @@ class RidePosting extends Component{
 		this.drawer.openDrawer();
 	}
 
+	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+	_handleDatePicked = (date) => {
+
+		this.userMs = date.getTime();
+
+		let day = date.getDate();
+		// the month that you get is from 0 to 11
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+
+		let formattedDate = day + "/" + month + "/" + year;
+		this.setState({travelDate: formattedDate});
+    	// console.log('Your Date of Birth is: ', date);
+    	this._hideDateTimePicker();
+
+	}
+
 
 	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
 	// doesnt get affected
 
 	// Code for functionality of the Post button on the app page
 	postButton(){
+		this.setState({loading: true});
 
 		let sameDestination = {dest:[]};
 		let newRydeID = {query: "databaseID", rydeID: 0};
@@ -67,6 +93,7 @@ class RidePosting extends Component{
 			body: JSON.stringify(newRydeID)
 
 		}).then((res) => {
+			this.setState({loading: false});
 
 			let resObjPromise = res.json();
 
@@ -91,6 +118,7 @@ class RidePosting extends Component{
 					price: "$" + this.state.ridePrice
 				}
 
+				this.setState({loading: true});
 				// Adding Ryde to the Database
 				fetch(this.baseUrl + "postRyde", {
 
@@ -102,10 +130,17 @@ class RidePosting extends Component{
 					body: JSON.stringify(reqObj)
 
 				}).then((res) => {
-
+					this.setState({loading: false});
 					if (res.status === 200){
+						this.setState({loading: true});
 
-						alert("Ryde Posted!");
+						Toast.show({
+										text: 'Ryde Posted!',
+										position: 'top',
+										buttonText: 'Okay',
+										type: 'success',
+										duration: 3000
+									});
 
 						fetch(this.baseUrl + "incrementRydeID", {
 
@@ -117,6 +152,7 @@ class RidePosting extends Component{
 							body: JSON.stringify(newRydeID)
 
 						}).then((res) => {
+							this.setState({loading: false});
 
 							if (res.status === 200){
 
@@ -126,18 +162,31 @@ class RidePosting extends Component{
 							}
 						}, (err) => {
 
-							alert("Server Error with Ryde ID");
+							Toast.show({
+											text: 'Server Error with Ryde ID',
+											position: 'top',
+											buttonText: 'Okay',
+											duration: 3000
+										});
 						});
 
 						Actions.driverView({resObj});
 
 					} else {
-
-						alert("Server Error!");
+						Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 					}
 				}, (err) => {
-
-					alert("Server Error!");
+					Toast.show({
+									text: 'Promise Error:\nUnhandled promise',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 				});
 			})
 
@@ -151,20 +200,19 @@ class RidePosting extends Component{
 	render(){
 
 		return(
-
 			<Notifications
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 1}}>
 								<Button transparent onPress={this.openMenu}>
 									<Icon name='menu' />
 								</Button>
 							</Left>
 							<Body style={{alignItems: 'center', flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>RYDE POST</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>Post</Title>
 							</Body>
 							<Right style={{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -172,67 +220,83 @@ class RidePosting extends Component{
 								</Button>
 							</Right>
 						</Header>
-						<View style = {styles.mainStyle}>
 
+						<Content contentContainerStyle={styles.mainStyle}>
 							{/*Instruction Text*/}
-							<Text style = {styles.welcome}>
-								Post Your Ryde
-							</Text>
 
 							{/*Input box for the from location*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='pin' />
+							<Input
 								placeholder = {this.state.fromLocation}
 								onChangeText = {(text) => this.setState({fromLocation: text})}
 								/>
-
+							</Item>
 							{/*Input box for the to location*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='pin' />
+							<Input
 								placeholder = {this.state.toLocation}
 								onChangeText = {(text) => this.setState({toLocation: text})}
 								/>
-
+							</Item>
 							{/*Input box for the travel date*/}
-							<TextInput
-								style = {styles.inputBox}
-								placeholder = {this.state.travelDate}
-								onChangeText = {(text) => this.setState({travelDate: text})}
-								/>
+
+							<Item style = {styles.inputBox} onPress={this._showDateTimePicker}>
+								<Icon active name ='calendar'/>
+								<Text style={{fontSize: 18}}> {this.state.travelDate}</Text>
+							</Item>
+
+							<DateTimePicker
+								isVisible={this.state.isDateTimePickerVisible}
+								onConfirm={this._handleDatePicked}
+								onCancel={this._hideDateTimePicker}
+						 />
 
 							{/*Input box for the number of passengers*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='contacts' />
+							<Input
 								placeholder = {this.state.numPassengers}
 								onChangeText = {(text) => this.setState({numPassengers: text})}
 								/>
+							</Item>
 
 							{/*Input box for the amount of luggage*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='briefcase' />
+							<Input
 								placeholder = {this.state.numLuggage}
 								onChangeText = {(text) => this.setState({numLuggage: text})}
 								/>
+							</Item>
 
 							{/*Input box for the price of each seat*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='cash' />
+							<Input
 								placeholder = {this.state.ridePrice}
 								onChangeText = {(text) => this.setState({ridePrice: text})}
 								/>
+							</Item>
 
 							{/*Button to use the postButton function with an image being used for the button*/}
-							<TouchableOpacity onPress = {() => {this.postButton()}}>
-								<Text>
-									Post
-								</Text>
+							<TouchableOpacity onPress = {() => {this.postButton()}} style = {{width: 280}}>
+								<Text style = {styles.submitButtonOnPost}> Post </Text>
 							</TouchableOpacity>
 
-						</View>
+							{this.state.loading && <View style = {styles.loading}>
+							<ActivityIndicator
+							animating
+							size="large"
+							color="red"
+							/>
+							</View>}
+						</Content>
+
 					</Container>
 				</Drawer>
 			</Notifications>
-
 		);
 	}
 }
@@ -245,14 +309,29 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#FFFFFF',
-	},
+		backgroundColor: 'white'
 
+	},
+	backgroundImage: {
+		width: 200,
+		height: 100,
+		marginTop: 10
+	},
+	logo: {
+		alignSelf: 'center',
+		width: 50,
+		height: 50,
+
+	},
+	content: {
+		alignItems: 'center',
+		backgroundColor: 'white',
+
+	},
 	inputBox: {
 		height: 40,
-		width: 200,
-		borderColor: '#000000',
-		borderWidth: 1
+		width: 250,
+		marginTop: 5
 	},
 
 	welcome: {
@@ -267,6 +346,29 @@ const styles = StyleSheet.create({
 		color: '#FFFFFF',
 		marginBottom: 5,
 	},
+
+	submitButtonOnPost: {
+		backgroundColor:'rgb(0, 51, 153)',
+		textAlign:'center',
+		height:54,
+		color:'#fff',
+		fontSize:18,
+		paddingTop:14,
+		fontFamily: 'sans-serif',
+		marginTop: 20,
+		marginLeft: 10,
+		marginRight: 10
+	},
+	loading: {
+		position: "absolute",
+		left: 0,
+		top: 0,
+		right: 0,
+		bottom: 0,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "rgba(0, 0, 0, .2)"
+	}
 });
 
 module.exports = RidePosting;

@@ -1,6 +1,6 @@
 
 function config() {
-	ip = "172.17.73.254";
+	ip = "182.2.2.74";
 	localUrl = "http://" + ip + ":3000/";
 	globalUrl = "https://ryde-matb.herokuapp.com/";
 

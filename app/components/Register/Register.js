@@ -7,6 +7,7 @@ import {
 	Image,
 	ScrollView,
 	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
 
 import {
@@ -23,7 +24,8 @@ import {
 	Icon,
 	Right,
 	Picker,
-	Item as FormItem
+	Item as FormItem,
+	Toast
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -39,6 +41,7 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
+		this.userMs = undefined;
 		this.state = {
 			deviceId: '',
 			date: 'Date of Birth',
@@ -68,7 +71,8 @@ class Register extends Component {
 			},
 
 			dobS: {
-				color: "grey"
+				color: "grey",
+				fontSize: 16
 			},
 
 			phoneS: {
@@ -77,7 +81,10 @@ class Register extends Component {
 
 			genderS: {
 				color: "grey"
-			}
+			},
+
+			loading: false,
+			showToast: false
 		}
 	}
 
@@ -95,18 +102,26 @@ class Register extends Component {
 		this.setState({deviceId: device.userId});
 	}
 
-
 	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
 	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 
 	_handleDatePicked = (date) => {
-		let dateString = date.toString();
-		let formattedDate = dateString.slice(3, 13);
+
+		this.userMs = date.getTime();
+
+		let day = date.getDate();
+		// the month that you get is from 0 to 11
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+
+		let formattedDate = day + "/" + month + "/" + year;
+
 		this.setState({date: formattedDate, dob: formattedDate, dobS: {color: "grey"}});
     	// console.log('Your Date of Birth is: ', date);
     	this._hideDateTimePicker();
-  	}
+
+		}
 
 	emailCheck() {
 		let emailCheck = false;
@@ -139,6 +154,7 @@ class Register extends Component {
 
 		// the promise returned by the fetch function will be the return of the
 		// .then function, so we are returning a promise
+		this.setState({loading:true});
 		return fetch(this.baseUrl + "emailCheck", {
 			method: "POST",
 			headers: {
@@ -147,6 +163,9 @@ class Register extends Component {
 			},
 			body: JSON.stringify(emailObj)
 		}).then((res) => {
+			this.setState({loading:false});
+
+
 			// Since fetch is asynchronous that returns a promise, we want to do
 			// all the checks after this async function returns the promise and so
 			// we use the .then function and then do all the checks, because any check
@@ -164,7 +183,15 @@ class Register extends Component {
 				return emailCheck;
 			}
 		}, (err) => {
-			alert(err)
+			this.setState({loading:false});
+
+
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 			return emailCheck;
 		});
 	}
@@ -186,54 +213,128 @@ class Register extends Component {
 	}
 
 	firstNameChecker() {
-		if (this.state.firstName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.firstName.length === 0 || this.state.firstName === "First name") {
 			return false;
 		}
 		return true;
 	}
 
 	lastNameChecker() {
-		if (this.state.lastName.length === 0) {
+		// either of these expression need to be true in order for the entire expression to be true
+		if (this.state.lastName.length === 0 || this.state.lastName === "Last name") {
 			return false;
 		}
 		return true;
 	}
 
+	dobCheck() {
+		// if it is undefined we immedietly know that nothing was filled in
+		if (this.userMs === undefined) {
+			return false;
+		}
+		// create the date object which represents the current time
+		let currentDate = new Date();
+		// converting the date into millisecons, gives the time from 1 Jan 1970 to now
+		let currentMs = currentDate.getTime()
+		let msDiff = currentMs - this.userMs;
+		// ms to seconds to minutes to hours to days to year
+		age = ((((msDiff / 1000) / 60) / 60) / 24) / 365;
+		// if the age is less than 18 then return false meaning to young to use the app
+		if (age < 18) {
+			return false;
+		}
+		return true;
+	}
+
+	genderCheck() {
+		if (this.state.gender === "Gender") {
+			return false;
+		}
+		return true;
+	}
+
+	// passwords must contains numbers
+	passwordCheck() {
+		// password below the length of 6 is false
+		if (this.state.password.length < 6) {
+			return false;
+		}
+
+		let containsNumbers = false
+		let containsLetters = false
+		for (let i = 0; i < this.state.password.length; ++i) {
+			// function to check if a data type is NaN
+			if (isNaN(Number(this.state.password[i]))) {
+				containsNumbers = true;
+			} else {
+				containsLetters = true;
+			}
+		}
+
+		// if only contains numbers and letters true is returned
+		if (containsNumbers == true && containsLetters == true) {
+			return true;
+		}
+
+		// by default I return false
+		return false;
+
+	}
+
 	submitButton() {
+		let emailCheck = this.emailCheck();
 		let errors = [];
 
-		let emailCheck = this.emailCheck();
-
 		emailCheck.then((val) => {
-
 			if (val === false) {
 				this.setState({emailS: {color: "red"}});
-				errors.push("email");
+				errors.push(0);
 			} else {
 				this.setState({emailS: {color: "grey"}});
+			}
+			if (this.dobCheck() === false) {
+				this.setState({dobS: {color: "red", fontSize: 16}})
+				errors.push(0);
+			} else {
+				this.setState({dobS: {color: "grey", fontSize: 16}});
 			}
 
 			let phoneCheck = this.phoneCheck();
 
 			if (phoneCheck === false) {
 				this.setState({phoneS: {color: "red"}})
-				errors.push("phone");
+				errors.push(0);
 			} else {
 				this.setState({phoneS: {color: "grey"}});
 			}
 
 			if (this.firstNameChecker() === false) {
 				this.setState({firstNameS: {color: "red"}});
-				errors.push("firstName");
+				errors.push(0);
 			} else {
 				this.setState({firstNameS: {color: "grey"}})
 			}
 
-			if (this.lastNameChecker() == false) {
+			if (this.lastNameChecker() === false) {
 				this.setState({lastNameS: {color: "red"}});
-				errors.push("lastName");
+				errors.push(0);
 			} else {
 				this.setState({lastNameS: {color: "grey"}});
+			}
+
+			if (this.genderCheck() === false) {
+				this.setState({genderS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({genderS: {color: "grey"}});
+			}
+
+			if (this.passwordCheck() === false) {
+				this.setState({passwordS: {color: "red"}});
+				errors.push(0);
+			} else {
+				this.setState({passwordS: {color: "grey"}});
 			}
 
 			let reqObj = {
@@ -248,6 +349,9 @@ class Register extends Component {
 				liscense: '',
 				car: '',
 				allInfoFilled: false,
+				seen: false,
+				totalRating: 0,
+				numRating: 0,
 				deviceId: this.state.deviceId
 			}
 
@@ -259,6 +363,7 @@ class Register extends Component {
 				// get sent. The promise being returned, gives back two call back functions
 				// first contains one parameter which is the response object and the second
 				// function contains one parameter which is the err.
+				this.setState({loading:true});
 				fetch(this.baseUrl + "register", {
 					method: "POST",
 					headers: {
@@ -267,7 +372,11 @@ class Register extends Component {
 					},
 					body: JSON.stringify(reqObj)
 				}).then((res) => {
+					this.setState({loading:false});
+
+
 					if (res.status === 200) {
+						this.setState({loading:true});
 						// on completing the registration we create the personal rydes object which
 						// every user will have
 						// we send the email address using the query string
@@ -275,23 +384,57 @@ class Register extends Component {
 							method: "GET"
 						// res means response object
 						}).then((res) => {
+							this.setState({loading:false});
+
+
 							if (res.status === 200) {
-								alert("Registration complete"); // should be changed to a message bar
+								Toast.show({
+									text: 'Registration Complete',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								}); // should be changed to a message bar
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
 							} else {
-								alert("Error");
+								Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 							}
 						// err means the error returned from the promise
 						}, (err) => {
-							alert("Server error")
+							this.setState({loading:false});
+
+
+							Toast.show({
+								text: 'Promise Error:\nUnhandled promise',
+								position: 'top',
+								buttonText: 'Okay',
+								duration: 3000
+							});
 
 						});
 					} else {
-						alert("Error");
+						Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 					}
 				}, (err) => {
-					alert("Server error");
+					this.setState({loading:false});
+
+
+					Toast.show({
+						text: 'Promise Error:\nUnhandled promise',
+						position: 'top',
+						buttonText: 'Okay',
+						duration: 3000
+					});
 				});
 			}
 
@@ -303,14 +446,9 @@ class Register extends Component {
 	render() {
 		return (
 			<ScrollView style={{backgroundColor: '#fff'}}>
-				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
-					<Body>
-						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
-					</Body>
-				</Header>
 
 				<View style={{ marginTop:30, paddingLeft:15}}>
-					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(72, 110, 255)'}}>
+					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(0, 51, 153)'}}>
 						Register
 					</Text>
 				</View>
@@ -356,7 +494,7 @@ class Register extends Component {
 
 				<ListItem icon style={{marginTop:28}} onPress={this._showDateTimePicker}>
 					<Body>
-						<Text style={{fontSize: 16}}>{this.state.date}</Text>
+						<Text style={this.state.dobS}>{this.state.date}</Text>
 					</Body>
 				</ListItem>
 				<DateTimePicker
@@ -377,10 +515,11 @@ class Register extends Component {
 
 				<Form style={{paddingLeft:15, marginTop:28, marginBottom: 28}}>
 					<Picker
+						style = {this.state.genderS}
 						mode="dropdown"
 						placeholder="Gender"
 						selectedValue={this.state.gender}
-						onValueChange={(value) => this.setState({gender: value, genderS: {color: "black"}})}
+						onValueChange={(value) => this.setState({gender: value, genderS: {color: "grey"}})}
 					>
 						<Item label="Gender" value="gender" />
 						<Item label="Male" value="male" />
@@ -390,11 +529,19 @@ class Register extends Component {
 
 				<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
 					<TouchableOpacity onPress = {() => {this.submitButton()}}>
-						<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+						<Text style = {{backgroundColor:'rgb(0, 51, 153)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
 							Register
 						</Text>
 					</TouchableOpacity>
 				</View>
+
+				{this.state.loading && <View style = {styles.loading}>
+				<ActivityIndicator
+				animating
+				size="large"
+				color="red"
+				/>
+				</View>}
 
 			</ScrollView>
 		);
