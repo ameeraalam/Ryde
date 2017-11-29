@@ -1,7 +1,0 @@
-Week 4
-------
-
-1. Commeneted previous code
-2. Confirmed our architecture as a group after review of multiple architectures were done in class
-3. Began work on RideBrowser page
-4. More research being done on Server/Database usage as most templating and page design is almost complete

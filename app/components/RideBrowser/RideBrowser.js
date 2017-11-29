@@ -63,7 +63,7 @@ class RideBrowser extends Component{
 
 		return(
 
-<<<<<<< HEAD
+<<<<<<< HEAD wtf
 		    <View>
 		        {this.state.rydes}
 =======

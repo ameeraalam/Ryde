@@ -1,5 +1,0 @@
-Week 2
-------
-
-1. Began work on RidePosting app page
-2. Learned how to work with server and a database for requirements related to the app
