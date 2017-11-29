@@ -11,8 +11,11 @@ import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Body, Button, Title, Content, Footer, Icon, CardItem} from 'native-base';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import config from "./../../config";
 
+=======
+>>>>>>> master
 =======
 >>>>>>> master
 //page you will link to when you search for rides as a passenger and click on a ride you are interested in. make sure to send both the ride and passenger obj.
@@ -20,7 +23,11 @@ class PassengerSearchProfile extends Component {
   constructor(props){
     super(props);
 <<<<<<< HEAD
+<<<<<<< HEAD
     this.address = config.ip;
+=======
+    this.address = "192.168.0.30";
+>>>>>>> master
 =======
     this.address = "192.168.0.30";
 >>>>>>> master
@@ -29,16 +36,22 @@ class PassengerSearchProfile extends Component {
 
   requestButton(){
 <<<<<<< HEAD
+<<<<<<< HEAD
     let resObj = this.props.currentRyde;
     let reqObj = {
 
       myRes: this.props.currentPassenger,
       driverRes: this.props.currentRyde
 =======
+=======
+>>>>>>> master
     let reqObj = {
 
       myRes: this.props.myRes,
       driverRes: this.props.resO
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
     }
 
@@ -52,6 +65,7 @@ class PassengerSearchProfile extends Component {
 		}).then((res) => {
 			if (res.status === 200) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         let resObj = this.props.currentPassenger;
         //if request is succesfully sent then we alert the user
 				alert("Request succesfully sent.")
@@ -63,6 +77,8 @@ class PassengerSearchProfile extends Component {
 			if (err) {
 				alert("Cannot request");
 =======
+=======
+>>>>>>> master
         //if request is succesfully sent then we alert the user
 				alert("Request succesfully sent.")
 
@@ -72,6 +88,9 @@ class PassengerSearchProfile extends Component {
 		}, (err) => {
 			if (err) {
 				alert(err);
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 			}
 		});
@@ -79,7 +98,10 @@ class PassengerSearchProfile extends Component {
 
   render() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 =======
 >>>>>>> master
     return (
@@ -118,6 +140,7 @@ class PassengerSearchProfile extends Component {
 
           <CardItem>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <Text>Driver E-mail: {this.props.currentRyde.driver}</Text>
           </CardItem>
           <Text></Text>
@@ -144,6 +167,8 @@ class PassengerSearchProfile extends Component {
           <CardItem>
           <Text>To: {this.props.currentRyde.to}</Text>
 =======
+=======
+>>>>>>> master
           <Text>Driver E-mail: {this.props.resO.driver}</Text>
           </CardItem>
           <Text></Text>
@@ -169,6 +194,9 @@ class PassengerSearchProfile extends Component {
           <Text></Text>
           <CardItem>
           <Text>To: {this.props.resO.to}</Text>
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
           </CardItem>
           <Text></Text>
@@ -214,7 +242,11 @@ const styles = StyleSheet.create({
 module.exports = PassengerSearchProfile;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);
+=======
+AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);
+>>>>>>> master
 =======
 AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);
 >>>>>>> master

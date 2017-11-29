@@ -10,14 +10,20 @@ let Chat = require("./../models/Chat.js");
 let PersonalRydes = require("./../models/PersonalRydes.js");
 let Rydes = require("./../models/Rydes.js");
 <<<<<<< HEAD
+<<<<<<< HEAD
 let RydeID = require("./../models/RydeID.js");
 =======
+=======
+>>>>>>> master
 =======
 let Rydes = require("./../models/Rydes.js")
 let PersonalRydes = require("./../models/PersonalRydes.js")
 let IdGenerator = require("./../helpers/IdGenerator.js"); // a class that generates unique user ids
 let Chat = require("./../models/Chat.js");
 >>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 
 /* Constants */
@@ -33,14 +39,20 @@ class Controller {
 		this.modelPersonalRydes = new PersonalRydes();
 		this.modelRydes = new Rydes();
 <<<<<<< HEAD
+<<<<<<< HEAD
 		this.rydeID = new RydeID();
 =======
+=======
+>>>>>>> master
 =======
 		this.modelRydes = new Rydes();
 		this.modelPersonalRydes = new PersonalRydes();
 		this.idGen = new IdGenerator();
 		this.modelChat = new Chat();
 >>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 	}
 
