@@ -10,22 +10,36 @@ import {
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Body, Button, Title, Content, Footer, Icon, CardItem} from 'native-base';
 
+<<<<<<< HEAD
 import config from "./../../config";
 
+=======
+>>>>>>> master
 //page you will link to when you search for rides as a passenger and click on a ride you are interested in. make sure to send both the ride and passenger obj.
 class PassengerSearchProfile extends Component {
   constructor(props){
     super(props);
+<<<<<<< HEAD
     this.address = config.ip;
+=======
+    this.address = "192.168.0.30";
+>>>>>>> master
 		this.baseUrl = "http://" + this.address + ":3000/";
   	}
 
   requestButton(){
+<<<<<<< HEAD
     let resObj = this.props.currentRyde;
     let reqObj = {
 
       myRes: this.props.currentPassenger,
       driverRes: this.props.currentRyde
+=======
+    let reqObj = {
+
+      myRes: this.props.myRes,
+      driverRes: this.props.resO
+>>>>>>> master
     }
 
     fetch(this.baseUrl + "passengerSearch", {
@@ -37,6 +51,7 @@ class PassengerSearchProfile extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
+<<<<<<< HEAD
         let resObj = this.props.currentPassenger;
         //if request is succesfully sent then we alert the user
 				alert("Request succesfully sent.")
@@ -47,12 +62,26 @@ class PassengerSearchProfile extends Component {
 		}, (err) => {
 			if (err) {
 				alert("Cannot request");
+=======
+        //if request is succesfully sent then we alert the user
+				alert("Request succesfully sent.")
+
+			} else {
+				alert("Error");
+			}
+		}, (err) => {
+			if (err) {
+				alert(err);
+>>>>>>> master
 			}
 		});
   }
 
   render() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     return (
       <Container>
       <Header>
@@ -88,6 +117,7 @@ class PassengerSearchProfile extends Component {
           />
 
           <CardItem>
+<<<<<<< HEAD
           <Text>Driver E-mail: {this.props.currentRyde.driver}</Text>
           </CardItem>
           <Text></Text>
@@ -113,6 +143,33 @@ class PassengerSearchProfile extends Component {
           <Text></Text>
           <CardItem>
           <Text>To: {this.props.currentRyde.to}</Text>
+=======
+          <Text>Driver E-mail: {this.props.resO.driver}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Rating: {this.props.resO.rating}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Luggage: {this.props.resO.luggage} </Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Passengers: {this.props.resO.passengers}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>Price: {this.props.resO.price}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>From: {this.props.resO.from}</Text>
+          </CardItem>
+          <Text></Text>
+          <CardItem>
+          <Text>To: {this.props.resO.to}</Text>
+>>>>>>> master
           </CardItem>
           <Text></Text>
           </Content>
@@ -156,4 +213,8 @@ const styles = StyleSheet.create({
 });
 module.exports = PassengerSearchProfile;
 
+<<<<<<< HEAD
 AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);
+=======
+AppRegistry.registerComponent('PassengerSearchProfile', () => PassengerSearchProfile);
+>>>>>>> master

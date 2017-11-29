@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 import React, { Component } from "react";
 import {
 	AppRegistry,
@@ -9,6 +13,7 @@ import {
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
+<<<<<<< HEAD
 
 import styles from "./styles";
 
@@ -23,6 +28,21 @@ class Login extends Component {
 		this.state = {
 			textEmail: "Email",
 			textPass: "Password"
+=======
+import styles from "./styles";
+import Config from '../Config/Config';
+
+
+class Login extends Component {
+
+	constructor(props) {
+		super(props);
+		this.address = Config.ip;
+		this.baseUrl = "http://" + this.address + ":3000/"; // https://ryde-matb.herokuapp.com/
+		this.state = {
+			textEmail: "bw@r.com",
+			textPass: "bw"
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		}
 	}
 
@@ -69,14 +89,24 @@ class Login extends Component {
 				<TextInput
 					style = {styles.inputBox}
 					placeholder = "Email"
+<<<<<<< HEAD
          			underlineColorAndroid = "transparent"
 					onChangeText = {(text) => this.setState({textEmail: text})}
+=======
+         	underlineColorAndroid = "transparent"
+					// onChangeText = {(text) => this.setState({textEmail: text})}
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 				/>
 				<TextInput
 					style = {styles.inputBox}
 					secureTextEntry = {true}
 					placeholder = "Password"
+<<<<<<< HEAD
 					onChangeText = {(text) => this.setState({textPass: text})}
+=======
+					underlineColorAndroid = "transparent"
+					// onChangeText = {(text) => this.setState({textPass: text})}
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 				/>
 
 				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>
@@ -94,4 +124,8 @@ class Login extends Component {
 
 module.exports = Login;
 
+<<<<<<< HEAD
 AppRegistry.registerComponent("Login", () => Login);
+=======
+AppRegistry.registerComponent("Login", () => Login);
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46

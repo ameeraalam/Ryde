@@ -14,16 +14,23 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
+<<<<<<< HEAD
 import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
 import config from "./../../config";
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 
 // Main class
 class RideSearch extends Component{
 
 	constructor(props){
 		super(props);
+<<<<<<< HEAD
 		this.address = config.ip;
+=======
+		this.address = "192.168.0.1";
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		this.baseUrl = "http://" + this.address + ":3000/";
 		this.state = {
 			fromLocation: "From:",
@@ -37,8 +44,11 @@ class RideSearch extends Component{
 	// Code for functionality of the Find button on the app page
 	findButton(){
 
+<<<<<<< HEAD
 		let passedResObj = this.props.resObj;
 
+=======
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 		let reqObj = {
 			from: this.state.fromLocation,
 			to: this.state.toLocation,
@@ -47,6 +57,7 @@ class RideSearch extends Component{
 			luggage: this.state.numLuggage
 		}
 
+<<<<<<< HEAD
 		fetch(this.baseUrl + "findRyde", {
 			method: "POST",
 			headers: {
@@ -71,6 +82,21 @@ class RideSearch extends Component{
 		}, (err) => {
 			alert(err);
 		});
+=======
+		fetch(this.baseUrl + "", {
+			method: "GET",
+			headers: {
+				"Accept:": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify
+		});
+
+		// get object back
+
+		// pass into here
+		Actions.rydeBrowser({});
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
 	}
 
 	// App visuals
