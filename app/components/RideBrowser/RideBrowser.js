@@ -17,6 +17,8 @@ import {
 import { Container, Header, Left, Icon, Body, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 import config from "./../../config";
 
+
+// Comments deleted?
 class RideBrowser extends Component{
 
     constructor(props){
