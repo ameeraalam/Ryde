@@ -18,6 +18,16 @@ import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
 
+<<<<<<< HEAD
+=======
+// Unique static ID that will be assigned to a Ryde each time one is created
+var rideNum = 1;
+=======
+// Unique static ID that will be assigned to a Ryde each time one is created
+var rideID = 1;
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
+var emptyArray = [];
+>>>>>>> 714c84e6fefc24e4b65e2ce4bb445950c41506e6
 
 // Main class
 class RidePosting extends Component{

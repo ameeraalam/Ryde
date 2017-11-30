@@ -17,6 +17,8 @@ import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
 
+
+// Comments deleted?
 class RideBrowser extends Component{
 
     constructor(props){
@@ -71,6 +73,7 @@ class RideBrowser extends Component{
         this.setState({rydes: allRydes});
     }
 
+<<<<<<< HEAD
   render(){
 
     return(
@@ -104,6 +107,29 @@ class RideBrowser extends Component{
 
     );
   }
+=======
+=======
+
+class RideBrowser extends Component{
+
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
+	render(){
+
+		return(
+
+<<<<<<< HEAD wtf
+		    <View>
+		        {this.state.rydes}
+=======
+			<View style = {styles.mainStyle}>
+				<Text style = {styles.welcome}>
+					Ryde Browser
+				</Text>
+>>>>>>> 295fd4106d74e34188b37ecaef0844e37149bd46
+			</View>
+		);
+	}
+>>>>>>> 714c84e6fefc24e4b65e2ce4bb445950c41506e6
 }
 
 const styles = StyleSheet.create({
