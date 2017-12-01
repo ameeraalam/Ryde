@@ -285,15 +285,16 @@ class RidePosting extends Component{
 								<Text style = {styles.submitButtonOnPost}> Post </Text>
 							</TouchableOpacity>
 
-							{this.state.loading && <View style = {styles.loading}>
-							<ActivityIndicator
-							animating
-							size="large"
-							color="red"
-							/>
-							</View>}
+
 						</Content>
 
+						{this.state.loading && <View style = {styles.loading}>
+						<ActivityIndicator
+						animating
+						size="large"
+						color="red"
+						/>
+						</View>}
 					</Container>
 				</Drawer>
 			</Notifications>

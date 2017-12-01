@@ -82,7 +82,7 @@ class RideBrowser extends Component{
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<Container>
+					<Container style={{backgroundColor: 'white'}}>
 						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 0}}>
 								<Button transparent onPress={this.openMenu}>
