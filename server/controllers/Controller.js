@@ -568,11 +568,10 @@ class Controller {
 
 			potentialRides.then((response) => {
 
-				console.log("Res length is " + response.length);
 				for (let i = 0; i < response.length; i++){
 
-					if (response[i].from === req.body.from && response[i].to === req.body.to){
-						console.log("Ryde found!");
+					if (response[i].from.toLowerCase() === req.body.from.toLowerCase() && response[i].to.toLowerCase() === req.body.to.toLowerCase() && response[i].date === req.body.date){
+
 						sameDestination.dest.push(response[i]);
 					}
 				}
@@ -583,6 +582,7 @@ class Controller {
 			res.sendStatus(404);
 		});
 	}
+
 
 
 	//for getting posts as a driver

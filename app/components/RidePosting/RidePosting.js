@@ -70,9 +70,10 @@ class RidePosting extends Component{
 
 	}
 
+	capitalizeFirstLetter(string) {
 
-	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
-	// doesnt get affected
+    	return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+	}
 
 	// Code for functionality of the Post button on the app page
 	postButton(){
@@ -105,8 +106,8 @@ class RidePosting extends Component{
 					driver: this.props.resObj.email,
 					firstName: this.props.resObj.firstName,
 					lastName: this.props.resObj.lastName,
-					from: this.state.fromLocation,
-					to: this.state.toLocation,
+					from: this.capitalizeFirstLetter(this.state.fromLocation),
+					to: this.capitalizeFirstLetter(this.state.toLocation),
 					date: this.state.travelDate,
 					numPassengers: this.state.numPassengers,
 					numLuggage: this.state.numLuggage,
@@ -295,6 +296,7 @@ class RidePosting extends Component{
 						color="red"
 						/>
 						</View>}
+
 					</Container>
 				</Drawer>
 			</Notifications>
