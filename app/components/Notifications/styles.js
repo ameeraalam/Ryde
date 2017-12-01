@@ -2,7 +2,7 @@ import {StyleSheet} from "react-native";
 
 const styles = StyleSheet.create({
 	navBar: {
-		backgroundColor: 'rgb(72, 110, 255)'
+		backgroundColor: 'rgb(0, 51, 153)'
 	},
 
   navbarContainer: {

@@ -8,15 +8,18 @@ import {
 	Image,
 	Alert,
 	TextInput,
-	TouchableOpacity
+	TouchableOpacity,
+	ScrollView,
+	ActivityIndicator
 } from 'react-native';
 import {
 	Actions
 } from 'react-native-router-flux';
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Item, Input, Toast, Picker } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 // Main class
 class RideSearch extends Component{
@@ -27,11 +30,13 @@ class RideSearch extends Component{
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
 		this.state = {
-			fromLocation: "From:",
-			toLocation: "To:",
-			travelDate: "Date: (DD/MM)",
-			numPassengers: "Amount of Passengers:",
-			numLuggage: "Amount of Luggage:"
+			fromLocation: "From",
+			toLocation: "To",
+			travelDate: "Date",
+			loading: false,
+			showToast: false,
+			isDateTimePickerVisible: false
+
 		}
 	}
 
@@ -43,9 +48,29 @@ class RideSearch extends Component{
 		this.drawer.openDrawer();
 	}
 
+	_showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+	_handleDatePicked = (date) => {
+
+		this.userMs = date.getTime();
+
+		let day = date.getDate();
+		// the month that you get is from 0 to 11
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+
+		let formattedDate = day + "/" + month + "/" + year;
+		this.setState({travelDate: formattedDate});
+    	// console.log('Your Date of Birth is: ', date);
+    	this._hideDateTimePicker();
+
+	}
 
 	// Code for functionality of the Find button on the app page
 	findButton(){
+		this.setState({loading: true});
 
 		let passedResObj = this.props.resObj;
 
@@ -65,6 +90,7 @@ class RideSearch extends Component{
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 
 			if (res.status === 200){
 
@@ -76,10 +102,20 @@ class RideSearch extends Component{
 				})
 			} else {
 
-				alert("Error encountered!"); // change to message bar
+				Toast.show({
+							text: 'Server sent an error',
+							position: 'top',
+							buttonText: 'Okay',
+							duration: 3000
+						});
 			}
 		}, (err) => {
-			alert(err); // change to message bar
+			Toast.show({
+							text: 'Promise Error:\nUnhandled promise',
+							position: 'top',
+							buttonText: 'Okay',
+							duration: 3000
+						});
 		});
 	}
 
@@ -92,15 +128,15 @@ class RideSearch extends Component{
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor: 'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 1}}>
 								<Button transparent onPress={this.openMenu}>
 									<Icon name='menu' />
 								</Button>
 							</Left>
 							<Body style={{alignItems: 'center', flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>RYDE SEARCH</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>Search</Title>
 							</Body>
 							<Right style={{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -108,56 +144,57 @@ class RideSearch extends Component{
 								</Button>
 							</Right>
 						</Header>
-						<View style = {styles.mainStyle}>
+						<Content contentContainerStyle = {styles.mainStyle}>
 
-							{/*Instruction Text*/}
-							<Text style = {styles.welcome}>
-								Find a Ryde
-							</Text>
 
 							{/*Input box for the from location*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='pin' />
+							<Input
 								placeholder = {this.state.fromLocation}
 								onChangeText = {(text) => this.setState({fromLocation: text})}
 								/>
+							</Item>
 
 							{/*Input box for the to location*/}
-							<TextInput
-								style = {styles.inputBox}
+							<Item style = {styles.inputBox}>
+							<Icon active name='pin' />
+							<Input
 								placeholder = {this.state.toLocation}
 								onChangeText = {(text) => this.setState({toLocation: text})}
 								/>
+								</Item>
 
-							{/*Input box for the travel date*/}
-							<TextInput
-								style = {styles.inputBox}
-								placeholder = {this.state.travelDate}
-								onChangeText = {(text) => this.setState({travelDate: text})}
-								/>
+								{/*Input box for the date*/}
 
-							{/*Input box for the number of passengers*/}
-							<TextInput
-								style = {styles.inputBox}
-								placeholder = {this.state.numPassengers}
-								onChangeText = {(text) => this.setState({numPassengers: text})}
-								/>
+								<Item style = {styles.inputBox} onPress={this._showDateTimePicker}>
+									<Icon active name ='calendar'/>
+									<Text style={{fontSize: 18}}> {this.state.travelDate}</Text>
+								</Item>
 
-							{/*Input box for the amount of luggage*/}
-							<TextInput
-								style = {styles.inputBox}
-								placeholder = {this.state.numLuggage}
-								onChangeText = {(text) => this.setState({numLuggage: text})}
-								/>
+								<DateTimePicker
+									isVisible={this.state.isDateTimePickerVisible}
+									onConfirm={this._handleDatePicked}
+									onCancel={this._hideDateTimePicker}
+							 />
 
 							{/*Button to use the findButton function with an image being used for the button*/}
-							<TouchableOpacity onPress = {() => {this.findButton()}}>
-								<Text>
-									Query
+							<TouchableOpacity onPress = {() => {this.findButton()}} style = {{width: 280}}>
+								<Text style= {styles.submitButtonOnFind}>
+									Find
 								</Text>
 							</TouchableOpacity>
 
-						</View>
+
+
+						</Content>
+						{this.state.loading && <View style = {styles.loading}>
+						<ActivityIndicator
+						animating
+						size="large"
+						color="red"
+						/>
+						</View>}
 					</Container>
 				</Drawer>
 			</Notifications>
@@ -169,7 +206,7 @@ class RideSearch extends Component{
 const styles = StyleSheet.create({
 
 	mainStyle: {
-		flex: 1,
+		marginTop: '38%',
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#FFFFFF',
@@ -177,9 +214,8 @@ const styles = StyleSheet.create({
 
 	inputBox: {
 		height: 40,
-		width: 200,
-		borderColor: '#000000',
-		borderWidth: 1
+		width: 250,
+		marginTop: 5
 	},
 
 	welcome: {
@@ -198,6 +234,30 @@ const styles = StyleSheet.create({
 	myImage: {
 		justifyContent: 'center',
 		alignItems: 'center'
+	},
+
+	submitButtonOnFind: {
+		backgroundColor:'rgb(0, 51, 153)',
+		textAlign:'center',
+		height:54,
+		color:'#fff',
+		fontSize:18,
+		paddingTop:14,
+		fontFamily: 'sans-serif',
+		marginTop: 20,
+		marginLeft: 10,
+		marginRight: 10
+	},
+
+	loading: {
+		position: "absolute",
+		left: 0,
+		top: 0,
+		right: 0,
+		bottom: 0,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "rgba(0, 0, 0, .2)"
 	}
 });
 

@@ -13,20 +13,21 @@ import {
 
 import { Actions } from "react-native-router-flux";
 
+import {Item, Label, Input, Toast} from "native-base";
+
 import styles from "./styles";
 
 import config from "./../../config";
 
-let MessageBarAlert = require('react-native-message-bar').MessageBar;
-let MessageBarManager = require('react-native-message-bar').MessageBarManager;
 import OneSignal from 'react-native-onesignal';
 
 class Login extends Component {
- 	constructor(props) {
+	constructor(props) {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
 		this.state = {
+			showToast: false,
 			deviceId: '',
 			loading: false,
 			textEmail: "Email",
@@ -34,22 +35,14 @@ class Login extends Component {
 		}
 	}
 
-	componentWillMount() {
-	  OneSignal.addEventListener('ids', this.onIds);
+	componentDidMount() {
+		OneSignal.addEventListener('ids', this.onIds);
 		OneSignal.configure();
 	}
 
-	componentDidMount() {
-		// Register the alert located on this master page
-		// This MessageBar will be accessible from the current (same) component, and from its child component
-		// The MessageBar is then declared only once, in your main component.
-		MessageBarManager.registerMessageBar(this.refs.alert);
-	}
 
 	componentWillUnmount() {
-		// Remove the alert located on this master page from the manager
 		OneSignal.removeEventListener('ids', this.onIds);
-		MessageBarManager.unregisterMessageBar();
 	}
 
 	onIds(device) {
@@ -108,23 +101,25 @@ class Login extends Component {
 					Actions.choice({resObj});
 				})
 			} else {
-				MessageBarManager.showAlert({
-					title: "Authentication Error",
-					message: "Wrong username or password",
-					alertType: "info",
-						stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
-						titleColor: '#000611', messageColor: '#000611'}
+				Toast.show({
+					text: 'Authentication Error\nWrong username or password',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
 				});
+
+				Keyboard.dismiss();
 			}
+
 
 		}, (err) => {
 			this.setState({loading: false});
-			MessageBarManager.showAlert({
-				title: "Connection Error",
-				message: "Cannot connect to the internet",
-				alertType: "info",
-					stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
-					titleColor: '#000611', messageColor: '#000611'}
+			Toast.show({
+				text: 'Connection Error\nNo internet connection',
+				position: 'top',
+				buttonText: 'Okay',
+				type: 'danger',
+				duration: 3000
 			});
 		});
 	}
@@ -137,41 +132,43 @@ class Login extends Component {
 	render() {
 		return (
 			<View style = {styles.container}>
-				<StatusBar
-		     backgroundColor="rgb(72, 110, 255)"
-		     barStyle="light-content"
-		   	/>
-				<TextInput
-					style = {styles.inputBox}
-					placeholder = "Email"
-         	underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textEmail: text})}
-				/>
-				<TextInput
-					style = {styles.inputBox}
-					secureTextEntry = {true}
-					placeholder = "Password"
-					underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textPass: text})}
-				/>
+			<Text style={styles.logo}> ryde </Text>
+			<StatusBar
+			backgroundColor="rgb(0, 51, 153)"
+			barStyle="light-content"
+			/>
 
-				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>
-					<Text style = {styles.submitButtonOnLogin}> Login </Text>
-				</TouchableOpacity>
+			<Item floatingLabel style={{marginLeft: 40, marginRight: 40}}>
+			<Label> Email </Label>
+			<Input
+			underlineColorAndroid = "transparent"
+			onChangeText = {(text) => this.setState({textEmail: text})}
+			/>
+			</Item>
+			<Item floatingLabel style={{marginTop: 10, marginLeft: 40, marginRight: 40}}>
+			<Label>Password</Label>
+			<Input
+			secureTextEntry = {true}
+			underlineColorAndroid = "transparent"
+			onChangeText = {(text) => this.setState({textPass: text})}
+			/>
+			</Item>
 
-				<View style = {styles.registerContainer}>
-					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
-				</View>
+			<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 280}}>
+			<Text style = {styles.submitButtonOnLogin}> Login </Text>
+			</TouchableOpacity>
 
-				<MessageBarAlert ref="alert" />
+			<View style = {styles.registerContainer}>
+			<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'rgb(0, 51, 153)', fontFamily: 'sans-serif'}}>Register</Text>
+			</View>
 
-				{this.state.loading && <View style = {styles.loading}>
-					<ActivityIndicator
-						animating
-						size="large"
-					/>
-				</View>}
-
+			{this.state.loading && <View style = {styles.loading}>
+			<ActivityIndicator
+			animating
+			size="large"
+			color="red"
+			/>
+			</View>}
 			</View>
 		);
 	}

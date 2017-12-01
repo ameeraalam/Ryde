@@ -7,36 +7,50 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: "white",
 	},
+	content: {
+		alignItems: 'center'
+	},
+	logo: {
+		color: 'rgb(0, 51, 153)',
+		fontFamily: 'Roboto',
+		fontSize: 40,
+		fontWeight: 'bold',
+		marginBottom: '3%'
+	},
+	backgroundImage: {
+		flex: 1,
+		alignSelf: 'stretch',
+		width: null,
+		justifyContent: 'center'
+	},
+
 	inputBox: {
-		height: 50,
-		width: 300,
-		borderColor: 'rgb(72, 110, 255)',
+		height: 40,
+		width: 280,
+		borderBottomColor: 'rgb(0, 51, 153)',
+		backgroundColor: 'rgba(255,255,255,0.2)',
 		borderWidth: 1,
-		marginBottom:20,
+		borderRadius: 20,
+		marginBottom:'25%',
 		textAlign:'center',
 		fontFamily: 'sans-serif'
 
 	},
-	submitButton: {
-		position: "relative",
-		bottom: -20,
-		left: 50,
-		width: 100,
-		height: 25
-	},
 	registerContainer: {
 		flexDirection:'row',
 		flexWrap:'wrap',
-		marginTop:10
+		marginTop:'5%',
+		alignItems: 'center'
 	},
 	submitButtonOnLogin: {
-		backgroundColor:'rgb(72, 110, 255)',
+		backgroundColor:'rgb(0, 51, 153)',
 		textAlign:'center',
 		height:54,
 		color:'#fff',
 		fontSize:18,
-		paddingTop:14,
-		fontFamily: 'sans-serif'
+		paddingTop:'5%',
+		fontFamily: 'sans-serif',
+		marginTop: '10%'
 	},
 	loading: {
 		position: "absolute",

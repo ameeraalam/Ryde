@@ -6,7 +6,8 @@ import {
 	AppRegistry,
 	ScrollView,
 	TouchableOpacity,
-	BackHandler
+	BackHandler,
+	ActivityIndicator
 } from "react-native";
 
 import {
@@ -21,7 +22,9 @@ import {
 	Body,
 	Button,
 	Right,
-	Title
+	Title,
+	Toast,
+	Content
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
@@ -50,10 +53,11 @@ class RequestedRides extends Component {
 			onPress: () => {this.rejectPassenger()}
 		}];
 		this.state = {
-			pendingPassengers: []
+			pendingPassengers: [],
+			loading: false,
+			showToast: false
 		}
 		this.passengerIndex = 0;
-		this.getPassengerRequests();
 
 		// THIS IS IMPORTANT
 		// this.acceptPassenger is our function within that class you can pass function logic from one
@@ -79,22 +83,50 @@ class RequestedRides extends Component {
 			return true;
 
 		});
+
+		//this.getPassengerRequests();
+
 	}
+
 	goBack() {
+
 		fetch(this.baseUrl + this.props.resObjRyde.rydeId + "/getUpdatedRyde").then((res) => {
+
 	    	if (res.status === 200) {
 				let resPromise = res.json();
 				resPromise.then((resObj) => {
 					// we set the new ryde object
-				   	let resObjDriver = this.props.resObjUser;
+				  let resObjDriver = this.props.resObjUser;
 					let resObjRide = resObj;
-					Actions.driverRideProfile({resObjDriver, resObjRide});
+
+					//****** when you do actions.pop, it pops the current page off the stack but since we do refresh inside the pop it refreshes the previous page with the new props being passed
+
+					Actions.pop();
+					Actions.refresh({resObjDriver, resObjRide});
+					/*Actions.pop();
+					setTimeout(() => {
+						Actions.refresh({resObjDriver, resObjRide});
+					}, 0);*/
+
+					//Actions.pop({refresh: {resObjDriver, resObjRide}});
+					//Actions.driverRideProfile({resObjDriver, resObjRide});
+
 	        	})
 			} else {
-	        	alert("server returned an error")
+						Toast.show({
+							text: 'Server returned an Error',
+							position: 'top',
+							buttonText: 'Okay',
+							duration: 3000
+						});
 	      	}
 		}, (err) => {
-	      		alert(err);
+						Toast.show({
+							text: 'Promise Error:\nUnhandled promise',
+							position: 'top',
+							buttonText: 'Okay',
+							duration: 3000
+						});
 	    });
 	}
 
@@ -108,7 +140,7 @@ class RequestedRides extends Component {
 
 
 	// we query to get the passengers who have applied to our rydes
-	getPassengerRequests() {
+	/*getPassengerRequests() {
 		// we sent a query string to the server with the email of the driver
 		fetch(this.baseUrl + this.user.email + "/getPassengerRequests", {
 			method: "POST",
@@ -134,14 +166,43 @@ class RequestedRides extends Component {
 					this.setState({pendingPassengers: passengers});
 
 				}, (err) => {
-					alert("Promise error");
+					Toast.show({
+						text: 'Promise Error:\nUnhandled promise',
+						position: 'top',
+						buttonText: 'Okay',
+						duration: 3000
+					});
 				});
 			} else {
-				alert("Server error");
+				Toast.show({
+					text: 'Server Error',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 			}
 		}, (err) => {
-			alert("Promise error");
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
+	}*/
+
+	componentWillMount() {
+		// holds the array of cards with the details with passengers requesting to join the ride
+
+		let passengers = [];
+
+		let pending = this.props.resObjRyde.pending;
+
+		for (let i = 0; i < pending.length; ++i) {
+			passengers.push(<CardSlide id = {i} key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId} firstName = {pending[i].firstName} lastName = {pending[i].lastName} email = {pending[i].email} rating = {pending[i].rating} />)
+		}
+
+		this.setState({pendingPassengers: passengers});
 	}
 
 	// self is the this of the child component
@@ -178,13 +239,36 @@ class RequestedRides extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 404) {
-				alert("Server error");
+				Toast.show({
+					text: 'Server Error',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
+			} else if(res.status === 200) {
+				Toast.show({
+					text: 'Passenger has been added to the ryde',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 			} else {
-				alert("The ryde cannot take in anymore passengers");
+				Toast.show({
+					text: 'The ryde cannot take in anymore passengers',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 			}
 		}, (err) => {
-			alert("Promise error");
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
+
 
 	}
 
@@ -211,6 +295,7 @@ class RequestedRides extends Component {
 			rejectedPassengerEmail: cardObjArr[0].props.email
 		}
 
+		this.setState({loading: true});
 		fetch(this.baseUrl + this.user.email + "/rejectedUpdatedRydes", {
 			method: "POST",
 			headers: {
@@ -219,11 +304,22 @@ class RequestedRides extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 			if (res.status !== 200) {
-				alert("Server error");
+				Toast.show({
+					text: 'Server Error',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 			}
 		}, (err) => {
-			alert("Promise error");
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
 
 	}
@@ -234,15 +330,15 @@ class RequestedRides extends Component {
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor: 'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 1}}>
 								<Button transparent onPress={this.openMenu}>
 									<Icon name='menu' />
 								</Button>
 							</Left>
 							<Body style={{alignItems: 'center', flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>RYDE REQUESTS</Title>
+								<Title style={{fontFamily: 'sans-serif'}}>View Requests</Title>
 							</Body>
 							<Right style={{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -250,9 +346,18 @@ class RequestedRides extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<ScrollView>
+						<Content>
 							{this.state.pendingPassengers}
-						</ScrollView>
+						</Content>
+
+						{this.state.loading && <View style = {styles.loading}>
+						<ActivityIndicator
+						animating
+						size="large"
+						color="red"
+						/>
+						</View>}
+
 					</Container>
 				</Drawer>
 			</Notifications>

@@ -6,11 +6,11 @@ import {
 	View,
 	StatusBar,
 	RefreshControl,
-	ScrollView
+	ScrollView,
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 
-import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Fab } from 'native-base';
+import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Fab, Toast } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -26,7 +26,8 @@ class DriverView extends Component {
 		this.baseUrl = config()
 		this.state = {
 			data: [],
-			refreshing: false
+			refreshing: false,
+			showToast: false
 		}
 	}
 
@@ -59,14 +60,20 @@ class DriverView extends Component {
 						let resObjDriver = this.props.resObj; //driver information
 						dataSet.push(
 							<View key={i}>
-								<CardItem style={{marginBottom: 20, marginLeft: 5, marginRight: 5, backgroundColor: 'rgb(72, 110, 255)'}} button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
-									<Body>
-										<Text style={{color: '#fff'}}>From: {resObj[i].from}</Text>
-										<Text style={{color: '#fff'}}>To: {resObj[i].to}</Text>
-										<Text style={{color: '#fff'}}>Date: {resObj[i].date}</Text>
-										<Text style={{color: '#fff', left: 275}}>Price: ${resObj[i].price}</Text>
-									</Body>
-								</CardItem>
+							<Card style={{marginBottom: 20, marginLeft: 5, marginRight: 5}}>
+							<CardItem button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
+
+							<Body>
+							<Icon name='pin' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {resObj[i].from} - {resObj[i].to}</Text></Icon>
+
+							<Icon name='calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}>  {resObj[i].date}</Text></Icon>
+
+							<Icon name='cash' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {resObj[i].price}</Text></Icon>
+
+
+							</Body>
+							</CardItem>
+							</Card>
 							</View>
 						);
 					}
@@ -74,11 +81,21 @@ class DriverView extends Component {
 				})
 			}
 		}, (err) => {
-			alert(err)
+
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
 	}
 
 	componentDidMount(){
+		this.retrievePosts();
+	}
+
+	componentWillReceiveProps(){
 		this.retrievePosts();
 	}
 
@@ -89,9 +106,6 @@ class DriverView extends Component {
 		})
 	}
 
-	// <View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
-	// <Content style={{backgroundColor: '#fff'}}>
-	// </Content>
 
 	render() {
 		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
@@ -99,53 +113,64 @@ class DriverView extends Component {
 		// try putting statusbar after Notifications tag
 		return (
 			<Notifications
-				ref={(notifications) => (this.notifications = notifications)}>
-				<Drawer
-					ref={(drawer) => this.drawer = drawer}>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
-							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
-								barStyle="light-content"
-								hidden = {false}
-								/>
-							<Left style = {{flex: 1}}>
-								<Button transparent onPress={this.openMenu}>
-									<Icon name='menu' />
-								</Button>
-							</Left>
-							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
-							</Body>
-							<Right style = {{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
-									<Icon name='notifications' />
-								</Button>
-							</Right>
-						</Header>
-						<View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
-						<ScrollView
-							refreshControl={<RefreshControl
-							refreshing={this.state.refreshing}
-							onRefresh={this.onRefresh.bind(this)}
-							/>}
-							style={{backgroundColor: '#fff'}}
-							>
-								{this.state.data}
-						</ScrollView>
-							<View>
-								<Fab
-									active={this.state.active}
-									direction="up"
-									containerStyle={{ }}
-									style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-									position="bottomRight"
-									onPress={() => {this.postButton()}}>
-									<Icon name="add" />
-								</Fab>
-							</View>
-						</Container>
-					</Drawer>
+			ref={(notifications) => (this.notifications = notifications)}>
+
+			<Drawer
+			ref={(drawer) => this.drawer = drawer}>
+
+			<Container style={{backgroundColor: 'white'}}>
+
+			<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
+
+			<StatusBar
+			backgroundColor="rgb(0, 51, 153)"
+			barStyle="light-content"
+			hidden = {false}
+			/>
+
+			<Left style = {{flex: 1}}>
+
+			<Button transparent onPress={this.openMenu}>
+
+			<Icon name='menu' />
+
+			</Button>
+			</Left>
+
+			<Body style={{flex: 1}}>
+			<Title style={{fontFamily: 'sans-serif'}}>Dashboard</Title>
+			</Body>
+
+			<Right style = {{flex: 1}}>
+			<Button onPress = {() => {this.openNotifications()}} transparent>
+			<Icon name='notifications' />
+			</Button>
+			</Right>
+			</Header>
+
+			<Content
+			refreshControl={<RefreshControl
+				refreshing={this.state.refreshing}
+				onRefresh={this.onRefresh.bind(this)}
+				colors={['red']}
+				/>}
+				style={{backgroundColor: '#fff'}}
+				>
+				{this.state.data}
+				</Content>
+				<View>
+				<Fab
+				active={this.state.active}
+				direction="up"
+				containerStyle={{ }}
+				style={{ backgroundColor: 'rgb(0, 51, 153)' }}
+				position="bottomRight"
+				onPress={() => {this.postButton()}}>
+				<Icon name="add" />
+				</Fab>
+				</View>
+				</Container>
+				</Drawer>
 				</Notifications>
 			);
 		}

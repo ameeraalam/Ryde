@@ -64,6 +64,12 @@ class Routing {
 
 		app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
 
+		app.get("/:email/getDriverData", (req,res) => {CONTROLLER.getDriverData(req,res); });
+
+		app.get("/:email/getDriverDataPending", (req,res) => {CONTROLLER.getDriverDataPending(req,res); });
+
+		app.get("/:email/getDriverDataSearch", (req,res) => {CONTROLLER.getDriverDataSearch(req,res); });
+
 		app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
 
 		app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });

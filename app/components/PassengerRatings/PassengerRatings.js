@@ -9,10 +9,12 @@ import {
 	StatusBar,
 	Easing,
 	ScrollView,
-	BackHandler
+	BackHandler,
+	StyleSheet,
+	ActivityIndicator
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
-	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
+	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col, Toast } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
@@ -31,8 +33,15 @@ class PassengerRatings extends Component {
 		this.openMenu = this.openMenu.bind(this);
 		this.ratings = [];
 		this.state = {
-			members: []
+			members: [],
+			loading: false,
+			showToast: false,
+			submitStyle: {}
 		}
+	}
+
+	openNotifications(){
+		this.notifications.openDrawer();
 	}
 
 	openMenu() {
@@ -56,6 +65,7 @@ class PassengerRatings extends Component {
 			ratings: this.ratings
 		}
 
+		this.setState({loading: true});
 		// a get request needs to be made so the server can retrieve the messages
 		fetch(this.baseUrl + "passengerRatings", {
 			method: "POST",
@@ -65,15 +75,27 @@ class PassengerRatings extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 			if (res.status === 200) {
 				let resObj = this.props.resObjUser;
 				// on success I change the page to driver view
+				Actions.pop();
 				Actions.driverView({resObj});
 			} else {
-				alert("Server error");
+				Toast.show({
+				text: 'Server error',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 			}
 		}, (err) => {
-			alert(err);
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
 
 	}
@@ -92,10 +114,10 @@ class PassengerRatings extends Component {
 		// we loop over the members of the ryde members and populate the cards
 		for (let i = 0; i < ryde.members.length; ++i) {
 			memberCards.push(
-						<Card key = {i}>
-							<CardItem key = {i}>
-							  <Body>
-								  <Text>{ryde.members[i].firstName} {ryde.members[i].lastName} </Text>
+						<Card key={i}>
+							<CardItem >
+								<Body>
+								  <Icon name='person' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}>{ryde.members[i].firstName} {ryde.members[i].lastName} </Text></Icon>
 								  <Rating
 									  onChange={(rating) => {
 										  // the rating belonging the member at index i has the following rating
@@ -112,17 +134,23 @@ class PassengerRatings extends Component {
 									  stagger={80}
 									  maxScale={1.4}
 									  starStyle={{
-										width: 50,
-										height: 50
+										width: 30,
+										height: 30
 									  }}
 									/>
-							  </Body>
+								</Body>
 							</CardItem>
 						</Card>
 				  )
 		}
 		// set the state of members
-		this.setState({members: memberCards});
+		this.setState({members: memberCards}, () => {
+			if(this.state.members.length < 5){
+				let amount = 50 / this.state.members.length;
+				amount = String(amount) + "%";
+				this.setState({submitStyle: {marginTop: amount}});
+			}
+		});
 	}
 
 	render() {
@@ -131,11 +159,10 @@ class PassengerRatings extends Component {
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<ScrollView>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor:'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
+								backgroundColor="rgb(0, 51, 153)"
 								barStyle="light-content"
 								hidden = {false}
 								/>
@@ -144,8 +171,8 @@ class PassengerRatings extends Component {
 									<Icon name='menu' />
 								</Button>
 							</Left>
-							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>Ratings</Title>
+							<Body style={{alignItems: 'center', flex: 1}}>
+								<Title style={{fontFamily: 'sans-serif'}}>Rate</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -153,17 +180,19 @@ class PassengerRatings extends Component {
 								</Button>
 							</Right>
 						</Header>
+						<Content style={{backgroundColor: '#fff'}}>
 
 						{this.state.members}
 
-						<Button medium info onPress = { () => {
+
+						<TouchableOpacity style={this.state.submitStyle} onPress = { () => {
 							this.submitRatings();
 						}}>
-						 	<Text> Submit </Text>
-						</Button>
+							<Text style = {styles.submitButton}> Submit </Text>
+						</TouchableOpacity>
 
+						</Content>
 					</Container>
-					</ScrollView>
 			</Drawer>
 		</Notifications>
 
@@ -171,6 +200,24 @@ class PassengerRatings extends Component {
 	}
 
 }
+
+const styles = StyleSheet.create({
+
+	submitButton: {
+		backgroundColor:'rgb(0, 51, 153)',
+		textAlign:'center',
+		height:54,
+		color:'#fff',
+		fontSize:18,
+		paddingTop:14,
+		fontFamily: 'sans-serif',
+		marginTop: 20,
+		marginLeft: 10,
+		marginRight: 10,
+		marginBottom: 20
+	}
+});
+
 
 module.exports = PassengerRatings;
 

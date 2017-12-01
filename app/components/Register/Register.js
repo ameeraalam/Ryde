@@ -7,6 +7,7 @@ import {
 	Image,
 	ScrollView,
 	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
 
 import {
@@ -23,7 +24,8 @@ import {
 	Icon,
 	Right,
 	Picker,
-	Item as FormItem
+	Item as FormItem,
+	Toast
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -79,7 +81,10 @@ class Register extends Component {
 
 			genderS: {
 				color: "grey"
-			}
+			},
+
+			loading: false,
+			showToast: false
 		}
 	}
 
@@ -149,6 +154,7 @@ class Register extends Component {
 
 		// the promise returned by the fetch function will be the return of the
 		// .then function, so we are returning a promise
+		this.setState({loading:true});
 		return fetch(this.baseUrl + "emailCheck", {
 			method: "POST",
 			headers: {
@@ -157,6 +163,9 @@ class Register extends Component {
 			},
 			body: JSON.stringify(emailObj)
 		}).then((res) => {
+			this.setState({loading:false});
+
+
 			// Since fetch is asynchronous that returns a promise, we want to do
 			// all the checks after this async function returns the promise and so
 			// we use the .then function and then do all the checks, because any check
@@ -174,7 +183,15 @@ class Register extends Component {
 				return emailCheck;
 			}
 		}, (err) => {
-			alert(err)
+			this.setState({loading:false});
+
+
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 			return emailCheck;
 		});
 	}
@@ -346,6 +363,7 @@ class Register extends Component {
 				// get sent. The promise being returned, gives back two call back functions
 				// first contains one parameter which is the response object and the second
 				// function contains one parameter which is the err.
+				this.setState({loading:true});
 				fetch(this.baseUrl + "register", {
 					method: "POST",
 					headers: {
@@ -354,7 +372,11 @@ class Register extends Component {
 					},
 					body: JSON.stringify(reqObj)
 				}).then((res) => {
+					this.setState({loading:false});
+
+
 					if (res.status === 200) {
+						this.setState({loading:true});
 						// on completing the registration we create the personal rydes object which
 						// every user will have
 						// we send the email address using the query string
@@ -362,23 +384,57 @@ class Register extends Component {
 							method: "GET"
 						// res means response object
 						}).then((res) => {
+							this.setState({loading:false});
+
+
 							if (res.status === 200) {
-								alert("Registration complete"); // should be changed to a message bar
+								Toast.show({
+									text: 'Registration Complete',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								}); // should be changed to a message bar
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
 							} else {
-								alert("Error");
+								Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 							}
 						// err means the error returned from the promise
 						}, (err) => {
-							alert("Server error")
+							this.setState({loading:false});
+
+
+							Toast.show({
+								text: 'Promise Error:\nUnhandled promise',
+								position: 'top',
+								buttonText: 'Okay',
+								duration: 3000
+							});
 
 						});
 					} else {
-						alert("Error");
+						Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 					}
 				}, (err) => {
-					alert("Server error");
+					this.setState({loading:false});
+
+
+					Toast.show({
+						text: 'Promise Error:\nUnhandled promise',
+						position: 'top',
+						buttonText: 'Okay',
+						duration: 3000
+					});
 				});
 			}
 
@@ -390,14 +446,9 @@ class Register extends Component {
 	render() {
 		return (
 			<ScrollView style={{backgroundColor: '#fff'}}>
-				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
-					<Body>
-						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
-					</Body>
-				</Header>
 
 				<View style={{ marginTop:30, paddingLeft:15}}>
-					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(72, 110, 255)'}}>
+					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(0, 51, 153)'}}>
 						Register
 					</Text>
 				</View>
@@ -478,11 +529,19 @@ class Register extends Component {
 
 				<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
 					<TouchableOpacity onPress = {() => {this.submitButton()}}>
-						<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+						<Text style = {{backgroundColor:'rgb(0, 51, 153)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
 							Register
 						</Text>
 					</TouchableOpacity>
 				</View>
+
+				{this.state.loading && <View style = {styles.loading}>
+				<ActivityIndicator
+				animating
+				size="large"
+				color="red"
+				/>
+				</View>}
 
 			</ScrollView>
 		);
