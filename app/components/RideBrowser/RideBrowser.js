@@ -12,7 +12,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem} from 'native-base';
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Item, Picker} from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -24,7 +24,112 @@ class RideBrowser extends Component{
         this.baseUrl = config();
         this.openMenu = this.openMenu.bind(this);
         this.openNotifications = this.openNotifications.bind(this);
-        this.state = {rydes: []}
+        this.state = {rydes: [], user: ""};
+    }
+
+    sortBrowser(){
+
+    	let allRydes = [];
+    	let currentPassenger = this.props.passedResObj;
+        let currentRyde = null;
+        let indexCount = 0;
+        let rydeForButton = [];
+        let searchResult = this.props.resObj.dest;
+		let length = searchResult.length;
+
+		// Sorting by price
+		if (this.state.user === "price"){
+
+	        for (let i = 0; i < length-1; i++){
+
+	        	for (let  j = 0; j < length - i - 1; j++){
+
+	        		if (searchResult[j].price > searchResult[j+1].price){
+
+	        			let temp = searchResult[j];
+	        			searchResult[j] = searchResult[j+1];
+	        			searchResult[j+1] = temp;
+	        		}
+	        	}
+	        }
+	    }
+
+	    // Sorting by luggage spots
+	    if (this.state.user === "luggage"){
+
+	    	for (let i = 0; i < length-1; i++){
+
+	        	for (let  j = 0; j < length - i - 1; j++){
+
+	        		if (searchResult[j].numLuggage < searchResult[j+1].numLuggage){
+
+	        			let temp = searchResult[j];
+	        			searchResult[j] = searchResult[j+1];
+	        			searchResult[j+1] = temp;
+	        		}
+	        	}
+	        }
+	    }
+
+	    // Sorting by available seats
+	    if (this.state.user === "seats"){
+
+	    	for (let i = 0; i < length-1; i++){
+
+	        	for (let  j = 0; j < length - i - 1; j++){
+
+	        		if (searchResult[j].numPassengers < searchResult[j+1].numPassengers){
+
+	        			let temp = searchResult[j];
+	        			searchResult[j] = searchResult[j+1];
+	        			searchResult[j+1] = temp;
+	        		}
+	        	}
+	        }
+	    }
+
+
+        // Clearing current cards
+    	this.setState({rydes: allRydes});
+
+    	for (let i = 0; i < searchResult.length;  i++){
+
+            currentRyde = searchResult[i];
+
+            if (this.props.passedResObj.email === currentRyde.driver){
+            	continue;
+            }
+
+            rydeForButton.push(currentRyde);
+            let resObjRyde = rydeForButton[indexCount];
+
+            allRydes.push(
+                <View key={i}>
+                  	<Card style={{marginBottom: 20, marginLeft: 5, marginRight: 5}}>
+                    	<CardItem button onPress={() => Actions.passengerSearchProfile({currentPassenger, resObjRyde})}>
+                    		<Body>
+                    			<Icon name = 'person' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.firstName + " " + currentRyde.lastName}</Text></Icon>
+                    			<Icon name = 'calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0,51,153)'}}> {currentRyde.date}</Text></Icon>
+                    			<Icon name = 'cash' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.price}</Text></Icon>
+                    			<Icon name='briefcase' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.numLuggage}</Text></Icon>
+                    			<Icon name='contact' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.numPassengers}</Text></Icon>
+                    		</Body>
+                    	</CardItem>
+                  	</Card>
+                </View>
+            );
+
+            indexCount++;
+        }
+
+        this.setState({rydes: allRydes});
+	}
+
+    updateBrowser = (value) => {
+
+    	this.setState({user: value}, () => {
+ 			this.sortBrowser();
+   		});
     }
 
     openNotifications(){
@@ -42,7 +147,7 @@ class RideBrowser extends Component{
 
     loadRydes(){
 
-        let allRydes = [];
+		let allRydes = [];
         let currentPassenger = this.props.passedResObj;
         let currentRyde = null;
         let indexCount = 0;
@@ -51,6 +156,11 @@ class RideBrowser extends Component{
         for (let i = 0; i < this.props.resObj.dest.length;  i++){
 
             currentRyde = this.props.resObj.dest[i];
+
+            if (this.props.passedResObj.email === currentRyde.driver){
+            	continue;
+            }
+
             rydeForButton.push(currentRyde);
             let resObjRyde = rydeForButton[indexCount];
 
@@ -62,6 +172,8 @@ class RideBrowser extends Component{
                     <Icon name = 'person' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.firstName + " " + currentRyde.lastName}</Text></Icon>
                     <Icon name='calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0,51,153)'}}> {currentRyde.date}</Text></Icon>
                     <Icon name='cash' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.price}</Text></Icon>
+                    <Icon name='briefcase' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.numLuggage}</Text></Icon>
+                    <Icon name='contact' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {currentRyde.numPassengers}</Text></Icon>
                     </Body>
                     </CardItem>
                   </Card>
@@ -82,7 +194,7 @@ class RideBrowser extends Component{
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<Container style={{backgroundColor: 'white'}}>
+					<Container style={{backgroundColor:'white'}}>
 						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<Left style={{flex: 0}}>
 								<Button transparent onPress={this.openMenu}>
@@ -99,6 +211,14 @@ class RideBrowser extends Component{
 							</Right>
 						</Header>
         <Content>
+        	<Picker selectedValue = {this.state.user}
+        			mode = "dropdown"
+        			onValueChange = {(value) => this.updateBrowser(value)}>
+        		<Item label = "Sort by" value = "nothing" />
+        		<Item label = "Price" value = "price" />
+        		<Item label = "Seats" value = "seats" />
+        		<Item label = "Luggage" value = "luggage" />
+        	</Picker>
             {this.state.rydes}
       </Content>
     </Container>

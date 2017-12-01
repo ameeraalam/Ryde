@@ -68,6 +68,11 @@ class RideSearch extends Component{
 
 	}
 
+	capitalizeFirstLetter(string) {
+
+    	return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+	}
+
 	// Code for functionality of the Find button on the app page
 	findButton(){
 		this.setState({loading: true});
@@ -75,8 +80,8 @@ class RideSearch extends Component{
 		let passedResObj = this.props.resObj;
 
 		let reqObj = {
-			from: this.state.fromLocation,
-			to: this.state.toLocation,
+			from: this.capitalizeFirstLetter(this.state.fromLocation),
+			to: this.capitalizeFirstLetter(this.state.toLocation),
 			date: this.state.travelDate,
 			passengers: this.state.numPassengers,
 			luggage: this.state.numLuggage
@@ -185,9 +190,8 @@ class RideSearch extends Component{
 								</Text>
 							</TouchableOpacity>
 
-
-
 						</Content>
+
 						{this.state.loading && <View style = {styles.loading}>
 						<ActivityIndicator
 						animating
@@ -195,6 +199,7 @@ class RideSearch extends Component{
 						color="red"
 						/>
 						</View>}
+
 					</Container>
 				</Drawer>
 			</Notifications>
