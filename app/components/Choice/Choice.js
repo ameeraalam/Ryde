@@ -32,8 +32,10 @@ import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 			this.drawer.openDrawer();
 		}
 
+
 		submitDriver() {
 			let {allDriverInfoFilled} = this.state;
+			let isDriverInfoFilled = true;
 			// Takes you to driver's home page, if all infos are filled.
 			// Otherwise a page will pop up asking for incomplete driver fields to be completed
 			if (!this.props.resObj.allInfoFilled && !allDriverInfoFilled) {
@@ -45,16 +47,40 @@ import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
 				let resObj = this.props.resObj
 				// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
 				// take to the driver's home page
-				Actions.driverView({resObj});
+				let isPassenger = false;
+				let driverFilledObj = {driverInfo: this.setDriverInfoFilled, isDriverInfoFilled: isDriverInfoFilled}
+				Actions.driverView({isPassenger, resObj, driverFilledObj});
 			}
 		}
 
 		submitPassenger() {
+			let {allDriverInfoFilled} = this.state;
 			// takes you to passenger's home page
 			let resObj = this.props.resObj
 			// the resObj that gets passed on to Choice component will be passed to the DriverInfo component
-			Actions.passengerView({resObj});
+
+			// do let isDriverInfoFilled = true;
+			// do if (!this.props.resObj.allInfoFilled && !allDriverInfoFilled) {
+			// 			isDriverInfoFilled = false;
+			// 		}
+			// then pass isDriverInfoFilled to passengerview, by doing this:
+			// let driverFilledObj = {driverInfo: this.setDriverInfoFilled, isDriverInfoFilled: isDriverInfoFilled} and pass
+			// driverFilledObj to passengerview
+			// so driverFilledObj contains both isDriverInfoFilled and driverInfo
+			//Remember that driverFilledObj will also be passed from passengerview to drawer
+			let isDriverInfoFilled = true;
+			if (!this.props.resObj.allInfoFilled && !allDriverInfoFilled) {
+						isDriverInfoFilled = false;
+			}
+
+			let driverFilledObj = {
+				driverInfo: this.setDriverInfoFilled,
+				isDriverInfoFilled: isDriverInfoFilled
+			}
+
+			Actions.passengerView({resObj, driverFilledObj});
 		}
+
 
 		setDriverInfoFilled() {
 			this.setState({allDriverInfoFilled: true});

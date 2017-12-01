@@ -167,7 +167,10 @@ class DriverInfo extends Component {
 		}).then((res) => {
 			if (res.status === 200) {
 				this.props.driverFilledObj.driverInfo()
-				Actions.driverView({type: 'replace', resObj});
+				let isPassenger = false;
+				let isDriverInfoFilled = true;
+				let driverFilledObj = {driverInfo: this.setDriverInfoFilled, isDriverInfoFilled: isDriverInfoFilled}
+				Actions.driverView({type: 'replace', isPassenger, resObj, driverFilledObj});
 
 			} else {
 				alert("Error");

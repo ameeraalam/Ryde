@@ -13,7 +13,7 @@ import {
 import {
 	Actions
 } from 'react-native-router-flux';
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Badge } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -26,7 +26,9 @@ class RideSearch extends Component{
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
+		this.setBadge = this.setBadge.bind(this);
 		this.state = {
+      placeBadge: false,
 			fromLocation: "From:",
 			toLocation: "To:",
 			travelDate: "Date: (DD/MM)",
@@ -35,6 +37,16 @@ class RideSearch extends Component{
 		}
 	}
 
+
+	componentDidMount() {
+		this._isMounted = true;
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+
 	openNotifications(){
 		this.notifications.openDrawer();
 	}
@@ -42,6 +54,19 @@ class RideSearch extends Component{
 	openMenu() {
 		this.drawer.openDrawer();
 	}
+
+
+	setBadge(num) {
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
 
 
 	// Code for functionality of the Find button on the app page
@@ -71,8 +96,8 @@ class RideSearch extends Component{
 				let resObjPromise = res.json();
 
 				resObjPromise.then((resObj) => {
-
-					Actions.rideBrowser({passedResObj, resObj})
+					let {isPassenger, driverFilledObj} = this.props;
+					Actions.rideBrowser({passedResObj, isPassenger, resObj, driverFilledObj})
 				})
 			} else {
 
@@ -85,12 +110,21 @@ class RideSearch extends Component{
 
 	// App visuals
 	render(){
+		let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>)
 
 		return(
 
 			<Notifications
+				badgeFunc = {this.setBadge}
+				isPassenger={true}
+				resObj = {this.props.resObj}
+				driverFilledObj = {this.props.driverFilledObj}
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
+					isPassenger={true}
+          resObj = {this.props.resObj}
+          driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -103,7 +137,8 @@ class RideSearch extends Component{
 								<Title style={{fontFamily: 'sans-serif'}}>RYDE SEARCH</Title>
 							</Body>
 							<Right style={{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
+								<Button badge onPress = {() => {this.openNotifications()}} transparent>
+									{this.state.placeBadge && displayBadge}
 									<Icon name='notifications' />
 								</Button>
 							</Right>

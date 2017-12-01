@@ -25,10 +25,10 @@ class Available extends Component {
 
   }
 
-
+  // let {isPassenger, resObj, driverFilledObj} = this.props;
   findButton(){
-    let resObj = this.props.resObj;
-    Actions.rideSearch({resObj});
+    let {isPassenger, resObj, driverFilledObj} = this.props;
+    Actions.rideSearch({isPassenger, resObj, driverFilledObj});
   }
 
   retrieveAvailablePosts(){
@@ -43,13 +43,14 @@ class Available extends Component {
         resObjPromise.then((resObj) => {
           //alert(JSON.stringify(resObj));
           dataSet = [];
+          let {isPassenger, driverFilledObj} = this.props;
           for(let i=0;i<resObj.length;i++){
             let resO = resObj[i]; //driver object
             let myRes = this.props.resObj; //passenger object
             dataSet.push(
               <View key={i}>
                 <CardItem button onPress={()=>
-                    Actions.availableProfile({resO, myRes})}>
+                    Actions.availableProfile({isPassenger, resO, myRes, driverFilledObj})}>
                     <Body>
                       <Text>From: {resObj[i].from}</Text>
                       <Text>To: {resObj[i].to}</Text>

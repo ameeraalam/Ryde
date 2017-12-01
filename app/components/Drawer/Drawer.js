@@ -38,12 +38,23 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
 
     // If a function uses "this", make sure to bind it in the constructor becauseit loses it's this when the function is called
     switchRole() { //check if this.props.isPassenger is undefined first
-      const {resObj} = this.props;
+      const {resObj, driverFilledObj} = this.props;
       if (this.props.isPassenger !== undefined) {
         if (this.props.isPassenger) {
-          Actions.driverView({type: 'replace', resObj});
+          // first check if this.props.driverFilledObj.isDriverInfoFilled === true, if not true, replace
+            // current screen (i.e passengerview) with driverInfo and pass the
+            // driverFilledObj to driverInfo where the function in it can be called
+            // if driver fills all info. if function is called, it will then be triggered in choice page
+            // setting the allDriverInfoFilled boolean to true
+          // if this.props.driverFilledObj.isDriverInfoFilled is true then you can replace passengerview with driverview page
+          if(!this.props.driverFilledObj.isDriverInfoFilled){
+            Actions.driverInfo({type: 'replace', resObj, driverFilledObj});
+          } else {
+            let isPassenger = false;
+            Actions.driverView({type: 'reset', isPassenger, resObj, driverFilledObj});
+          }
         } else {
-          Actions.passengerView({type: 'replace', resObj});
+          Actions.passengerView({type: 'reset', resObj, driverFilledObj});
         }
       }
     }
@@ -62,7 +73,7 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
 
 
     contactUs() {
-      Actions.contactUs({});
+      Actions.contactUs();
     }
 
 

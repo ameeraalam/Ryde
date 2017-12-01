@@ -50,7 +50,7 @@ class Routing {
 
 		app.post("/:email/getPassengerRequests", (req, res) => { CONTROLLER.getPassengerRequests(req, res); });
 
-		app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); })
+		app.post("/:email/acceptedUpdatedRydes", (req, res) => { CONTROLLER.acceptedUpdatedRydes(req, res); });
 
 		app.post("/:email/rejectedUpdatedRydes", (req, res) => { CONTROLLER.rejectedUpdatedRydes(req, res); });
 
@@ -66,9 +66,21 @@ class Routing {
 
 		app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
 
+		app.post("/:email/endTrip", (req, res) => {CONTROLLER.endTrip(req, res); });
+
+		app.post("/:email/startTrip", (req, res) => {CONTROLLER.startTrip(req, res); });
+
+		app.post("/:email/handlePassengerNotificationOnPress", (req, res) => {CONTROLLER.handlePassengerNotificationOnPress(req, res); });
+
+		app.post("/:email/handleDriverNotificationOnPress", (req, res) => {CONTROLLER.handleDriverNotificationOnPress(req, res); });
+
+		app.get("/:email/retrievePassengerAcceptedRydes", (req, res) => {CONTROLLER.retrievePassengerAcceptedRydes(req, res); });
+
+		app.get("/:email/retrieveDriverPendingRequests", (req, res) => {CONTROLLER.retrieveDriverPendingRequests(req, res); });
+
 		app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
 
-		app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); })
+		app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); });
 
 
 		// Error get request must always be processed at the very end after all options

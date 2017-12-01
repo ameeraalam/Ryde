@@ -5,7 +5,8 @@ import React, { Component } from "react";
 import {
 	AppRegistry,
 	ScrollView,
-	TouchableOpacity
+	TouchableOpacity,
+	BackHandler
 } from "react-native";
 
 import {
@@ -20,7 +21,8 @@ import {
 	Body,
 	Button,
 	Right,
-	Title
+	Title,
+	Badge
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
@@ -39,20 +41,13 @@ class RequestedRides extends Component {
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
-		this.swipeOutButtons = [{
-			text: "Accept",
-			backgroundColor: "#86e079",
-			onPress: () => {this.acceptPassenger()}
-		}, {
-			text: "Reject",
-			backgroundColor: "#e54747",
-			onPress: () => {this.rejectPassenger()}
-		}];
+		this.setBadge = this.setBadge.bind(this);
+		this.popBack = this.popBack.bind(this);
 		this.state = {
-			pendingPassengers: []
+			pendingPassengers: [],
+			placeBadge: false
 		}
 		this.passengerIndex = 0;
-		this.getPassengerRequests();
 
 		// THIS IS IMPORTANT
 		// this.acceptPassenger is our function within that class you can pass function logic from one
@@ -77,6 +72,65 @@ class RequestedRides extends Component {
 		this.drawer.openDrawer();
 	}
 
+	componentWillMount() {
+		this._isMounted = true;
+		console.log('componentDidMount in requestedRides');
+		this.getPassengerRequests();
+		BackHandler.addEventListener('hardwareBackPress', this.popBack);
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+		BackHandler.removeEventListener('hardwareBackPress', this.popBack);
+	}
+
+
+	popBack() {
+		console.log('popBack');
+		// let resObj = this.props.resObjUser
+		// let {isPassenger, driverFilledObj} = this.props;
+		// Actions.driverView({trigger: true, resObj, isPassenger, driverFilledObj});
+		// console.log(this.props.name);
+				this.setState({reload: !this.state.reload})
+				Actions.pop({refresh: {trigger: true}});
+				// one component)
+				return true;
+		// 	}
+		// } else {
+		// 	Actions.pop({refresh: {trigger: false}});
+		// 	return true;
+		// }
+	}
+
+
+
+
+	// popBack() {
+	// 	// Actions.pop({refresh: {newPees}}) will trigger componentWillReceiveProps in the previous screen
+	// 	console.log('popBack');
+	// 	// let resObj = this.props.resObjUser
+	// 	// let {isPassenger, driverFilledObj} = this.props;
+	// 	// Actions.driverView({trigger: true, resObj, isPassenger, driverFilledObj});
+	// 	if(this.props.name === 'requestedRides') {
+	// 		Actions.pop();
+	// 		Actions.refresh({trigger: true});
+	// 		return true;
+	// 	}
+	// }
+
+
+	setBadge(num) {
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
+
 
 	// we query to get the passengers who have applied to our rydes
 	getPassengerRequests() {
@@ -99,10 +153,14 @@ class RequestedRides extends Component {
 					let passengers = [];
 
 					for (let i = 0; i < resObj.pending.length; ++i) {
-						passengers.push(<CardSlide key = {i} acceptPassenger = {this.acceptPassenger} rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId} firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName} email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
+						passengers.push(<CardSlide id = {i} key = {i} acceptPassenger = {this.acceptPassenger}
+							rejectPassenger = {this.rejectPassenger} rydeId = {this.props.resObjRyde.rydeId}
+							firstName = {resObj.pending[i].firstName} lastName = {resObj.pending[i].lastName}
+							email = {resObj.pending[i].email} rating = {resObj.pending[i].rating} />)
 					}
-
-					this.setState({pendingPassengers: passengers});
+					if(this._isMounted){
+						this.setState({pendingPassengers: passengers});
+					}
 
 				}, (err) => {
 					alert("Promise error");
@@ -146,7 +204,9 @@ class RequestedRides extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				this.setState({pendingPassengers: passengers});
+				if(this._isMounted){
+					this.setState({pendingPassengers: passengers});
+				}
 			} else if (res.status === 404) {
 				alert("Server error");
 			} else {
@@ -187,7 +247,9 @@ class RequestedRides extends Component {
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
 			if (res.status === 200) {
-				this.setState({pendingPassengers: passengers});
+				if(this._isMounted){
+					this.setState({pendingPassengers: passengers});
+				}
 			} else if (res.status === 404) {
 				alert("Server error");
 			}
@@ -198,10 +260,20 @@ class RequestedRides extends Component {
 	}
 
 	render() {
+		let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>);
+
 		return(
 			<Notifications
+				badgeFunc = {this.setBadge}
+				isPassenger={false}
+				resObj = {this.props.resObjUser}
+				driverFilledObj = {this.props.driverFilledObj}
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
+					isPassenger={false}
+					resObj = {this.props.resObjUser}
+					driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -214,7 +286,8 @@ class RequestedRides extends Component {
 								<Title style={{fontFamily: 'sans-serif'}}>RYDE REQUESTS</Title>
 							</Body>
 							<Right style={{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
+								<Button badge onPress = {() => {this.openNotifications()}} transparent>
+									{this.state.placeBadge && displayBadge}
 									<Icon name='notifications' />
 								</Button>
 							</Right>

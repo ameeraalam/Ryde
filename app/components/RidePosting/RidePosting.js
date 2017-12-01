@@ -16,7 +16,7 @@ import {
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
-import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem } from 'native-base';
+import { Container, Header, Left, Icon, Body, Button, Right, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Badge } from 'native-base';
 
 
 // Main class
@@ -27,7 +27,9 @@ class RidePosting extends Component{
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
+		this.setBadge = this.setBadge.bind(this);
 		this.state = {
+			placeBadge: false,
 			fromLocation: "From:",
 			toLocation: "To:",
 			travelDate: "Date: (DD/MM)",
@@ -44,6 +46,29 @@ class RidePosting extends Component{
 	openMenu() {
 		this.drawer.openDrawer();
 	}
+
+
+	componentDidMount() {
+		this._isMounted = true;
+		console.log('componentDidMount in requestedRides');
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+
+	setBadge(num) {
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
 
 
 	// MAKE INPUTS LOWERCASE FOR ROBUSTNESS WHEN SEARCHING, or lowercase it when doing comparisons server side so data
@@ -88,7 +113,8 @@ class RidePosting extends Component{
 					members: [],
 					currentPassengerCount: 0,
 					currentLuggageCount: 0,
-					price: "$" + this.state.ridePrice
+					price: "$" + this.state.ridePrice,
+					seen: false
 				}
 
 				// Adding Ryde to the Database
@@ -128,8 +154,8 @@ class RidePosting extends Component{
 
 							alert("Server Error with Ryde ID");
 						});
-
-						Actions.driverView({type: 'replace', resObj});
+						let {isPassenger, driverFilledObj} = this.props;
+						Actions.driverView({isPassenger, resObj, driverFilledObj});
 
 					} else {
 
@@ -149,14 +175,21 @@ class RidePosting extends Component{
 
 	// App visuals
 	render(){
+		let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>);
 
 		return(
 
 			<Notifications
+				badgeFunc = {this.setBadge}
+				isPassenger={false}
+				resObj = {this.props.resObj}
+				driverFilledObj = {this.props.driverFilledObj}
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					isPassenger={false}
-					resObj = {this.props.resObj}
+          resObj = {this.props.resObj}
+          driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -169,7 +202,8 @@ class RidePosting extends Component{
 								<Title style={{fontFamily: 'sans-serif'}}>RYDE POST</Title>
 							</Body>
 							<Right style={{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
+								<Button badge onPress = {() => {this.openNotifications()}} transparent>
+									{this.state.placeBadge && displayBadge}
 									<Icon name='notifications' />
 								</Button>
 							</Right>

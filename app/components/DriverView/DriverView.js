@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import {Actions } from 'react-native-router-flux';
 
-import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Fab } from 'native-base';
+import { Container, Header, Left, Icon, Body, Right, Button, Card, CardItem, Title, Footer, FooterTab, Content, List, ListItem, Fab, Badge } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -21,16 +21,20 @@ class DriverView extends Component {
 
 	constructor(props){
 		super(props);
+		// console.log(this);
 		this.openMenu = this.openMenu.bind(this);
 		this.openNotifications = this.openNotifications.bind(this);
+		this.setBadge = this.setBadge.bind(this);
 		this.baseUrl = config()
 		this.state = {
 			data: [],
-			refreshing: false
+			refreshing: false,
+			placeBadge: false,
+			refresh: false
 		}
 	}
 
-	openNotifications(){
+	openNotifications() {
 		this.notifications.openDrawer();
 	}
 
@@ -39,9 +43,28 @@ class DriverView extends Component {
 	}
 
 
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+
+	setBadge(num) {
+		console.log('setBadge ######');
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
+
+
 	postButton(){
-		let resObj = this.props.resObj;
-		Actions.ridePosting({resObj});
+		let {isPassenger, resObj, driverFilledObj} = this.props;
+    Actions.ridePosting({isPassenger, resObj, driverFilledObj});
 	}
 
 	retrievePosts(){
@@ -54,12 +77,14 @@ class DriverView extends Component {
 
 				resObjPromise.then((resObj) => {
 					dataSet = [];
+					let {isPassenger, driverFilledObj} = this.props;
 					for(let i=0;i<resObj.length; i++){
 						let resObjRide = resObj[i]; //ride information
 						let resObjDriver = this.props.resObj; //driver information
 						dataSet.push(
 							<View key={i}>
-								<CardItem style={{marginBottom: 20, marginLeft: 5, marginRight: 5, backgroundColor: 'rgb(72, 110, 255)'}} button onPress={() => Actions.driverRideProfile({resObjRide, resObjDriver})}>
+								<CardItem style={{marginBottom: 20, marginLeft: 5, marginRight: 5, backgroundColor: 'rgb(72, 110, 255)'}}
+									button onPress={() => Actions.driverRideProfile({isPassenger, resObjRide, resObjDriver, driverFilledObj})}>
 									<Body>
 										<Text style={{color: '#fff'}}>From: {resObj[i].from}</Text>
 										<Text style={{color: '#fff'}}>To: {resObj[i].to}</Text>
@@ -70,7 +95,9 @@ class DriverView extends Component {
 							</View>
 						);
 					}
-					this.setState({data: dataSet});
+					if(this._isMounted){
+						this.setState({data: dataSet});
+					}
 				})
 			}
 		}, (err) => {
@@ -78,31 +105,45 @@ class DriverView extends Component {
 		});
 	}
 
-	componentDidMount(){
+	componentWillMount(){
+		this._isMounted = true;
+		console.log('componentDidMount in driverView');
 		this.retrievePosts();
 	}
 
+	componentWillUpdate() {
+    console.log('driverView updated');
+  }
+
 	onRefresh(){
-		this.setState({refreshing:true});
+		if(this._isMounted){
+			this.setState({refreshing:true});
+		}
 		this.retrievePosts().then(()=> {
-			this.setState({refreshing:false});
+			if(this._isMounted){
+				this.setState({refreshing:false});
+			}
 		})
 	}
 
-	// <View style={{paddingBottom: 20, backgroundColor: '#fff'}} />
-	// <Content style={{backgroundColor: '#fff'}}>
-	// </Content>
+
 
 	render() {
-		//retrieve data from the db and then add the reqobj in to an array and then push this array in to lists, and create the list.
 		let resObj = this.props.resObj;
-		// try putting statusbar after Notifications tag
+		let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>);
+
 		return (
 			<Notifications
+				badgeFunc = {this.setBadge}
+				isPassenger={false}
+				resObj = {this.props.resObj}
+				driverFilledObj = {this.props.driverFilledObj}
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					isPassenger={false}
 					resObj = {this.props.resObj}
+					driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -120,7 +161,8 @@ class DriverView extends Component {
 								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
+								<Button badge onPress = {() => {this.openNotifications()}} transparent>
+									{this.state.placeBadge && displayBadge}
 									<Icon name='notifications' />
 								</Button>
 							</Right>

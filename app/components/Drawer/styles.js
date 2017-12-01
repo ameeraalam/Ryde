@@ -1,4 +1,5 @@
-import {StyleSheet} from "react-native";
+import {StyleSheet, Dimensions} from "react-native";
+var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
 	firstDivision: {
@@ -11,43 +12,44 @@ const styles = StyleSheet.create({
     alignItems:'center'
 	},
 
+	// change all fields below to use percentage, e.g marginTop: 10%. SAME FOR ALL OTHER OBJECTS
   userPlaceholderImage: {
-		height:90,
-    width: 90,
-    borderRadius: 64,
-    marginTop:30
+		height:'45%',
+    width: '30%',
+    borderRadius: 100,
+    marginTop:'10%'
 	},
 
   userName: {
 		color:'#fff',
 		fontSize:20,
-		marginTop:20,
+		marginTop:'6%',
 		fontFamily: 'sans-serif'
 	},
 
   rating: {
 		flexDirection:'row',
-	flexWrap:'wrap'
+		flexWrap:'wrap'
 	},
 
   star: {
-    height:15,
-		width: 15,
-		marginTop:6
+    height:'63%',
+		width: '5.5%',
+		marginTop:'1.9%'
   },
 
   ratingNum: {
     color:'#fff',
-		marginTop:5.5,
+		marginTop:'1.9%',
 		fontSize:14,
-		marginLeft:2,
+		marginLeft:'0.5%',
 		fontFamily: 'sans-serif'
   },
 
   drawerOptions: {
     flex: 2,
 		backgroundColor: '#fff',
-		marginTop:50
+		paddingTop:'19%'
   },
 
   drawerIcons: {
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
   },
 
   drawerOptionsMargin: {
-    marginTop:20
+    marginTop:'6%'
   },
 
   drawerItems: {

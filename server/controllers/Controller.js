@@ -76,6 +76,7 @@ class Controller {
 								resObj.car = doc.car;
 								resObj.allInfoFilled = doc.allInfoFilled;
 								resObj.id = doc.id;
+								resObj.seen = doc.seen;
 
 								// check to know if deviceId was updated so that we can put
 								// the right deviceId in resObj
@@ -196,7 +197,7 @@ class Controller {
 			let driverTo  				 = driverRideObj.to;
 			let playerId 					 = doc.deviceId;
 
-			// try adding '\n' to go to next line so that notification appears on two lines
+
 			let message = driverFirstName + ' ' + driverLastName + ' has accepted your ride request from ' +
 										driverfrom + ' to ' + driverTo;
 
@@ -205,8 +206,8 @@ class Controller {
 			// send a notification
 			client.sendNotification(message, {
 			  include_player_ids: [playerId]
-				});
-		console.log('notification sent to passenger');
+			});
+			console.log('notification sent to passenger');
 
 		}, () => {
 			console.log('Error retrieving passenger object ryde object');
@@ -322,6 +323,12 @@ class Controller {
 									});
 								}
 
+								if(rydeToModify !== undefined) {
+									console.log('About to send notification to passenger');
+									this.sendRydeAcceptNotification(rydeToModify, userMember);
+								} else {
+									console.log('Error accepting request since the ryde is full');
+								}
 								// on success we send the 200 code
 								res.sendStatus(200);
 
@@ -345,11 +352,6 @@ class Controller {
 				// error on trying to update
 				res.sendStatus(404);
 			});
-			if(rydeToModify !== undefined) {
-				this.sendRydeAcceptNotification(rydeToModify, userMember);
-			} else {
-				console.log('Error accepting request since the ryde is full');
-			}
 		}, () => {
 			// on unsuccesful query we sent 404 code
 			res.sendStatus(404);
@@ -527,6 +529,174 @@ class Controller {
 		})
 	}
 
+
+	endTrip(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let playerIds = [];
+
+			for(let i =0; i< doc.rydesPostedAsDriver.length; i++) {
+				if(doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
+					for(let j=0; j<doc.rydesPostedAsDriver[i].members.length; i++) {
+						playerIds.push(doc.rydesPostedAsDriver[i].members[j].deviceId);
+					}
+					break;
+				}
+			}
+
+			let message = `Thanks for riding with ${req.body.firstName}, Please rate your trip`;
+
+			if(playerIds.length > 0){
+			// send notification
+				client.sendNotification(message, {
+					include_player_ids: playerIds,
+					data: {type: 'endTrip'}
+				});
+				console.log('notification sent to passenger(s) to endTrip');
+				res.sendStatus(200);
+			}
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+
+	startTrip(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let driverfrom = '';
+			let driverTo   = ''
+			let playerIds  = [];
+
+			for(let i=0; i< doc.rydesPostedAsDriver.length; i++) {
+				if(doc.rydesPostedAsDriver[i].rydeId === req.body.rydeId) {
+					for(let j=0; j<doc.rydesPostedAsDriver[i].members.length; j++) {
+						playerIds.push(doc.rydesPostedAsDriver[i].members[j].deviceId);
+					}
+					driverfrom = doc.rydesPostedAsDriver[i].from;
+					driverTo = doc.rydesPostedAsDriver[i].to;
+					break;
+				}
+			}
+
+			let message = `Your trip from ${driverfrom} to ${driverTo} has started`;
+
+			if(playerIds.length > 0){
+				// send notification
+				client.sendNotification(message, {
+					include_player_ids: playerIds
+				});
+				console.log('notification sent to passenger(s) to startTrip');
+				res.sendStatus(200);
+			}
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+
+	handlePassengerNotificationOnPress(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let rydeIndex = 0;
+			for (let i = 0; i < doc.rydesAcceptedToAsPassenger.length; ++i) {
+				if(doc.rydesAcceptedToAsPassenger[i].rydeId === req.body.rydeId) {
+					rydeIndex = i;
+					break;
+				}
+			}
+
+			var updateField = {
+				['rydesAcceptedToAsPassenger.' + rydeIndex + '.seen']: true
+			}
+
+			this.modelPersonalRydes.update({"email": req.params.email}, updateField, (doc) => {
+				console.log('Passenger\'s accepted Ryde \'seen\' field successfully updated');
+				res.sendStatus(200);
+			}, () => {
+				res.sendStatus(404);
+			});
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+
+	handleDriverNotificationOnPress(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			let rydeIndex = 0;
+			var passengerIndex = 0;
+			
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				for (let j = 0; j < doc.rydesPostedAsDriver[i].pending.length; ++j) {
+					if(doc.rydesPostedAsDriver[i].pending[j].email === req.body.email) {
+						rydeIndex = i;
+						passengerIndex = j;
+						break;
+					}
+				}
+			}
+
+			var updateField = {
+				['rydesPostedAsDriver.' + rydeIndex + '.pending.' + passengerIndex + '.seen']: true
+			}
+
+			this.modelPersonalRydes.update({"email": req.params.email}, updateField, (doc) => {
+				console.log('Driver\'s Pending Passenger \'seen\' field successfully updated');
+				res.sendStatus(200);
+			}, () => {
+				res.sendStatus(404);
+			});
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+
+	retrievePassengerAcceptedRydes(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			// on successfully querying the data we sent the res object back
+			// the response object
+			let resObj = {unseenAcceptedRydes: []};
+			//We loop through the pending array in every ride posted to find all the pending not seen(or opened) by the user(driver
+			for (let i = 0; i < doc.rydesAcceptedToAsPassenger.length; ++i) {
+				if(!doc.rydesAcceptedToAsPassenger[i].seen) {
+					let rydeObj = doc.rydesAcceptedToAsPassenger[i];
+					resObj.unseenAcceptedRydes.push(rydeObj);
+				}
+			}
+			res.status(200).send(resObj);
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+
+	retrieveDriverPendingRequests(req, res) {
+		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
+			// on successfully querying the data we sent the res object back
+			// the response object
+			let resObj = {unseenPendingRequests: []};
+			//We loop through the pending array in every ride posted to find all the pending not seen(or opened) by the user(driver
+			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+				for (let j = 0; j < doc.rydesPostedAsDriver[i].pending.length; ++j) {
+					if(!doc.rydesPostedAsDriver[i].pending[j].seen) {
+						let requestInfo = {
+							passenger: doc.rydesPostedAsDriver[i].pending[j],
+							rydeObj: doc.rydesPostedAsDriver[i]
+						}
+						resObj.unseenPendingRequests.push(requestInfo);
+					}
+				}
+			}
+			res.status(200).send(resObj);
+		}, () => {
+			// on unsuccesful query we sent 404 code
+			res.sendStatus(404);
+		});
+	}
+
+
 	//for getting available requests as a passenger
 	available(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
@@ -640,8 +810,6 @@ class Controller {
 									}
 
 										this.modelPersonalRydes.updatePush({"email":docs.pending[j].email}, {"rydesAppliedToAsPassenger": rydeToModify}, () => {
-												this.sendRydeRequestNotification(req);
-												res.sendStatus(200);
 											}, () => {
 												res.sendStatus(404);
 											});
@@ -649,6 +817,9 @@ class Controller {
 											res.sendStatus(404);
 										});
 									}
+									console.log('About to send notification to driver');
+									this.sendRydeRequestNotification(req);
+									res.sendStatus(200);
 								}, () => {
 									res.sendStatus(404);
 								});
@@ -663,7 +834,6 @@ class Controller {
 				}, () => {
 					res.sendStatus(404);
 				});
-
 			}, () => {
 				res.sendStatus(404);
 			});

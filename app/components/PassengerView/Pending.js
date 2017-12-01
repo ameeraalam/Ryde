@@ -27,9 +27,8 @@ class Pending extends Component {
   }
 
   findButton(){
-
-    let resObj = this.props.resObj;
-    Actions.rideSearch({resObj});
+    let {isPassenger, resObj, driverFilledObj} = this.props;
+    Actions.rideSearch({isPassenger, resObj, driverFilledObj});
   }
 
   retrievePendingPosts(){
@@ -43,23 +42,24 @@ class Pending extends Component {
 
         resObjPromise.then((resObj) => {
           dataSet = [];
+          let {isPassenger, driverFilledObj} = this.props;
           for(let i=0;i<resObj.length;i++){
             let resO = resObj[i]; //ride obj
             let myRes = this.props.resObj; //passenger obj
 
             dataSet.push(
               <View key={i}>
-              <CardItem button
-              onPress={()=>
-                Actions.pendingProfile({resO, myRes})}>
-                <Body>
-                <Text>From: {resObj[i].from}</Text>
-                <Text>To: {resObj[i].to}</Text>
-                <Text>Date: {resObj[i].date}</Text>
-                <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
-                </Body>
-                </CardItem>
-                <Text></Text>
+                <CardItem button
+                  onPress={()=>
+                    Actions.pendingProfile({isPassenger, resO, myRes, driverFilledObj})}>
+                    <Body>
+                      <Text>From: {resObj[i].from}</Text>
+                      <Text>To: {resObj[i].to}</Text>
+                      <Text>Date: {resObj[i].date}</Text>
+                      <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
+                    </Body>
+                  </CardItem>
+                  <Text></Text>
                 </View>
               )
             }
@@ -89,34 +89,34 @@ class Pending extends Component {
 
       return (
         <Container>
-        <ScrollView
-        refreshControl={<RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this.onRefresh.bind(this)}
-          />
-        }>
-        <Content>
-        {this.state.data}
-        </Content>
+          <ScrollView
+            refreshControl={<RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+              />
+          }>
+          <Content>
+            {this.state.data}
+          </Content>
         </ScrollView>
         <View>
-        <Fab
-        active={this.state.active}
-        direction="up"
-        containerStyle={{ }}
-        style={{ backgroundColor: 'rgb(72, 110, 255)' }}
-        position="bottomRight"
-        onPress={() => {this.findButton()}}>
-        <Icon name="search" />
-        </Fab>
+          <Fab
+            active={this.state.active}
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+            position="bottomRight"
+            onPress={() => {this.findButton()}}>
+            <Icon name="search" />
+          </Fab>
         </View>
-        </Container>
+      </Container>
 
 
-      );
-    }
+    );
   }
+}
 
-  module.exports = Pending;
+module.exports = Pending;
 
-  AppRegistry.registerComponent('Pending', () => Pending);
+AppRegistry.registerComponent('Pending', () => Pending);

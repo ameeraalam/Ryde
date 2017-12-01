@@ -23,6 +23,7 @@ import {
 	Icon,
 	Right,
 	Picker,
+	Toast,
 	Item as FormItem
 } from "native-base";
 
@@ -39,8 +40,10 @@ class Register extends Component {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
-		this.deviceId = '';
+		this._Mounted = false;
 		this.state = {
+			showToast: false,
+			deviceId: '',
 			date: 'Date of Birth',
 			isDateTimePickerVisible: false,
 			firstName: "First name",
@@ -82,17 +85,21 @@ class Register extends Component {
 	}
 
 
-	componentWillMount() {
+	componentDidMount() {
+		this._Mounted = true;
 	  OneSignal.addEventListener('ids', this.onIds);
 		OneSignal.configure();
 	}
 
 	componentWillUnmount() {
-	    OneSignal.removeEventListener('ids', this.onIds);
+		this._Mounted = false;
+	  OneSignal.removeEventListener('ids', this.onIds);
 	}
 
 	onIds(device) {
-		this.deviceId = device.userId;
+		if(this._Mounted){
+			this.setState({deviceId: device.userId});
+		}
 	}
 
 
@@ -248,7 +255,8 @@ class Register extends Component {
 				liscense: '',
 				car: '',
 				allInfoFilled: false,
-				deviceId: this.deviceId
+				deviceId: this.state.deviceId,
+				seen: false
 			}
 
 			// I want to send the object only if there are no errors
@@ -276,7 +284,13 @@ class Register extends Component {
 						// res means response object
 						}).then((res) => {
 							if (res.status === 200) {
-								alert("Registration complete"); // should be changed to a message bar
+								Toast.show({
+									text: 'Registration Complete',
+									position: 'top',
+									buttonText: 'Okay',
+									type: 'success',
+									duration: 3000
+								});
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
 							} else {

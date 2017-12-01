@@ -5,10 +5,11 @@ import {
   View,
   Image,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  BackHandler
 } from 'react-native';
-import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
+import { Actions } from 'react-native-router-flux';
+import { Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab, Badge, Toast } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -22,6 +23,13 @@ class DriverRideProfile extends Component {
     this.baseUrl = config();
     this.openMenu = this.openMenu.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
+    this.setBadge = this.setBadge.bind(this);
+    this.startTrip = this.startTrip.bind(this);
+    this.endTrip = this.endTrip.bind(this);
+    this.state = {
+			placeBadge: false,
+      showToast: false
+		}
   }
 
   openNotifications(){
@@ -33,15 +41,134 @@ class DriverRideProfile extends Component {
   }
 
 
+  componentDidMount() {
+		this._isMounted = true;
+		console.log('componentDidMount in driverRideProfile');
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+
+  setBadge(num) {
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
+
+
+  startTrip() {
+    let reqObj = {
+      from: this.props.resObjRide.from,
+      to: this.props.resObjRide.to,
+      rydeId: this.props.resObjRide.rydeId
+    }
+    let {email} = this.props.resObjDriver;
+    return fetch(this.baseUrl + email + '/startTrip', {
+      method: "POST",
+      headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(reqObj)
+    }).then((response) => {
+      if(response.status === 200) {
+        Toast.show({
+          text: `You've just started your trip from ${reqObj.from} to ${reqObj.to}`,
+          position: 'top',
+          buttonText: 'Okay',
+          duration: 4000
+        });
+      } else {
+        Toast.show({
+          text: 'Server error',
+          position: 'top',
+          buttonText: 'Okay',
+          type: 'danger',
+          duration: 3000
+        });
+			}
+    },  (err) => {
+      Toast.show({
+        text: 'First promise Error: ' + err,
+        position: 'top',
+        buttonText: 'Okay',
+        type: 'danger',
+        duration: 3000
+      });
+    });
+  }
+
+
+  endTrip() {
+    let reqObj = {
+      firstName: this.props.resObjDriver.firstName,
+      rydeId: this.props.resObjRide.rydeId
+    }
+    let {email} = this.props.resObjDriver;
+    return fetch(this.baseUrl + email + '/endTrip', {
+      method: "POST",
+      headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json"
+			},
+      body: JSON.stringify(reqObj)
+    }).then((response) => {
+      if(response.status === 200) {
+        Toast.show({
+          text: `Thanks for hosting this ryde ${reqObj.firstName}, Please rate your trip`,
+          position: 'top',
+          buttonText: 'Okay',
+          duration: 4000
+        });
+        // Actions.ratingsPage({pass object});
+      } else {
+        Toast.show({
+          text: 'Server error',
+          position: 'top',
+          buttonText: 'Okay',
+          type: 'danger',
+          duration: 3000
+        });
+			}
+    },  (err) => {
+      Toast.show({
+        text: 'First promise Error: ' + err,
+        position: 'top',
+        buttonText: 'Okay',
+        type: 'danger',
+        duration: 3000
+      });
+    });
+  }
+
+
   render() {
 
     let resObjUser = this.props.resObjDriver;
     let resObjRyde = this.props.resObjRide;
+    let {isPassenger, driverFilledObj} = this.props;
+    let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>);
 
     return (
       <Notifications
+        badgeFunc = {this.setBadge}
+        isPassenger={false}
+        resObj = {this.props.resObjDriver}
+        driverFilledObj = {this.props.driverFilledObj}
         ref={(notifications) => (this.notifications = notifications)}>
         <Drawer
+          isPassenger={false}
+					resObj = {this.props.resObjDriver}
+					driverFilledObj = {this.props.driverFilledObj}
           ref={(drawer) => this.drawer = drawer}>
           <Container>
             <Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -54,7 +181,8 @@ class DriverRideProfile extends Component {
                 <Title style={{fontFamily: 'sans-serif'}}>RYDE INFO</Title>
               </Body>
               <Right style={{flex: 1}}>
-                <Button onPress = {() => {this.openNotifications()}} transparent>
+                <Button badge onPress = {() => {this.openNotifications()}} transparent>
+                  {this.state.placeBadge && displayBadge}
                   <Icon name='notifications' />
                 </Button>
               </Right>
@@ -101,10 +229,10 @@ class DriverRideProfile extends Component {
                 <Text></Text>
                 <View style={styles.container}>
                   <Button large info onPress = {() => {
-                      Actions.requestedRides({resObjUser, resObjRyde});
+                      Actions.requestedRides({isPassenger, resObjUser, resObjRyde, driverFilledObj});
                     }}><Text style={styles.text}>View Requests</Text>
                 </Button>
-                <Button large info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
+                <Button large info onPress={ () => {Actions.chat({isPassenger, resObjUser, resObjRyde, driverFilledObj})}}>
                   <Text style={styles.text}>Chat</Text>
 
                 </Button>
@@ -113,8 +241,8 @@ class DriverRideProfile extends Component {
             </ScrollView>
             <Footer>
               <FooterTab>
-                <Button success><Text style={styles.text}>Start Trip</Text></Button>
-                <Button disabled><Text style={styles.text}>End Trip</Text></Button>
+                <Button onPress={this.startTrip} success><Text style={styles.text}>Start Trip</Text></Button>
+                <Button onPress={this.endTrip}><Text style={styles.text}>End Trip</Text></Button>
               </FooterTab>
             </Footer>
           </Container>

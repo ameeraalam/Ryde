@@ -12,56 +12,61 @@ import {
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
+import { Toast } from 'native-base';
 
 import styles from "./styles";
 
 import config from "./../../config";
 
-let MessageBarAlert = require('react-native-message-bar').MessageBar;
-let MessageBarManager = require('react-native-message-bar').MessageBarManager;
 import OneSignal from 'react-native-onesignal';
+// var _ = require('lodash');
 
 class Login extends Component {
  	constructor(props) {
 		super(props);
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
-		this.deviceId = '';
+		this._Mounted = false;
 		this.state = {
+			loginName: 'Login',
+			showToast: false,
+			deviceId: '',
 			loading: false,
 			textEmail: "Email",
 			textPass: "Password"
 		}
 	}
 
-	componentWillMount() {
-	  OneSignal.addEventListener('ids', this.onIds);
+	componentDidMount() {
+		this._Mounted = true;
+		OneSignal.addEventListener('ids', this.onIds);
 		OneSignal.configure();
 	}
 
-	componentDidMount() {
-		// Register the alert located on this master page
-		// This MessageBar will be accessible from the current (same) component, and from its child component
-		// The MessageBar is then declared only once, in your main component.
-		MessageBarManager.registerMessageBar(this.refs.alert);
-	}
-
 	componentWillUnmount() {
-		// Remove the alert located on this master page from the manager
+		this._Mounted = false;
 		OneSignal.removeEventListener('ids', this.onIds);
-		MessageBarManager.unregisterMessageBar();
 	}
 
 	onIds(device) {
-		this.deviceId = device.userId;
+		if(this._Mounted){
+			this.setState({deviceId: device.userId});
+		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		// console.log('nextProps: ' + JSON.stringify(nextProps));
+		// this.setState({loginName: nextProps.newPees.good})
+	}
+
+
 	submitButton() {
+		// Actions.refresh({data: 'hello'})
 		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
 			password: this.state.textPass,
-			deviceId: this.deviceId
+			deviceId: this.state.deviceId
 		}
 		fetch(this.baseUrl + "login", {
 			method: "POST",
@@ -108,23 +113,23 @@ class Login extends Component {
 					Actions.choice({resObj});
 				})
 			} else {
-				MessageBarManager.showAlert({
-					title: "Authentication Error",
-					message: "Wrong username or password",
-					alertType: "info",
-						stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
-						titleColor: '#000611', messageColor: '#000611'}
+				Toast.show({
+					text: 'Authentication Error\nWrong username or password!',
+					position: 'top',
+					buttonText: 'Okay',
+					type: 'warning',
+					duration: 3000
 				});
 			}
 
 		}, (err) => {
 			this.setState({loading: false});
-			MessageBarManager.showAlert({
-				title: "Connection Error",
-				message: "Cannot connect to the internet",
-				alertType: "info",
-					stylesheetInfo : {backgroundColor : 'transparent', strokeColor : '#828589',
-					titleColor: '#000611', messageColor: '#000611'}
+			Toast.show({
+				text: 'Connection Error\nNo internet connection',
+				position: 'top',
+				buttonText: 'Okay',
+				type: 'danger',
+				duration: 3000
 			});
 		});
 	}
@@ -162,8 +167,6 @@ class Login extends Component {
 				<View style = {styles.registerContainer}>
 					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
 				</View>
-
-				<MessageBarAlert ref="alert" />
 
 				{this.state.loading && <View style = {styles.loading}>
 					<ActivityIndicator

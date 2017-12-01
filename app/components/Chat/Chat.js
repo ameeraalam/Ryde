@@ -16,7 +16,8 @@ import {
 	Right,
 	Thumbnail,
 	Icon,
-	Title
+	Title,
+	Badge
 } from "native-base";
 import {
 	AppRegistry,
@@ -30,7 +31,7 @@ import {
 } from "react-native";
 import { Actions } from "react-native-router-flux";
 import styles from "./styles";
-import clientIO from "socket.io-client"; /////?????????Add drawer and notification???????????///////////////////////////////////////////////////////////
+import clientIO from "socket.io-client";
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config"
@@ -52,13 +53,17 @@ class Chat extends Component {
 		this.socket = clientIO(config());
 		this.initMessages = this.initMessages.bind(this);
 		this.registerSocketEvents = this.registerSocketEvents.bind(this);
+		this.setBadge = this.setBadge.bind(this);
+		this._Mounted = false;
 		this.state = {
+			placeBadge: false,
 			// textValue is the value that will be used as a placeholder in
 			// the TextInput to type in things
 			textValue: "",
 			texts: []
 		};
 	}
+
 
 	openNotifications(){
 		this.notifications.openDrawer();
@@ -68,7 +73,22 @@ class Chat extends Component {
 		this.drawer.openDrawer();
 	}
 
-	componentWillMount() {
+
+	setBadge(num) {
+    if(num > 0){
+			if(this._Mounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._Mounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
+
+
+	componentDidMount() {
+		this._Mounted = true;
 		console.ignoredYellowBox = [ // if you still get the mounted warning, put this in componentDidMount
 			'Setting a timer'
 		];
@@ -84,7 +104,9 @@ class Chat extends Component {
 
 		// socket event for receiving messages broadcasted by the server socket
 		this.socket.on(this.rydeObject.rydeId.toString() + "/broadcast", (resObj) => {
-			this.setState({texts: resObj.texts});
+			if(this._Mounted) {
+				this.setState({texts: resObj.texts});
+			}
 		});
 
 		// socket event for success of a server job
@@ -112,7 +134,9 @@ class Chat extends Component {
 		// this event listener catches the path through which the socket from the
 		// server will send the all the messages related to the ride from the database
 		this.socket.on(this.rydeObject.rydeId.toString() + "/initMessages", (resObj) => {
-			this.setState({texts: resObj.texts});
+			if(this._Mounted) {
+				this.setState({texts: resObj.texts});
+			}
 		});
 
 	}
@@ -126,6 +150,7 @@ class Chat extends Component {
 	// Example of how to unregister events:
 
 	componentWillUnmount() {
+		this._Mounted = false;
 		this.socket.off(this.rydeObject.rydeId.toString() + "/broadcast");
 		this.socket.off(this.rydeObject.rydeId.toString() + "/success");
 		this.socket.off(this.rydeObject.rydeId.toString() + "/failure");
@@ -150,10 +175,20 @@ class Chat extends Component {
 	}
 
 	render() {
+		let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>)
+
 		return (
 			<Notifications
+				badgeFunc = {this.setBadge}
+				isPassenger={this.props.isPassenger}
+				resObj = {this.props.resObjUser}
+				driverFilledObj = {this.props.driverFilledObj}
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
+					isPassenger={this.props.isPassenger}
+					resObj = {this.props.resObjUser}
+					driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
 						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -171,7 +206,8 @@ class Chat extends Component {
 								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
-								<Button onPress = {() => {this.openNotifications()}} transparent>
+								<Button badge onPress = {() => {this.openNotifications()}} transparent>
+									{this.state.placeBadge && displayBadge}
 									<Icon name='notifications' />
 								</Button>
 							</Right>

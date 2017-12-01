@@ -7,8 +7,8 @@ import {
   StyleSheet,
   ScrollView
 } from 'react-native';
-import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem} from 'native-base';
+import { Actions } from 'react-native-router-flux';
+import { Container, Header, Left, Icon, Right, Body, Button, Title, Content, Footer, CardItem, Badge } from 'native-base';
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 
@@ -18,7 +18,21 @@ class PassengerPendingRideProfile extends Component {
     super(props);
     this.openMenu = this.openMenu.bind(this);
     this.openNotifications = this.openNotifications.bind(this);
+    this.setBadge = this.setBadge.bind(this);
+    this.state = {
+      placeBadge: false
+    }
   }
+
+
+  componentDidMount() {
+		this._isMounted = true;
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
 
   openNotifications(){
     this.notifications.openDrawer();
@@ -28,11 +42,35 @@ class PassengerPendingRideProfile extends Component {
     this.drawer.openDrawer();
   }
 
+
+  setBadge(num) {
+    if(num > 0){
+			if(this._isMounted){
+       	this.setState({placeBadge: true});
+			}
+    } else {
+			if(this._isMounted){
+	      this.setState({placeBadge: false});
+			}
+		}
+  }
+
+
   render() {
+    let displayBadge = (<Badge style={{ position: 'absolute', right: 14, top: 9, paddingTop: 0,
+      paddingBottom: 0, borderRadius: 100, height: 11, zIndex: 1 }}/>)
+
     return (
       <Notifications
+        badgeFunc = {this.setBadge}
+        isPassenger={true}
+        resObj = {this.props.myRes}
+        driverFilledObj = {this.props.driverFilledObj}
         ref={(notifications) => (this.notifications = notifications)}>
         <Drawer
+          isPassenger={true}
+          resObj = {this.props.myRes}
+          driverFilledObj = {this.props.driverFilledObj}
           ref={(drawer) => this.drawer = drawer}>
           <Container>
             <Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
@@ -45,7 +83,8 @@ class PassengerPendingRideProfile extends Component {
                 <Title style={{fontFamily: 'sans-serif'}}>RYDE INFO</Title>
               </Body>
               <Right style={{flex: 1}}>
-                <Button onPress = {() => {this.openNotifications()}} transparent>
+                <Button badge onPress = {() => {this.openNotifications()}} transparent>
+                  {this.state.placeBadge && displayBadge}
                   <Icon name='notifications' />
                 </Button>
               </Right>
