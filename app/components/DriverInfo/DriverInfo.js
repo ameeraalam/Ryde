@@ -5,12 +5,8 @@ import {
 	View,
 	TextInput,
 	Image,
-<<<<<<< HEAD
 	TouchableOpacity,
 	ActivityIndicator
-=======
-	TouchableOpacity
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 } from "react-native";
 
 import {
@@ -26,13 +22,9 @@ import {
 	Body,
 	Button,
 	Right,
-<<<<<<< HEAD
 	Title,
 	Content,
 	Toast
-=======
-	Title
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -60,7 +52,6 @@ class DriverInfo extends Component {
 		}
 	}
 
-<<<<<<< HEAD
 	componentDidMount(){
 		Toast.show({
 				text: 'The information below are mandatory in order to access functionalities of a driver',
@@ -70,8 +61,6 @@ class DriverInfo extends Component {
 			});
 	}
 
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 	openMenu() {
 		this.drawer.openDrawer();
 	}
@@ -221,35 +210,19 @@ class DriverInfo extends Component {
 			<Drawer
 				ref={(drawer) => this.drawer = drawer}>
 				<Container>
-<<<<<<< HEAD
 					<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
-=======
-					<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 						<Left style={{flex: 1}}>
 							<Button transparent onPress={this.openMenu}>
 								<Icon name='menu' />
 							</Button>
 						</Left>
 						<Body style={{alignItems: 'center', flex: 1}}>
-<<<<<<< HEAD
 							<Title style={{fontFamily: 'sans-serif'}}>Details</Title>
-=======
-							<Title style={{fontFamily: 'sans-serif'}}>DRIVER INFO</Title>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 						</Body>
 						<Right style={{flex: 1}} />
 					</Header>
 
-<<<<<<< HEAD
 					<Content style={{backgroundColor: 'white'}}>
-=======
-					<View>
-						<ListItem itemHeader>
-							<Text>The information below are mandatory in order to access functionalities of a driver</Text>
-						</ListItem>
-
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 						<Form>
 							<Item floatingLabel>
 								<Label style = {this.state.plateS}>Plate number</Label>
@@ -280,16 +253,11 @@ class DriverInfo extends Component {
 
 						<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
 							<TouchableOpacity onPress = {() => {this.submitButton()}}>
-<<<<<<< HEAD
 								<Text style = {{backgroundColor:'rgb(0, 51, 153)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
-=======
-								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 									Submit
 								</Text>
 							</TouchableOpacity>
 						</View>
-<<<<<<< HEAD
 					</Content>
 					
 					{this.state.loading && <View style = {styles.loading}>
@@ -299,10 +267,6 @@ class DriverInfo extends Component {
 					color="red"
 					/>
 					</View>}
-=======
-
-					</View>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 				</Container>
 			</Drawer>
 

@@ -6,19 +6,12 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-<<<<<<< HEAD
   TouchableOpacity,
   Alert,
   ActivityIndicator
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Icon, CardItem, Card, Body, Button, Title, Content, Footer, FooterTab, Toast} from 'native-base';
-=======
-  Alert
-} from 'react-native';
-import {Actions } from 'react-native-router-flux';
-import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -37,11 +30,9 @@ class DriverRideProfile extends Component {
       buttonMessage: "Start Trip",
       red: false,
       green: true,
-<<<<<<< HEAD
       showToast: false,
-      loading: false
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
+      loading: false,
+      starRating: []
     }
   }
 
@@ -66,15 +57,41 @@ class DriverRideProfile extends Component {
     }
   }
 
+  rating(){
+    let total = this.props.resObjDriver.totalRating;
+    let num = this.props.resObjDriver.numRating;
+    let rating = Math.round(total/num);
+
+    let imgstar = require('./Images/star_filled.png')
+    let imgblank = require('./Images/star_unfilled.png')
+
+    let stars = [];
+
+    if(num === 0){
+      for(let i=0;i<5;i++){
+        stars.push(<Image style={{height: 30, width: 30}} key ={i} source={imgblank} />);
+      }
+    }
+
+    else{
+      for(let i=0;i<rating;i++){
+        stars.push(<Image style={{height: 30, width: 30}} key ={i} source={imgstar} />);
+      }
+    }
+
+    this.setState({starRating: stars});
+  }
+
+  componentWillMount(){
+    this.rating();
+  }
+
   deletePost() {
     reqObj = {
       driver: this.props.resObjDriver,
       ryde: this.props.resObjRide
     }
-<<<<<<< HEAD
     this.setState({loading: true});
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 
     // this is when we press the end trip button
     fetch(this.baseUrl + "endTrip", {
@@ -85,18 +102,14 @@ class DriverRideProfile extends Component {
       },
       body: JSON.stringify(reqObj)
     }).then((res) => {
-<<<<<<< HEAD
       this.setState({loading: false});
 
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
       if (res.status === 200) {
         // if success we view the ratings page
         let resObjUser = this.props.resObjDriver;
         let resObjRyde = this.props.resObjRide;
         Actions.passengerRatings({resObjUser, resObjRyde});
       } else {
-<<<<<<< HEAD
 
         Toast.show({
 									text: 'Server sent an error',
@@ -112,15 +125,65 @@ class DriverRideProfile extends Component {
 				buttonText: 'Okay',
 				duration: 3000
 			});
-=======
-        alert("Server sent an error");
-      }
-    }, (err) => {
-      alert(err)
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
     });
 
   }
+
+  rateButton(){
+    let resObjUser = this.props.resObjDriver;
+    let resObjRyde = this.props.resObjRide;
+    Actions.passengerRatings({resObjUser, resObjRyde});
+  }
+
+  bruteForceDeletePost(){
+    reqObj = {
+      driver: this.props.resObjDriver,
+      ryde: this.props.resObjRide
+    }
+
+    // this is when we press the end trip button
+    fetch(this.baseUrl + "endTrip", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(reqObj)
+    }).then((res) => {
+
+      if (res.status === 200) {
+        // if success we view the ratings page
+
+        Toast.show({
+                  text: 'Post has been deleted',
+                  position: 'top',
+                  buttonText: 'Okay',
+                  duration: 3000
+                });
+
+        let resObj = this.props.resObjDriver;
+
+        Actions.pop();
+        Actions.refresh({resObj});
+      } else {
+
+        Toast.show({
+                  text: 'Server sent an error',
+                  position: 'top',
+                  buttonText: 'Okay',
+                  duration: 3000
+                });
+      }
+    }, (err) => {
+      Toast.show({
+        text: 'Promise Error:\nUnhandled promise',
+        position: 'top',
+        buttonText: 'Okay',
+        duration: 3000
+      });
+    });
+  }
+
 
 
   render() {
@@ -129,29 +192,20 @@ class DriverRideProfile extends Component {
     let resObjRyde = this.props.resObjRide;
 
     return (
+
       <Notifications
         ref={(notifications) => (this.notifications = notifications)}>
         <Drawer
           ref={(drawer) => this.drawer = drawer}>
-<<<<<<< HEAD
-          <ScrollView>
           <Container>
             <Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
-=======
-          <Container>
-            <Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               <Left style={{flex: 1}}>
                 <Button transparent onPress={this.openMenu}>
                   <Icon name='menu' />
                 </Button>
               </Left>
               <Body style={{alignItems: 'center', flex: 1}}>
-<<<<<<< HEAD
                 <Title style={{fontFamily: 'sans-serif'}}>Ride Details</Title>
-=======
-                <Title style={{fontFamily: 'sans-serif'}}>RYDE INFO</Title>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               </Body>
               <Right style={{flex: 1}}>
                 <Button onPress = {() => {this.openNotifications()}} transparent>
@@ -159,80 +213,30 @@ class DriverRideProfile extends Component {
                 </Button>
               </Right>
             </Header>
-<<<<<<< HEAD
-            <ScrollView style={{backgroundColor:'white'}}>
-              <Content>
+            <Content style={{backgroundColor:'white'}}>
               <View style={{backgroundColor: 'rgb(0, 51, 153)'}}>
               <Icon name='person' style={{marginTop: 40, marginLeft: 30, color: 'white'}}><Text> {this.props.resObjDriver.firstName} {this.props.resObjDriver.lastName} </Text></Icon>
+
                 <Icon name='mail' style={{fontSize: 20, marginLeft: 30, color: 'white'}}>
                   <Text> {this.props.resObjRide.driver}</Text>
                 </Icon>
+
                 {/*will need to figure out the rating stars*/}
+
+
+                <View style={{marginLeft: 30, marginBottom: '1%', flexDirection: 'row'}}>{this.state.starRating}</View>
+
                 <View style={{flexDirection: 'row'}}>
-                <Icon name='star-half' style={{fontSize: 20, marginLeft: 30, color: 'white', marginBottom: 20}}>
-                  <Text> {this.props.resObjRide.rating}</Text>
-                </Icon>
-                <Icon name='person-add' style={{color:'white', marginLeft: '50%'}} onPress = {() => {
+
+                <Icon name='person-add' style={{color:'white', marginLeft: '60%', marginBottom: '3%'}} onPress = {() => {
+                    //Actions.pop();
                     Actions.requestedRides({resObjUser, resObjRyde});
                   }} />
-                <Icon name='chatbubbles' style={{color: 'white', marginLeft: '7%'}} onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}/>
 
-                <Icon name = 'trash' style={{color: 'white', marginLeft: '7%'}} onPress={ () => {
-=======
-            <ScrollView>
-              <Content>
-                <Image
-                  style={{
-                    width: 160,
-                    borderRadius: 80,
-                    height: 160,
-                    alignItems: 'center'
-                  }}
-                  source={require('../Profile/Images/profilepic.jpg')}
-                  />
 
-                <CardItem>
-                  <Text>Driver E-mail: {this.props.resObjRide.driver}</Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>Rating: {this.props.resObjRide.rating}</Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>Luggage: {this.props.resObjRide.numLuggage} </Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>Passengers: {this.props.resObjRide.numPassengers}</Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>Price: {this.props.resObjRide.price}</Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>From: {this.props.resObjRide.from}</Text>
-                </CardItem>
-                <Text></Text>
-                <CardItem>
-                  <Text>To: {this.props.resObjRide.to}</Text>
-                </CardItem>
-                <Text></Text>
-                <View style={styles.container}>
-                  <Button small info onPress = {() => {
-                      Actions.requestedRides({resObjUser, resObjRyde});
-                    }}><Text style={styles.text}>View Requests</Text>
-                  </Button>
-                  <Button small info onPress = {() => {
-                      Actions.viewMembers({resObjUser, resObjRyde});
-                    }}><Text style={styles.text}>View Members</Text>
-                  </Button>
-                <Button small info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
-                  <Text style={styles.text}>Chat</Text>
-                </Button>
-                <Button small info onPress={ () => {
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
+                <Icon name='chatbubbles' style={{color: 'white', marginLeft: '7%', marginBottom: '3%'}} onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}/>
+
+                <Icon name = 'trash' style={{color: 'white', marginLeft: '7%', marginBottom: '3%'}} onPress={ () => {
                   // Prompt the user if he actually wants to delete the post
 
                   Alert.alert(
@@ -241,15 +245,15 @@ class DriverRideProfile extends Component {
                     [
                       {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                       {text: 'OK', onPress: () => {
-                        this.deletePost();
+                        this.bruteForceDeletePost();
                       }},
                     ],
                     { cancelable: false }
                   )
-<<<<<<< HEAD
                 }}/>
                 </View>
                 </View>
+
                 <View>
                 <Card  style={{marginTop: 20, marginLeft: 20, marginRight: 20, marginBottom: 20}}>
 
@@ -309,7 +313,9 @@ class DriverRideProfile extends Component {
 
                   <CardItem>
                   <Left>
-                  <Icon name ='people' style={{fontSize: 16}}><Text> MEMBERS </Text> </Icon><Icon name='arrow-dropdown' style={{fontSize: 16}} onPress = {() => {
+                  <Icon name ='people' style={{fontSize: 16}} onPress = {() => {
+                      Actions.viewMembers({resObjUser, resObjRyde});}}><Text onPress = {() => {
+                          Actions.viewMembers({resObjUser, resObjRyde});}}> MEMBERS </Text> </Icon><Icon name='arrow-dropright' style={{fontSize: 16}} onPress = {() => {
                       Actions.viewMembers({resObjUser, resObjRyde});}} />
                   </Left>
                   <Right>
@@ -318,33 +324,18 @@ class DriverRideProfile extends Component {
                   </CardItem>
                   </Card>
                   </View>
-=======
-                }}>
-                  <Text style={styles.text}>Delete Post</Text>
-                </Button>
 
-                </View>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               </Content>
-            </ScrollView>
+
             <Footer>
               <FooterTab>
-<<<<<<< HEAD
+
               <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
                 this.endTrip();
               }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
               </FooterTab>
             </Footer>
           </Container>
-        </ScrollView>
-=======
-                <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
-                  this.endTrip();
-                }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
-              </FooterTab>
-            </Footer>
-          </Container>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
         </Drawer>
       </Notifications>
 
@@ -352,7 +343,6 @@ class DriverRideProfile extends Component {
   }
 }
 const styles = StyleSheet.create({
-<<<<<<< HEAD
   mainStyle: {
 		flex: 1,
 		justifyContent: 'center',
@@ -360,8 +350,6 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 
 	},
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
   text: {
     color: 'white',
     fontSize: 16,

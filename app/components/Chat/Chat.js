@@ -156,15 +156,9 @@ componentWillUnmount() {
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
 					<Container>
-<<<<<<< HEAD
 						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<StatusBar
 								backgroundColor="rgb(0, 51, 153)"
-=======
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
-							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 								barStyle="light-content"
 								hidden = {false}
 								/>
@@ -173,13 +167,8 @@ componentWillUnmount() {
 									<Icon name='menu' />
 								</Button>
 							</Left>
-<<<<<<< HEAD
 							<Body style={{alignItems: 'center',flex: 1}}>
 								<Title style={{fontFamily: 'sans-serif'}}>Chat</Title>
-=======
-							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>

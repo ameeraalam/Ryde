@@ -9,10 +9,12 @@ import {
 	StatusBar,
 	Easing,
 	ScrollView,
-	BackHandler
+	BackHandler,
+	StyleSheet,
+	ActivityIndicator
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
-	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
+	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col, Toast } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
@@ -32,10 +34,18 @@ class DriverRatings extends Component {
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.ratings = -1;
+		this.state= {
+			loading: false,
+			showToast: false
+		}
 	}
 
 	openMenu() {
 		this.drawer.openDrawer();
+	}
+
+	openNotifications(){
+		this.notifications.openDrawer();
 	}
 
 	componentDidMount() {
@@ -55,7 +65,7 @@ class DriverRatings extends Component {
 			rydeObj: this.props.resObjRyde,
 			ratings: this.ratings
 		}
-
+		this.setState({loading: true});
 		// a get request needs to be made so the server can retrieve the messages
 		fetch(this.baseUrl + "driverRatings", {
 			method: "POST",
@@ -65,19 +75,31 @@ class DriverRatings extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
 			if (res.status === 200) {
 
 
 
 				// ON SUBMIT SHOULD TAKE YOU BACK TO THE PREVIOUS PAGE YOU WERE
+				Actions.pop();
 
 
 
 			} else {
-				alert("Server error");
+				Toast.show({
+				text: 'Server error',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 			}
 		}, (err) => {
-			alert(err);
+			Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 		});
 
 	}
@@ -88,11 +110,10 @@ class DriverRatings extends Component {
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<ScrollView>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor: 'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
+								backgroundColor="rgb(0, 51, 153)"
 								barStyle="light-content"
 								hidden = {false}
 								/>
@@ -101,8 +122,8 @@ class DriverRatings extends Component {
 									<Icon name='menu' />
 								</Button>
 							</Left>
-							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>Ratings</Title>
+							<Body style={{alignItems: 'center', flex: 1}}>
+								<Title style={{fontFamily: 'sans-serif'}}>Rate</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button onPress = {() => {this.openNotifications()}} transparent>
@@ -111,36 +132,39 @@ class DriverRatings extends Component {
 							</Right>
 						</Header>
 
-						<Text>{this.props.resObjRyde.firstName} {this.props.resObjRyde.lastName} </Text>
-						<Rating
-							onChange={(rating) => {
-								// the rating belonging the member at index i has the following rating
-								// i is the same for both member array and rating array
-								// as they are identical
-								this.ratings = rating;
-							}}
-							selectedStar={images.starFilled}
-							unselectedStar={images.starUnfilled}
-							config={{
-							  easing: Easing.inOut(Easing.ease),
-							  duration: 350
-							}}
-							stagger={80}
-							maxScale={1.4}
-							starStyle={{
-							  width: 60,
-							  height: 60
-							}}
-						/>
+						<Content style={{backgroundColor: 'white'}}>
+						<Card>
+							<CardItem>
+								<Body>
+									<Icon name='person' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}>{this.props.resObjRyde.firstName} {this.props.resObjRyde.lastName} </Text></Icon>
+									<Rating
+										onChange={(rating) => {
+											// the rating belonging the member at index i has the following rating
+											// i is the same for both member array and rating array
+											// as they are identical
+											this.ratings = rating;
+										}}
+										selectedStar={images.starFilled}
+										unselectedStar={images.starUnfilled}
+										config={{
+										  easing: Easing.inOut(Easing.ease),
+										  duration: 350
+										}}
+										stagger={80}
+										maxScale={1.4}
+										starStyle={{
+										  width: 30,
+										  height: 30
+										}}
+									/>
+								</Body>
+							</CardItem>
+						</Card>
 
-						<Button medium info onPress = { () => {
-							this.submitRatings();
-						}}>
-						 	<Text> Submit </Text>
-						</Button>
+						<TouchableOpacity style={{marginTop: '50%'}} onPress = { () => { this.submitRatings(); }}><Text style = {styles.submitButton}> Submit </Text></TouchableOpacity>
 
+						</Content>
 					</Container>
-					</ScrollView>
 			</Drawer>
 		</Notifications>
 
@@ -149,6 +173,22 @@ class DriverRatings extends Component {
 
 }
 
+const styles = StyleSheet.create({
+
+	submitButton: {
+		backgroundColor:'rgb(0, 51, 153)',
+		textAlign:'center',
+		height:54,
+		color:'#fff',
+		fontSize:18,
+		paddingTop:14,
+		fontFamily: 'sans-serif',
+		marginTop: '50%',
+		marginLeft: 10,
+		marginRight: 10,
+		marginBottom: 20
+	}
+});
 module.exports = DriverRatings;
 
 AppRegistry.registerComponent("Ratings", () => DriverRatings);

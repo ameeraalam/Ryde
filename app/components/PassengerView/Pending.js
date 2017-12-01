@@ -9,7 +9,7 @@ import {
   RefreshControl
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, CardItem, Fab } from 'native-base';
+import { Container, Header, Left, Right, Icon, Body, Button, Title, Footer, FooterTab, Content, List, Card, CardItem, Fab, Toast } from 'native-base';
 //this is not the main passenger view page. the default page will be available and you can come to this page by selecting on the pending footer tab. all the rides you have requested to join in as a passenger
 //when you click on a ride, you get redirected to the PassengerPendingRideProfile. Here I send both the ride object and passenger object
 
@@ -22,7 +22,9 @@ class Pending extends Component {
     this.baseUrl = config();
     this.state = {
       data: [],
-      refreshing: false
+      refreshing: false,
+      showToast: false
+
     }
   }
 
@@ -49,16 +51,21 @@ class Pending extends Component {
 
             dataSet.push(
               <View key={i}>
-              <CardItem button
-              onPress={()=>
-                Actions.pendingProfile({resO, myRes})}>
-                <Body>
-                <Text>From: {resObj[i].from}</Text>
-                <Text>To: {resObj[i].to}</Text>
-                <Text>Date: {resObj[i].date}</Text>
-                <Text style={{left: 320}}>Price: ${resObj[i].price}</Text>
-                </Body>
-                </CardItem>
+              <Card>
+                <CardItem button
+                onPress={()=>
+                  Actions.pendingProfile({resO, myRes})}>
+                  <Body>
+
+                  <Icon name='pin' style={{color: 'rgb(0, 51, 153)'}}><Text style={{color: 'rgb(0, 51, 153)'}}> {resObj[i].from} - {resObj[i].to}</Text></Icon>
+
+                  <Icon name='calendar' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}>  {resObj[i].date}</Text></Icon>
+
+                  <Icon name='cash' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text style={{color: 'rgb(0, 51, 153)'}}> {resObj[i].price}</Text></Icon>
+
+                  </Body>
+                  </CardItem>
+                </Card>
                 <Text></Text>
                 </View>
               )
@@ -67,7 +74,12 @@ class Pending extends Component {
           })
         }
       }, (err) => {
-        alert(err)
+        Toast.show({
+        text: 'Promise Error:\nUnhandled promise',
+        position: 'top',
+        buttonText: 'Okay',
+        duration: 3000
+      });
       });
     }
 
@@ -89,22 +101,23 @@ class Pending extends Component {
 
       return (
         <Container>
-        <ScrollView
+        <Content
         refreshControl={<RefreshControl
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh.bind(this)}
+          colors={['red']}
           />
         }>
-        <Content>
+
         {this.state.data}
+
         </Content>
-        </ScrollView>
         <View>
         <Fab
         active={this.state.active}
         direction="up"
         containerStyle={{ }}
-        style={{ backgroundColor: 'rgb(72, 110, 255)' }}
+        style={{ backgroundColor: 'rgb(0, 51, 153)' }}
         position="bottomRight"
         onPress={() => {this.findButton()}}>
         <Icon name="search" />

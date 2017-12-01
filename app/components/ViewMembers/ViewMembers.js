@@ -8,11 +8,13 @@ import {
 	TouchableOpacity,
 	StatusBar,
 	ScrollView,
-	BackHandler
+	BackHandler,
+	ActivityIndicator
 } from "react-native";
 import { Container, Header, Title, Left, Icon, Right, Button, Center, Footer,
-	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col } from "native-base";
+	FooterTab, Body, Content, Card, CardItem, Grid, Row, Col, Toast } from "native-base";
 import { Actions } from "react-native-router-flux";
+import styles from "./styles";
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import CardSlide from "./CardSlide";
@@ -28,7 +30,9 @@ class ViewMembers extends Component {
 		// triggering the function and it is important that the this of the function remains of that of the parents scope
 		this.removePassenger = this.removePassenger.bind(this);
 		this.state = {
-			members: []
+			members: [],
+			loading: false,
+			showToast: false
 		}
 	}
 
@@ -47,25 +51,41 @@ class ViewMembers extends Component {
 	}
 
 	goBack() {
+
 		fetch(this.baseUrl + this.props.resObjRyde.rydeId + "/getUpdatedRyde").then((res) => {
 			if (res.status === 200) {
+
 				let resPromise = res.json();
 				resPromise.then((resObj) => {
 					// we set the new ryde object
 					let resObjDriver = this.props.resObjUser;
 					let resObjRide = resObj;
-					Actions.driverRideProfile({resObjDriver, resObjRide});
+
+					//****** when you do actions.pop, it pops the current page off the stack but since we do refresh inside the pop it refreshes the previous page with the new props being passed
+
+					Actions.pop({refresh: {resObjDriver, resObjRide}});
 				})
 			} else {
-				alert("server returned an error")
+				Toast.show({
+					text: 'Server returned an error',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 			}
 		}, (err) => {
-				alert(err);
+				Toast.show({
+					text: 'Promise Error:\nUnhandled promise',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 		});
 	}
 
 	// the self is the this of the CardSlide
 	removePassenger(self) {
+
 		// this array is a placeholder for the state.members array
 		// this array will get modified, and then I will change the member state to this array
 		let mems = this.state.members;
@@ -96,6 +116,8 @@ class ViewMembers extends Component {
 			memberRemoved: memberRemoved
 		};
 
+		this.setState({loading: true});
+
 		fetch(this.baseUrl + "removePassenger", {
 			method: "POST",
 			headers: {
@@ -104,11 +126,33 @@ class ViewMembers extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
+
 			if (res.status !== 200) {
-				alert("Server sent an error");
+				Toast.show({
+					text: 'Server sent an error',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
+			}
+
+			else{
+				Toast.show({
+					text: 'Member has been successfully removed',
+					position: 'top',
+					buttonText: 'Okay',
+					type: 'success',
+					duration: 3000
+				});
 			}
 		}, (err) => {
-			alert(err)
+				Toast.show({
+					text: 'Promise Error:\nUnhandled promise',
+					position: 'top',
+					buttonText: 'Okay',
+					duration: 3000
+				});
 		});
 	}
 
@@ -137,10 +181,10 @@ class ViewMembers extends Component {
 				ref={(notifications) => (this.notifications = notifications)}>
 				<Drawer
 					ref={(drawer) => this.drawer = drawer}>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor: 'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
+								backgroundColor="rgb(0, 51, 153)"
 								barStyle="light-content"
 								hidden = {false}
 								/>
@@ -149,7 +193,7 @@ class ViewMembers extends Component {
 									<Icon name='menu' />
 								</Button>
 							</Left>
-							<Body style={{flex: 1}}>
+							<Body style={{alignItems: 'center',flex: 1}}>
 								<Title style={{fontFamily: 'sans-serif'}}>Members</Title>
 
 							</Body>
@@ -159,9 +203,18 @@ class ViewMembers extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<ScrollView>
+						<Content>
 							{this.state.members}
-						</ScrollView>
+						</Content>
+
+						{this.state.loading && <View style = {styles.loading}>
+						<ActivityIndicator
+						animating
+						size="large"
+						color="red"
+						/>
+						</View>}
+
 					</Container>
 			</Drawer>
 		</Notifications>

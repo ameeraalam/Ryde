@@ -76,6 +76,8 @@ class Controller {
 								resObj.car = doc.car;
 								resObj.allInfoFilled = doc.allInfoFilled;
 								resObj.id = doc.id;
+								resObj.totalRating = doc.totalRating;
+								resObj.numRating = doc.numRating;
 
 								// check to know if deviceId was updated so that we can put
 								// the right deviceId in resObj
@@ -828,6 +830,54 @@ class Controller {
 
 	}
 
+//used by PassengerAvailableRideProfile to get drievrdata
+	getDriverData(req,res){
+		this.modelUsers.query({"email": req.params.email}, (doc) => {
+				console.log(doc);
+				let resObj = {};
+				resObj.firstName = doc.firstName;
+				resObj.lastName = doc.lastName;
+				resObj.totalRating = doc.totalRating;
+				resObj.numRating = doc.numRating;
+
+				res.status(200).send(resObj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	//used by PassengerPendingRideProfile to get getDriverData
+	getDriverDataPending(req,res){
+		this.modelUsers.query({"email": req.params.email}, (doc) => {
+				console.log(doc);
+				let resObj = {};
+				resObj.firstName = doc.firstName;
+				resObj.lastName = doc.lastName;
+				resObj.totalRating = doc.totalRating;
+				resObj.numRating = doc.numRating;
+
+				res.status(200).send(resObj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
+	//used by PassengerSearchProfile to get drievr data
+	getDriverDataSearch(req,res){
+		this.modelUsers.query({"email": req.params.email}, (doc) => {
+				console.log(doc);
+				let resObj = {};
+				resObj.firstName = doc.firstName;
+				resObj.lastName = doc.lastName;
+				resObj.totalRating = doc.totalRating;
+				resObj.numRating = doc.numRating;
+
+				res.status(200).send(resObj);
+		}, () => {
+			res.sendStatus(404);
+		})
+	}
+
   	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
 	//use updatePush for the request for passengers.
 	//update the ryde collection, requests [] with the passenger info
@@ -905,7 +955,7 @@ class Controller {
 											res.sendStatus(404);
 										});
 									}
-									
+
 									this.sendRydeRequestNotification(req);
 									res.sendStatus(200);
 								}, () => {

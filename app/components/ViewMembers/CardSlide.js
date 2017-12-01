@@ -11,7 +11,8 @@ import {
 	Card,
 	CardItem,
 	Text,
-	Icon
+	Icon,
+	Body
 } from 'native-base';
 
 import { Actions } from "react-native-router-flux";
@@ -33,10 +34,18 @@ class CardSlide extends Component {
 
 	render() {
 		return(
-			<Swipeout right = {this.swipeOutButtons} autoClose = {true}>
+			<Swipeout right = {this.swipeOutButtons} autoClose = {true} style={{backgroundColor:'white'}}>
 					<Card>
 						<CardItem>
-							<Text>Name: {this.props.firstName} {this.props.lastName}, Email: {this.props.email} Phone: {this.props.phone}</Text>
+							<Body style={{backgroundColor: 'white'}}>
+								<Icon name ='person' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}>
+								<Text>{this.props.firstName} {this.props.lastName}</Text></Icon>
+
+								<Icon name='mail' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text>{this.props.email}</Text></Icon>
+
+								<Icon name='call' style={{color: 'rgb(0, 51, 153)', fontSize: 14}}><Text> {this.props.phone}</Text></Icon>
+								
+							</Body>
 						</CardItem>
 					</Card>
 			</Swipeout>

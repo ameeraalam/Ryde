@@ -19,11 +19,6 @@ import styles from "./styles";
 
 import config from "./../../config";
 
-<<<<<<< HEAD
-=======
-let MessageBarAlert = require('react-native-message-bar').MessageBar;
-let MessageBarManager = require('react-native-message-bar').MessageBarManager;
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 import OneSignal from 'react-native-onesignal';
 
 class Login extends Component {
@@ -32,10 +27,7 @@ class Login extends Component {
 		this.baseUrl = config();
 		this.onIds = this.onIds.bind(this);
 		this.state = {
-<<<<<<< HEAD
 			showToast: false,
-=======
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 			deviceId: '',
 			loading: false,
 			textEmail: "Email",
@@ -43,30 +35,14 @@ class Login extends Component {
 		}
 	}
 
-	componentWillMount() {
-	  OneSignal.addEventListener('ids', this.onIds);
-		OneSignal.configure();
-	}
-
 	componentDidMount() {
 		OneSignal.addEventListener('ids', this.onIds);
 		OneSignal.configure();
 	}
 
-<<<<<<< HEAD
 
 	componentWillUnmount() {
 		OneSignal.removeEventListener('ids', this.onIds);
-	}
-
-	onIds(device) {
-		this.setState({deviceId: device.userId});
-=======
-	componentWillUnmount() {
-		// Remove the alert located on this master page from the manager
-		OneSignal.removeEventListener('ids', this.onIds);
-		MessageBarManager.unregisterMessageBar();
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 	}
 
 	onIds(device) {
@@ -131,7 +107,10 @@ class Login extends Component {
 					buttonText: 'Okay',
 					duration: 3000
 				});
+
+				Keyboard.dismiss();
 			}
+
 
 		}, (err) => {
 			this.setState({loading: false});
@@ -153,7 +132,6 @@ class Login extends Component {
 	render() {
 		return (
 			<View style = {styles.container}>
-<<<<<<< HEAD
 			<Text style={styles.logo}> ryde </Text>
 			<StatusBar
 			backgroundColor="rgb(0, 51, 153)"
@@ -183,42 +161,6 @@ class Login extends Component {
 			<View style = {styles.registerContainer}>
 			<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'rgb(0, 51, 153)', fontFamily: 'sans-serif'}}>Register</Text>
 			</View>
-=======
-				<StatusBar
-		     backgroundColor="rgb(72, 110, 255)"
-		     barStyle="light-content"
-		   	/>
-				<TextInput
-					style = {styles.inputBox}
-					placeholder = "Email"
-         	underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textEmail: text})}
-				/>
-				<TextInput
-					style = {styles.inputBox}
-					secureTextEntry = {true}
-					placeholder = "Password"
-					underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textPass: text})}
-				/>
-
-				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>
-					<Text style = {styles.submitButtonOnLogin}> Login </Text>
-				</TouchableOpacity>
-
-				<View style = {styles.registerContainer}>
-					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
-				</View>
-
-				<MessageBarAlert ref="alert" />
-
-				{this.state.loading && <View style = {styles.loading}>
-					<ActivityIndicator
-						animating
-						size="large"
-					/>
-				</View>}
->>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 
 			{this.state.loading && <View style = {styles.loading}>
 			<ActivityIndicator
