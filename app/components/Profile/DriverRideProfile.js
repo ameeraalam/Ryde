@@ -6,12 +6,19 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+<<<<<<< HEAD
   TouchableOpacity,
   Alert,
   ActivityIndicator
 } from 'react-native';
 import {Actions } from 'react-native-router-flux';
 import {Container, Header, Left, Right, Icon, CardItem, Card, Body, Button, Title, Content, Footer, FooterTab, Toast} from 'native-base';
+=======
+  Alert
+} from 'react-native';
+import {Actions } from 'react-native-router-flux';
+import {Container, Header, Left, Right, Icon, CardItem, Body, Button, Title, Content, Footer, FooterTab} from 'native-base';
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 import Drawer from '../Drawer/Drawer';
 import Notifications from '../Notifications/Notifications';
 import config from "./../../config";
@@ -30,8 +37,11 @@ class DriverRideProfile extends Component {
       buttonMessage: "Start Trip",
       red: false,
       green: true,
+<<<<<<< HEAD
       showToast: false,
       loading: false
+=======
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
     }
   }
 
@@ -61,7 +71,10 @@ class DriverRideProfile extends Component {
       driver: this.props.resObjDriver,
       ryde: this.props.resObjRide
     }
+<<<<<<< HEAD
     this.setState({loading: true});
+=======
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 
     // this is when we press the end trip button
     fetch(this.baseUrl + "endTrip", {
@@ -72,14 +85,18 @@ class DriverRideProfile extends Component {
       },
       body: JSON.stringify(reqObj)
     }).then((res) => {
+<<<<<<< HEAD
       this.setState({loading: false});
 
+=======
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
       if (res.status === 200) {
         // if success we view the ratings page
         let resObjUser = this.props.resObjDriver;
         let resObjRyde = this.props.resObjRide;
         Actions.passengerRatings({resObjUser, resObjRyde});
       } else {
+<<<<<<< HEAD
 
         Toast.show({
 									text: 'Server sent an error',
@@ -95,6 +112,12 @@ class DriverRideProfile extends Component {
 				buttonText: 'Okay',
 				duration: 3000
 			});
+=======
+        alert("Server sent an error");
+      }
+    }, (err) => {
+      alert(err)
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
     });
 
   }
@@ -110,16 +133,25 @@ class DriverRideProfile extends Component {
         ref={(notifications) => (this.notifications = notifications)}>
         <Drawer
           ref={(drawer) => this.drawer = drawer}>
+<<<<<<< HEAD
           <ScrollView>
           <Container>
             <Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
+=======
+          <Container>
+            <Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               <Left style={{flex: 1}}>
                 <Button transparent onPress={this.openMenu}>
                   <Icon name='menu' />
                 </Button>
               </Left>
               <Body style={{alignItems: 'center', flex: 1}}>
+<<<<<<< HEAD
                 <Title style={{fontFamily: 'sans-serif'}}>Ride Details</Title>
+=======
+                <Title style={{fontFamily: 'sans-serif'}}>RYDE INFO</Title>
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               </Body>
               <Right style={{flex: 1}}>
                 <Button onPress = {() => {this.openNotifications()}} transparent>
@@ -127,6 +159,7 @@ class DriverRideProfile extends Component {
                 </Button>
               </Right>
             </Header>
+<<<<<<< HEAD
             <ScrollView style={{backgroundColor:'white'}}>
               <Content>
               <View style={{backgroundColor: 'rgb(0, 51, 153)'}}>
@@ -145,6 +178,61 @@ class DriverRideProfile extends Component {
                 <Icon name='chatbubbles' style={{color: 'white', marginLeft: '7%'}} onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}/>
 
                 <Icon name = 'trash' style={{color: 'white', marginLeft: '7%'}} onPress={ () => {
+=======
+            <ScrollView>
+              <Content>
+                <Image
+                  style={{
+                    width: 160,
+                    borderRadius: 80,
+                    height: 160,
+                    alignItems: 'center'
+                  }}
+                  source={require('../Profile/Images/profilepic.jpg')}
+                  />
+
+                <CardItem>
+                  <Text>Driver E-mail: {this.props.resObjRide.driver}</Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>Rating: {this.props.resObjRide.rating}</Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>Luggage: {this.props.resObjRide.numLuggage} </Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>Passengers: {this.props.resObjRide.numPassengers}</Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>Price: {this.props.resObjRide.price}</Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>From: {this.props.resObjRide.from}</Text>
+                </CardItem>
+                <Text></Text>
+                <CardItem>
+                  <Text>To: {this.props.resObjRide.to}</Text>
+                </CardItem>
+                <Text></Text>
+                <View style={styles.container}>
+                  <Button small info onPress = {() => {
+                      Actions.requestedRides({resObjUser, resObjRyde});
+                    }}><Text style={styles.text}>View Requests</Text>
+                  </Button>
+                  <Button small info onPress = {() => {
+                      Actions.viewMembers({resObjUser, resObjRyde});
+                    }}><Text style={styles.text}>View Members</Text>
+                  </Button>
+                <Button small info onPress={ () => {Actions.chat({resObjUser, resObjRyde})}}>
+                  <Text style={styles.text}>Chat</Text>
+                </Button>
+                <Button small info onPress={ () => {
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
                   // Prompt the user if he actually wants to delete the post
 
                   Alert.alert(
@@ -158,6 +246,7 @@ class DriverRideProfile extends Component {
                     ],
                     { cancelable: false }
                   )
+<<<<<<< HEAD
                 }}/>
                 </View>
                 </View>
@@ -229,10 +318,18 @@ class DriverRideProfile extends Component {
                   </CardItem>
                   </Card>
                   </View>
+=======
+                }}>
+                  <Text style={styles.text}>Delete Post</Text>
+                </Button>
+
+                </View>
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
               </Content>
             </ScrollView>
             <Footer>
               <FooterTab>
+<<<<<<< HEAD
               <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
                 this.endTrip();
               }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
@@ -240,6 +337,14 @@ class DriverRideProfile extends Component {
             </Footer>
           </Container>
         </ScrollView>
+=======
+                <Button success = {this.state.green} failure = {this.state.red} onPress = {() => {
+                  this.endTrip();
+                }}><Text style={styles.text}>{this.state.buttonMessage}</Text></Button>
+              </FooterTab>
+            </Footer>
+          </Container>
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
         </Drawer>
       </Notifications>
 
@@ -247,6 +352,7 @@ class DriverRideProfile extends Component {
   }
 }
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   mainStyle: {
 		flex: 1,
 		justifyContent: 'center',
@@ -254,6 +360,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 
 	},
+=======
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
   text: {
     color: 'white',
     fontSize: 16,

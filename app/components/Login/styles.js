@@ -48,9 +48,14 @@ const styles = StyleSheet.create({
 		height:54,
 		color:'#fff',
 		fontSize:18,
+<<<<<<< HEAD
 		paddingTop:'5%',
 		fontFamily: 'sans-serif',
 		marginTop: '10%'
+=======
+		paddingTop:14,
+		fontFamily: 'sans-serif'
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 	},
 	loading: {
 		position: "absolute",

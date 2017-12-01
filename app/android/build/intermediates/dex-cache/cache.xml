@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.13.0\a9283170b7305c8d92d25aff02a6ab7e45d06cbe\okio-1.13.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a9283170b7305c8d92d25aff02a6ab7e45d06cbe">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\okio-1.13.0_9c678d8dd67ea352cad129fffa9a2d2f89ed5a5a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.0.1_91cc2c0be873a3494bd94f5e40b9d214b437e0e7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\Ryde\react-native-onesignal\unspecified\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="43b3eb17d5232d576dc613f658d82d2da04e1b99">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\Ryde-react-native-onesignal-unspecified_6a413f13cc9918fc74ae10b77d3088b313c136c1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.react\react-native\0.49.3\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="e013739f7ddb6740bf196dc515d8999a6030f9ea">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.react-react-native-0.49.3_6c31797ca461becea0ed3b248348bca4c926fb85.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\fbcore\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="37345de2ed2772f385eaeec37a9c2ff0fea99ad7">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-fbcore-1.3.0_d62827cca022aa863937583906cd740815929254.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-25.2.0_800b584cfe2e8dc440e98f7bc1d64043ab46ab3a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.facebook.fbui.textlayoutbuilder\staticlayout-proxy\1.0\f162442a19fff13995fbd51ba414d9ee05579080\staticlayout-proxy-1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f162442a19fff13995fbd51ba414d9ee05579080">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\staticlayout-proxy-1.0_6d8dcfa8466ee04fe0587f69d8da1948cfb6c279.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.6.0\69edde9fc4b01c9fd51d25b83428837478c27254\okhttp-3.6.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="69edde9fc4b01c9fd51d25b83428837478c27254">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\okhttp-3.6.0_34fcf3c549c4eb833a969e2a3d417fa1ee96935c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\imagepipeline-okhttp3\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c03c08c9934b23c8c09c803345ec51a74119127b">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-imagepipeline-okhttp3-1.3.0_9035025fe43a1e7f11109a29b358e6a3f1dc2605.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="2430e711762a749feb00b3d64858ca4768251b9d">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-11.0.4_41ba30d6d0110c8a9f1680f580fa25b203356a87.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\fresco\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="fe85b87215e405f5917d40ae4960488ac9224b74">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-fresco-1.3.0_ef5eaa3d1c2fb8a7cc591485ecd64861ebbf4d4b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.google.code.findbugs\jsr305\3.0.0\5871fb60dc68d67da54a663c3fd636a10a532948\jsr305-3.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="5871fb60dc68d67da54a663c3fd636a10a532948">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\jsr305-3.0.0_c4bae9eaffbdcc34e254ba67df1322dfda575c89.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.onesignal\OneSignal\3.6.5\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="dfff80b6e21c10f40ec59c0e5d86d00bd67a1f35">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.onesignal-OneSignal-3.6.5_7487710b8fbeabf4abd8c308ba6a3f152dbcec56.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="41f47bbcd281fdb1e42e220220ab3bfa1da591e0">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-11.0.4_134ebfde01ed3669454daad5e678eb12e392079f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-tasks\1.4.0\d85884acf6810a3bbbecb587f239005cbc846dc4\bolts-tasks-1.4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\bolts-tasks-1.4.0_d5d62e60871b75c894f79d44f440abacea8d679c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics-impl\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="2c2f1b3f82c027e98f56bb0154de0acbcce42e6d">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-analytics-impl-11.0.4_e76bc40d818a556f247630ff1a3b1cdf1f785998.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fbui.textlayoutbuilder\textlayoutbuilder\1.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f90b593491e4044903f0bbf68dc3fa2790b151b9">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fbui.textlayoutbuilder-textlayoutbuilder-1.0.0_49e18c02eb4112d9458865d0544511cdd5aac775.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.soloader\soloader\0.1.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="8f615bca00639150c9eb6175d4b5471193f70794">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.soloader-soloader-0.1.0_bf6ab98408c19712951b42287f5b3aaebb0fb970.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.react\react-native\0.49.3\jars\libs\infer-annotations-4.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="9809e90be788acdb479b2b44e2112f3295a03068">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\infer-annotations-4.0_fd89f742d8b5783aa4d7b8bb1aabc47f5dbaea6a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-25.2.0_8eaab52188e9d1eef01e28bb44e3135d5710dd70.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d8942ee348aaa9341f08f7e2437063893fe27542">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-gcm-11.0.4_ae9b28a4617e33d0fd01a936db7f7a2910e18f87.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\imagepipeline-base\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="72128af126ddd7d6252da9357fe560d3abcdfb0c">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-imagepipeline-base-1.3.0_a4fbf17d881171acf6454d5f09905ed128d8dabf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\imagepipeline\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="48c7f54c2515a2312d3a4481d10c43fbb807f3af">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-imagepipeline-1.3.0_e269ffbe2d7dda4fe242f97337103944afa3efa9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.facebook.fresco\drawee\1.3.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c65a2e39d54023bac3aef64a2f0cff89289c7ff6">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-drawee-1.3.0_afdc6bfe4601e4a166a7c4ef36629353d4cb47e4.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-25.2.0_9c5feb145686ec5e8320bed9319e10e70c740e4e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a25b0b5aec89681b95d32780ad7904c1e1e4c679">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-analytics-11.0.4_3e1930d3ae19dc0b714202a9c67914a7cebd0aa0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\Ryde\react-native-vector-icons\unspecified\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="f2cf527de8d0bd35d72088fafea02395ba4a9eec">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\Ryde-react-native-vector-icons-unspecified_ce5239d26f4acabb18384c02533dac6f0a358c54.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-25.2.0_3228c12fa6c4bd359cdfff79ce1699239ca1235d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\javax.inject\javax.inject\1\6975da39a7040257bd51d21a231b76c915872d38\javax.inject-1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="6975da39a7040257bd51d21a231b76c915872d38">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\javax.inject-1_cb11cb9a4d32390a2cce6f7d611c27c325f7eaac.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.2.0\support-annotations-25.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="4a5a82a027706397fff621b22fd6fa796e91d7c5">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\support-annotations-25.2.0_18fce47375923927a0555a1b80b5b2cfd95550ab.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tanvi\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp-urlconnection\3.6.0\3f9b16b774f2c36cfd86dd2053d0b3059531dacc\okhttp-urlconnection-3.6.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="3f9b16b774f2c36cfd86dd2053d0b3059531dacc">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\okhttp-urlconnection-3.6.0_81aee726c21578fff5c9b3b7f69ed97c6fdae16a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-25.2.0_a671d6adde20f4217a1fa3957fca3815fa51f69c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager-v4-impl\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="c1b91bc7e480ab100d0397b16c93732e26fd10eb">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tagmanager-v4-impl-11.0.4_6ec3b10f9c1bd405ad619dec40d7ae9178cb925d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="70ffe00aaf049893f59d1dad57bd82992faa38ef">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-11.0.4_29c6068b7f6b87f0bbb65502acea85112980fd27.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-25.2.0_06e1213b61908088072004394462a3218e3fd8dd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="364364bf77b4a71afc5930fc3ae57b3f0eea637c">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-11.0.4_0e42ae20c4ecb22ce87d0b6af51a0746e0ce5a5f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Root\Ryde\app\android\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-iid\11.0.4\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.2"
+        sha1="dd282bdeaa904c59d77e57dedd7e0a241c9b679d">
+        <dex dex="C:\Root\Ryde\app\android\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-iid-11.0.4_037859ecb114ad507bde8c04feec3d41660223e3.jar" />
+    </item>
+
+</items>

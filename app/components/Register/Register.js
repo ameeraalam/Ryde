@@ -81,8 +81,11 @@ class Register extends Component {
 
 			genderS: {
 				color: "grey"
-			},
+			}
+		}
+	}
 
+<<<<<<< HEAD
 			loading: false,
 			showToast: false
 		}
@@ -94,6 +97,14 @@ class Register extends Component {
 		OneSignal.configure();
 	}
 
+=======
+
+	componentWillMount() {
+	  OneSignal.addEventListener('ids', this.onIds);
+		OneSignal.configure();
+	}
+
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 	componentWillUnmount() {
 	    OneSignal.removeEventListener('ids', this.onIds);
 	}
@@ -388,12 +399,16 @@ class Register extends Component {
 
 
 							if (res.status === 200) {
+<<<<<<< HEAD
 								Toast.show({
 									text: 'Registration Complete',
 									position: 'top',
 									buttonText: 'Okay',
 									duration: 3000
 								}); // should be changed to a message bar
+=======
+								alert("Registration complete"); // should be changed to a message bar
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 								// on completing the registration we switch to the login page
 								Actions.login({type: 'reset'});
 							} else {
@@ -446,6 +461,14 @@ class Register extends Component {
 	render() {
 		return (
 			<ScrollView style={{backgroundColor: '#fff'}}>
+<<<<<<< HEAD
+=======
+				<Header style={{backgroundColor:'rgb(72, 110, 255)'}}>
+					<Body>
+						<Title style={{alignSelf: 'center', fontFamily: 'sans-serif'}}>REGISTER</Title>
+					</Body>
+				</Header>
+>>>>>>> f99511f1586e1c495ce092453d5be35e4b63024a
 
 				<View style={{ marginTop:30, paddingLeft:15}}>
 					<Text style={{fontSize: 40, fontFamily: 'sans-serif', color: 'rgb(0, 51, 153)'}}>
