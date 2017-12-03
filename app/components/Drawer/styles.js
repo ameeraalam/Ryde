@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
 
   profile: {
 		flex: 1,
-    backgroundColor: 'rgb(72, 110, 255)',
+    backgroundColor: 'rgb(0, 51, 153)',
     alignItems:'center'
 	},
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
 
   drawerIcons: {
-    color: 'rgb(72, 110, 255)'
+    color: 'rgb(0, 51, 153)'
   },
 
   drawerOptionsMargin: {

@@ -5,7 +5,8 @@ import {
 	View,
 	TextInput,
 	Image,
-	TouchableOpacity
+	TouchableOpacity,
+	ActivityIndicator
 } from "react-native";
 
 import {
@@ -22,7 +23,8 @@ import {
 	Body,
 	Button,
 	Right,
-	Title
+	Title,
+	Toast
 } from "native-base";
 
 import { Actions } from "react-native-router-flux";
@@ -39,6 +41,8 @@ class DriverInfo extends Component {
 		this.baseUrl = config();
 		this.openMenu = this.openMenu.bind(this);
 		this.state = {
+			showToast: false,
+			loading: false,
 			plate: "Car plate number",
 			liscense: "Driver's licsense number",
 			car: "Car model number",
@@ -46,6 +50,15 @@ class DriverInfo extends Component {
 			liscenseS: {color: "grey"},
 			carS: {color: "grey"}
 		}
+	}
+
+	componentDidMount(){
+		Toast.show({
+				text: 'The information below are mandatory in order to access functionalities of a driver',
+				position: 'bottom',
+				buttonText: 'Okay',
+				duration: 30000
+			});
 	}
 
 	openMenu() {
@@ -156,6 +169,7 @@ class DriverInfo extends Component {
 		}
 
 		let resObj = this.props.resObj
+		this.setState({loading: true});
 
 		fetch(this.baseUrl + "driverInfo", {
 			method: "POST",
@@ -165,6 +179,8 @@ class DriverInfo extends Component {
 			},
 			body: JSON.stringify(reqObj)
 		}).then((res) => {
+			this.setState({loading: false});
+
 			if (res.status === 200) {
 				this.props.driverFilledObj.driverInfo()
 				let isPassenger = false;
@@ -173,11 +189,21 @@ class DriverInfo extends Component {
 				Actions.driverView({type: 'replace', isPassenger, resObj, driverFilledObj});
 
 			} else {
-				alert("Error");
+				Toast.show({
+									text: 'Server sent an error',
+									position: 'top',
+									buttonText: 'Okay',
+									duration: 3000
+								});
 			}
 		}, (err) => {
 			if (err) {
-				alert(err);
+				Toast.show({
+				text: 'Promise Error:\nUnhandled promise',
+				position: 'top',
+				buttonText: 'Okay',
+				duration: 3000
+			});
 			}
 		});
 
@@ -189,23 +215,19 @@ class DriverInfo extends Component {
 				resObj = {this.props.resObj}
 				ref={(drawer) => this.drawer = drawer}>
 				<Container>
-					<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 						<Left style={{flex: 1}}>
 							<Button transparent onPress={this.openMenu}>
 								<Icon name='menu' />
 							</Button>
 						</Left>
 						<Body style={{alignItems: 'center', flex: 1}}>
-							<Title style={{fontFamily: 'sans-serif'}}>DRIVER INFO</Title>
+							<Title style={{fontFamily: 'sans-serif'}}>Details</Title>
 						</Body>
 						<Right style={{flex: 1}} />
 					</Header>
 
-					<Content style={{backgroundColor: '#fff'}}>
-						<ListItem itemHeader>
-							<Text>The information below are mandatory in order to access functionalities of a driver</Text>
-						</ListItem>
-
+					<Content style={{backgroundColor: 'white'}}>
 						<Form>
 							<Item floatingLabel>
 								<Label style = {this.state.plateS}>Plate number</Label>
@@ -236,13 +258,20 @@ class DriverInfo extends Component {
 
 						<View style = {{marginTop: 15, marginBottom: 30, paddingLeft: 15, paddingRight: 15}}>
 							<TouchableOpacity onPress = {() => {this.submitButton()}}>
-								<Text style = {{backgroundColor:'rgb(72, 110, 255)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
+								<Text style = {{backgroundColor:'rgb(0, 51, 153)', textAlign:'center', height:60, color:'#fff', fontSize:18, paddingTop:14, marginTop:25, fontFamily: 'sans-serif'}}>
 									Submit
 								</Text>
 							</TouchableOpacity>
 						</View>
-
 					</Content>
+					
+					{this.state.loading && <View style = {styles.loading}>
+					<ActivityIndicator
+					animating
+					size="large"
+					color="red"
+					/>
+					</View>}
 				</Container>
 			</Drawer>
 

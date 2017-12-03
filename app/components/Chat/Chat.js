@@ -111,12 +111,12 @@ class Chat extends Component {
 
 		// socket event for success of a server job
 		this.socket.on(this.rydeObject.rydeId.toString() + "/success", () => {
-			console.log("Server socket sent success");
+			// console.log("Server socket sent success");
 		});
 
 		// socket event for failure of a server job
 		this.socket.on(this.rydeObject.rydeId.toString() + "/failure", () => {
-			console.log("Server socket sent failure...");
+			// console.log("Server socket sent failure...");
 		});
 
 	}
@@ -190,10 +190,10 @@ class Chat extends Component {
 					resObj = {this.props.resObjUser}
 					driverFilledObj = {this.props.driverFilledObj}
 					ref={(drawer) => this.drawer = drawer}>
-					<Container>
-						<Header style={{backgroundColor: 'rgb(72, 110, 255)'}}>
+					<Container style={{backgroundColor: 'white'}}>
+						<Header style={{backgroundColor: 'rgb(0, 51, 153)'}}>
 							<StatusBar
-								backgroundColor="rgb(72, 110, 255)"
+								backgroundColor="rgb(0, 51, 153)"
 								barStyle="light-content"
 								hidden = {false}
 								/>
@@ -202,8 +202,8 @@ class Chat extends Component {
 									<Icon name='menu' />
 								</Button>
 							</Left>
-							<Body style={{flex: 1}}>
-								<Title style={{fontFamily: 'sans-serif'}}>DASHBOARD</Title>
+							<Body style={{alignItems: 'center',flex: 1}}>
+								<Title style={{fontFamily: 'sans-serif'}}>Chat</Title>
 							</Body>
 							<Right style = {{flex: 1}}>
 								<Button badge onPress = {() => {this.openNotifications()}} transparent>
@@ -212,7 +212,6 @@ class Chat extends Component {
 								</Button>
 							</Right>
 						</Header>
-						<View style={{flex: 1, backgroundColor:'#fff'}}>
 						<GiftedChat
 							messages = {this.state.texts}
 							onSend = {(message) => {
@@ -225,7 +224,6 @@ class Chat extends Component {
 								name: this.username
 							}}
 							/>
-						</View>
 					</Container>
 				</Drawer>
 			</Notifications>

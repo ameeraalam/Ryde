@@ -1,0 +1,22 @@
+Week 1
+======
+
+
+
+Duties
+—————-
+1. Finish up D1 
+2. Make a decision on what language framework to use for our project.
+3. Planned to research and and familiarize ourselves with language and framework.
+
+
+Achievements
+———————————-
+1. 1. We finished and submitted D1. (We already settled with Ryde as our app idea at this time).
+2. We settled on using react native as our framework for building our app.
+3. We researched and on react native, looked at their API, did some tutorials on it.
+
+
+Time Spent
+——————————
+We spent about 6 hours on this.

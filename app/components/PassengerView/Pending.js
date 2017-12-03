@@ -63,7 +63,9 @@ class Pending extends Component {
                 </View>
               )
             }
-            this.setState({data: dataSet})
+            if(this._Mounted) {
+              this.setState({data: dataSet})
+            }
           })
         }
       }, (err) => {
@@ -72,13 +74,22 @@ class Pending extends Component {
     }
 
     componentDidMount(){
+      this._Mounted = true;
       this.retrievePendingPosts();
     }
 
+    componentWillUnmount(){
+      this._Mounted = false;
+    }
+
     onRefresh(){
-      this.setState({refreshing: true});
+      if(this._Mounted) {
+        this.setState({refreshing: true});
+      }
       this.retrievePendingPosts().then(() => {
-        this.setState({refreshing:false});
+        if(this._Mounted) {
+          this.setState({refreshing:false});
+        }
       });
     }
 

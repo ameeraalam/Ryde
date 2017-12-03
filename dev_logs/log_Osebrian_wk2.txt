@@ -1,0 +1,22 @@
+Week 2
+======
+
+
+
+Duties
+—————-
+1. Think of architecture patterns and design patterns to structure our project with.
+2. Think and List out functionalities and non-functionalities of our app.
+3. Decide on what database to use between MongoDB, SQLite and firebase.
+
+
+Achievements
+———————————-
+1. We settled with MVC architecture pattern to start to build our app on.
+2. We listed out functionalities and non-functionalities of our app.
+3. We decided to use MongoDB for our database. We made this decision mainly for learning purposes and to challenge ourselves.
+
+
+Time Spent
+——————————
+We spent approximately 7 hours on this.

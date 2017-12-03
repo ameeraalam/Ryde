@@ -1,0 +1,22 @@
+Week 3
+======
+
+
+
+Duties
+—————-
+1. Have react native environment setup(client-side).
+2. Have server side built on nodejs and express framework.
+3. Have login and registration implemented.
+
+
+Achievements
+———————————-
+1. We got react native environment setup and working.
+2. Server side was implemented and running.
+3. The login and registration page were implemented and working with the server.
+
+
+Time Spent
+——————————
+We spent approximately 9 hours on this

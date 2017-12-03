@@ -1,0 +1,21 @@
+Week 5
+======
+
+
+
+Duties
+—————-
+1. Have drawer menu working with the app 
+2. Integrate maps to work in the app
+
+
+Achievements
+———————————-
+1. Drawer not yet implemented
+2. Maps not yet implemented
+2. Learnt a lot through experiencing all kinds of errors trying to integrate drawer and maps to the app
+
+
+Time Spent
+——————————
+1 spent approximately 20 hours this week

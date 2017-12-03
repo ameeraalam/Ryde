@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import { Actions } from "react-native-router-flux";
-import { Toast } from 'native-base';
+import { Item, Label, Input, Toast } from 'native-base';
 
 import styles from "./styles";
 
@@ -28,7 +28,6 @@ class Login extends Component {
 		this.onIds = this.onIds.bind(this);
 		this._Mounted = false;
 		this.state = {
-			loginName: 'Login',
 			showToast: false,
 			deviceId: '',
 			loading: false,
@@ -54,14 +53,9 @@ class Login extends Component {
 		}
 	}
 
-	componentWillReceiveProps(nextProps) {
-		// console.log('nextProps: ' + JSON.stringify(nextProps));
-		// this.setState({loginName: nextProps.newPees.good})
-	}
 
 
 	submitButton() {
-		// Actions.refresh({data: 'hello'})
 		this.setState({loading: true});
 		let reqObj = {
 			email: this.state.textEmail,
@@ -142,40 +136,44 @@ class Login extends Component {
 	render() {
 		return (
 			<View style = {styles.container}>
+				<Text style={styles.logo}> ryde </Text>
 				<StatusBar
-		     backgroundColor="rgb(72, 110, 255)"
-		     barStyle="light-content"
-		   	/>
-				<TextInput
-					style = {styles.inputBox}
-					placeholder = "Email"
-         	underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textEmail: text})}
-				/>
-				<TextInput
-					style = {styles.inputBox}
-					secureTextEntry = {true}
-					placeholder = "Password"
-					underlineColorAndroid = "transparent"
-					onChangeText = {(text) => this.setState({textPass: text})}
-				/>
+					backgroundColor="rgb(0, 51, 153)"
+					barStyle="light-content"
+					/>
 
-				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 300}}>
-					<Text style = {styles.submitButtonOnLogin}> Login </Text>
+				<Item floatingLabel style={{marginLeft: 40, marginRight: 40}}>
+					<Label> Email </Label>
+					<Input
+						underlineColorAndroid = "transparent"
+						onChangeText = {(text) => this.setState({textEmail: text})}
+						/>
+				</Item>
+				<Item floatingLabel style={{marginTop: 10, marginLeft: 40, marginRight: 40}}>
+					<Label>Password</Label>
+					<Input
+						secureTextEntry = {true}
+						underlineColorAndroid = "transparent"
+						onChangeText = {(text) => this.setState({textPass: text})}
+						/>
+				</Item>
+
+				<TouchableOpacity onPress = {() => {this.submitButton()}} style = {{width: 280}}>
+					<Text style = {styles.submitButtonOnLogin}>Login</Text>
 				</TouchableOpacity>
 
 				<View style = {styles.registerContainer}>
-					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'blue', fontFamily: 'sans-serif'}}>Register</Text>
+					<Text style={{fontFamily: 'sans-serif'}}>If not signed up then </Text><Text onPress = {this.registerButton} style = {{color: 'rgb(0, 51, 153)', fontFamily: 'sans-serif'}}>Register</Text>
 				</View>
 
 				{this.state.loading && <View style = {styles.loading}>
-					<ActivityIndicator
-						animating
-						size="large"
+				<ActivityIndicator
+					animating
+					size="large"
+					color="red"
 					/>
-				</View>}
-
-			</View>
+			</View>}
+		</View>
 		);
 	}
 }

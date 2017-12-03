@@ -1,0 +1,25 @@
+Week 10
+======
+
+
+
+Duties
+—————-
+1. Do a lot of testing on all components and classes in the app.
+3. Complete the internal part of push notification
+4. Group to implement the rest of the functionalities of the app.
+5. Submit documentation for D4 and finish the rest of app
+
+
+Achievements
+———————————-
+1. Fixed a lot of bugs in the app from testing.
+2. Completed the internal portion of push notification.
+3. Group implemented the remaining functionalities of the app.
+4. Submitted D4 documentation and finished the rest of the app.
+5. Pulled 2 all-nighters with group to accomplish this
+
+
+Time Spent
+——————————
+I spent approximately 45 hours this week

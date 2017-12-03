@@ -62,7 +62,9 @@ class Available extends Component {
                 </View>
               )
             }
-            this.setState({data: dataSet})
+            if(this._Mounted) {
+              this.setState({data: dataSet})
+            }
           })
         }
 
@@ -74,13 +76,22 @@ class Available extends Component {
     }
 
     componentDidMount(){
+      this._Mounted = true;
       this.retrieveAvailablePosts();
     }
 
+    componentWillUnmountMount(){
+      this._Mounted = false;
+    }
+
     onRefresh(){
-      this.setState({refreshing:true});
+      if(this._Mounted) {
+        this.setState({refreshing:true});
+      }
       this.retrieveAvailablePosts().then(()=> {
-        this.setState({refreshing:false});
+        if(this._Mounted) {
+          this.setState({refreshing:false});
+        }
       })
     }
 

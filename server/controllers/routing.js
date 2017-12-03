@@ -64,9 +64,15 @@ class Routing {
 
 		app.get("/:email/driverView", (req,res) => { CONTROLLER.driverView(req,res); });
 
+		app.get("/:email/getDriverData", (req,res) => {CONTROLLER.getDriverData(req,res); });
+
+		app.get("/:email/getDriverDataPending", (req,res) => {CONTROLLER.getDriverDataPending(req,res); });
+
+		app.get("/:email/getDriverDataSearch", (req,res) => {CONTROLLER.getDriverDataSearch(req,res); });
+
 		app.get("/:email/pending", (req,res) => {CONTROLLER.pending(req,res); });
 
-		app.post("/:email/endTrip", (req, res) => {CONTROLLER.endTrip(req, res); });
+		app.post("/:email/endTrip", (req, res) => {CONTROLLER.endTripNotifications(req, res); });
 
 		app.post("/:email/startTrip", (req, res) => {CONTROLLER.startTrip(req, res); });
 
@@ -81,6 +87,16 @@ class Routing {
 		app.get("/:email/available", (req,res) => {CONTROLLER.available(req,res); });
 
 		app.post("/passengerSearch", (req, res) => {CONTROLLER.passengerSearch(req,res); });
+
+		app.post("/endTrip", (req, res) => { CONTROLLER.endTrip(req, res); });
+
+		app.get("/:rydeId/getUpdatedRyde", (req, res) => { CONTROLLER.getUpdatedRyde(req, res); });
+
+		app.post("/passengerRatings", (req, res) => { CONTROLLER.passengerRatings(req, res); });
+
+		app.post("/driverRatings", (req, res) => { CONTROLLER.driverRatings(req, res); });
+
+		app.post("/removePassenger", (req, res) => { CONTROLLER.removePassenger(req, res); });
 
 
 		// Error get request must always be processed at the very end after all options

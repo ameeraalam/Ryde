@@ -1,0 +1,24 @@
+Week 9
+======
+
+
+
+Duties
+—————-
+1. Fully implement the push notification system
+2. Created a schedule on doodle to organize the group to work on D3
+
+
+
+Achievements
+———————————-
+1. Continued to catch and fix a lot of bugs.
+2. Push notifications was fully implemented
+3. Group was a lot more organized and devoted to working on the app.
+4. Finished and submitted D3 documentation.
+5. Pulled about 4 sleepless nights in a row
+
+
+Time Spent
+——————————
+I spent atleast 45 hours this week

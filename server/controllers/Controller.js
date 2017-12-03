@@ -61,7 +61,6 @@ class Controller {
 						// function returns.
 						this.compareAndUpdateDeviceId(req, doc, (err, updatedDoc) => {
 							if(err) {
-								// console.log("Err: " + err);
 								res.sendStatus(err);
 							} else {
 								// creating a response object to send back to the client
@@ -77,6 +76,8 @@ class Controller {
 								resObj.allInfoFilled = doc.allInfoFilled;
 								resObj.id = doc.id;
 								resObj.seen = doc.seen;
+								resObj.totalRating = doc.totalRating;
+								resObj.numRating = doc.numRating;
 
 								// check to know if deviceId was updated so that we can put
 								// the right deviceId in resObj
@@ -106,13 +107,11 @@ class Controller {
 	compareAndUpdateDeviceId(req, doc, callback) {
 		if(req.body.deviceId !== doc.deviceId){
 			this.modelUsers.update({"email": req.body.email}, {deviceId: req.body.deviceId}, (userDocObj) => {
-				console.log('deviceId successfully updated');
 				callback(null, userDocObj);
 			},() => {
 				callback(404, null);
 			});
 		} else {
-			console.log('deviceId the same. No need for an update');
 			callback(null, doc);
 		}
 	}
@@ -207,7 +206,6 @@ class Controller {
 			client.sendNotification(message, {
 			  include_player_ids: [playerId]
 			});
-			console.log('notification sent to passenger');
 
 		}, () => {
 			console.log('Error retrieving passenger object ryde object');
@@ -324,7 +322,6 @@ class Controller {
 								}
 
 								if(rydeToModify !== undefined) {
-									console.log('About to send notification to passenger');
 									this.sendRydeAcceptNotification(rydeToModify, userMember);
 								} else {
 									console.log('Error accepting request since the ryde is full');
@@ -459,6 +456,89 @@ class Controller {
 	}
 
 
+	endTrip(req, res) {
+
+		// Step - 1 - Find the ryde object from mongodb
+		// Step - 2 - List all the user in the ryde and pending users in the ryde
+		this.modelRydes.query({"rydeId": req.body.ryde.rydeId}, (doc) => {
+
+			// Step - 1 and Step - 2 complete
+			let members = doc.members
+			let pendings = doc.pending
+
+			// all the members of the ryde will have their own personalRyde object
+			// where they will have the rydeObject in rydesAcceptedToAsPassenger
+
+			// Step - 3 - all these rydes from each passenger must be removed
+
+			// looping over the members of the ryde
+			for (let i = 0; i < members.length; ++i) {
+				// retrieveing the personal ryde objects of each member
+				this.modelPersonalRydes.query({"email": members[i].email}, (doc) => {
+					// find the ryde from the array of rydes
+					for (let j = 0; j < doc.rydesAcceptedToAsPassenger.length; ++j) {
+						if (doc.rydesAcceptedToAsPassenger[j].rydeId === req.body.ryde.rydeId) {
+							// splice will remove the element at that index from the array
+							// and slice will just extract that element
+							doc.rydesAcceptedToAsPassenger.splice(j, 1)
+							break;
+						}
+					}
+					this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAcceptedToAsPassenger": doc.rydesAcceptedToAsPassenger});
+				});
+			}
+
+			// Step - 3 complete
+
+			// all the pending users will have their own personalRyde object where they
+			// will have the rydeObject in their rydesAppliedToAsPassenger
+
+			// Step - 4 - all these rydes from each pending user must be removed
+			// looping over the pending users
+			for (let i = 0; i < pendings.length; ++i) {
+				this.modelPersonalRydes.query({"email": pendings[i].email}, (doc) => {
+					for (let j = 0; j < doc.rydesAppliedToAsPassenger.length; ++j) {
+						if (doc.rydesAppliedToAsPassenger[j].rydeId === req.body.ryde.rydeId) {
+							doc.rydesAppliedToAsPassenger.splice(j, 1);
+							break;
+						}
+					}
+					this.modelPersonalRydes.update({"email": pendings[i].email}, {"rydesAppliedToAsPassenger": doc.rydesAppliedToAsPassenger});
+				});
+			}
+			// step - 4 - complete
+
+			// step - 5 - remove ryde from driver's personal ryde which means it will be inside
+			// the drivers rydesPostedAsDriver
+			this.modelPersonalRydes.query({"email": req.body.driver.email}, (doc) => {
+				// lets now loop over the rydesPostedAsDriver array
+				for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+					if (doc.rydesPostedAsDriver[i].rydeId === req.body.ryde.rydeId) {
+						doc.rydesPostedAsDriver.splice(i, 1)
+						break;
+					}
+				}
+
+				this.modelPersonalRydes.update({"email": req.body.driver.email}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver})
+			});
+
+			// step - 5 - complete
+
+			// step - 6 - now finally we remove the universal ryde object
+
+			this.modelRydes.remove({"rydeId": req.body.ryde.rydeId});
+
+			// step - 6 - complete
+
+			res.sendStatus(200);
+
+		}, () => {
+			// on failure the 404 code is sent
+			res.sendStatus(404);
+		});
+	}
+
+
 	postRyde(req, res){
 		this.modelRydes.insert(req.body, () => {
 			this.modelPersonalRydes.query({"email": req.body.driver}, (doc) => {
@@ -486,11 +566,10 @@ class Controller {
 
 			potentialRides.then((response) => {
 
-				console.log("Res length is " + response.length);
 				for (let i = 0; i < response.length; i++){
 
-					if (response[i].from === req.body.from && response[i].to === req.body.to){
-						console.log("Ryde found!");
+					if (response[i].from.toLowerCase() === req.body.from.toLowerCase() && response[i].to.toLowerCase() === req.body.to.toLowerCase()){
+
 						sameDestination.dest.push(response[i]);
 					}
 				}
@@ -530,7 +609,7 @@ class Controller {
 	}
 
 
-	endTrip(req, res) {
+	endTripNotifications(req, res) {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let playerIds = [];
 
@@ -551,7 +630,6 @@ class Controller {
 					include_player_ids: playerIds,
 					data: {type: 'endTrip'}
 				});
-				console.log('notification sent to passenger(s) to endTrip');
 				res.sendStatus(200);
 			}
 		}, () => {
@@ -584,7 +662,6 @@ class Controller {
 				client.sendNotification(message, {
 					include_player_ids: playerIds
 				});
-				console.log('notification sent to passenger(s) to startTrip');
 				res.sendStatus(200);
 			}
 		}, () => {
@@ -608,7 +685,6 @@ class Controller {
 			}
 
 			this.modelPersonalRydes.update({"email": req.params.email}, updateField, (doc) => {
-				console.log('Passenger\'s accepted Ryde \'seen\' field successfully updated');
 				res.sendStatus(200);
 			}, () => {
 				res.sendStatus(404);
@@ -624,7 +700,7 @@ class Controller {
 		this.modelPersonalRydes.query({"email": req.params.email}, (doc) => {
 			let rydeIndex = 0;
 			var passengerIndex = 0;
-			
+
 			for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
 				for (let j = 0; j < doc.rydesPostedAsDriver[i].pending.length; ++j) {
 					if(doc.rydesPostedAsDriver[i].pending[j].email === req.body.email) {
@@ -640,7 +716,6 @@ class Controller {
 			}
 
 			this.modelPersonalRydes.update({"email": req.params.email}, updateField, (doc) => {
-				console.log('Driver\'s Pending Passenger \'seen\' field successfully updated');
 				res.sendStatus(200);
 			}, () => {
 				res.sendStatus(404);
@@ -729,7 +804,6 @@ class Controller {
 			client.sendNotification(message, {
 			  include_player_ids: [playerId]
 			});
-		console.log('Notification sent to driver');
 
 		}, () => {
 			console.log('Error retrieving driver ryde object');
@@ -738,14 +812,244 @@ class Controller {
 
 
 
+	getUpdatedRyde(req, res) {
+		// the variable in the param is a string which needs to be converted into a number
+		this.modelRydes.query({"rydeId": Number(req.params.rydeId)}, (doc) => {
+			res.status(200).send(doc)
+		}, () => {
+			// on error the 404 code is sent
+			res.sendStatus(404);
+		})
+	}
+
+
+	passengerRatings(req, res) {
+
+		let successIndicator = true
+
+		// loop over the members array and add the newly sent ratings
+		for (let i = 0; i < req.body.members.length; ++i) {
+			// we only update ratings if they are not - 1, if they are -1 it means
+			// the driver never really sent any ratings
+			if (req.body.ratings[i] !== -1) {
+
+				this.modelUsers.query({"email": req.body.members[i].email}, (doc) => {
+					// total ratings increases for the user
+					doc.totalRating += Number(req.body.ratings[i]);
+					// number of ratings increases
+					++doc.numRating;
+					this.modelUsers.update({"email": req.body.members[i].email}, {"totalRating": doc.totalRating, "numRating": doc.numRating});
+				}, () => {
+					successIndicator = false;
+				})
+
+			}
+		}
+
+		if (successIndicator) {
+			// means nothing went wrong
+			res.sendStatus(200);
+		} else {
+			// successIndicator being false means something went wrong
+			res.sendStatus(404);
+		}
+
+
+	}
+
+
+	driverRatings(req, res) {
+		if (req.body.ratings !== -1) {
+			// using the ryde objects email get the driver from Users collection
+			this.modelUsers.query({"email": req.body.rydeObj.driver}, (doc) => {
+				doc.totalRating += Number(req.body.ratings)
+				++doc.numRating;
+				this.modelUsers.update({"email": req.body.rydeObj.driver}, {"totalRating": doc.totalRating, "numRating": doc.numRating}, (doc) => {
+					// on success send the 200 code
+					res.sendStatus(200);
+				}, () => {
+					// on failure send the 404 code
+					res.sendStatus(404);
+				})
+			}, () => {
+				// on failure send the 404 message
+				res.sendStatus(404);
+			});
+		} else {
+			// on success and when nothing to update we send the 200 code
+			res.sendStatus(200);
+		}
+	}
+
+
+
+	removePassenger(req, res) {
+		// effects who?
+		// the universal ryde object (check)
+		// The driver's personal ryde object - rydesPostedAsDriver (check)
+		// the passenger removed's personal rydeObject - rydesAcceptedToAsPassenger (check)
+		// all the members in the ryde's ryde object - rydesAcceptedToAsPassenger (check)
+
+		let rydeId = req.body.rydeId;
+		let memberRemoved = req.body.memberRemoved
+		let driverEmail = req.body.driverEmail
+
+		// I retrive the rydeObject from the universal rydeDatebase
+		this.modelRydes.query({"rydeId": rydeId}, (doc) => {
+
+			let rydeToModify = doc;
+
+			for (let i = 0; i < rydeToModify.members.length; ++i) {
+				// if the members email at that particular index matches the member to be removed email address
+				// we remove the member from the email
+				if (rydeToModify.members[i].email === memberRemoved) {
+					rydeToModify.members.splice(i, 1);
+					// I break the loop as I got what I wanted from the loop and it does not need to iterate more
+					break;
+				}
+			}
+
+			this.modelRydes.update({"rydeId": rydeId}, {"members": rydeToModify.members} ,(doc) => {
+				this.modelPersonalRydes.query({"email": driverEmail}, (doc) => {
+					for (let i = 0; i < doc.rydesPostedAsDriver.length; ++i) {
+						if (doc.rydesPostedAsDriver[i].rydeId === rydeId) {
+							doc.rydesPostedAsDriver[i] = rydeToModify;
+							// we are done with the for loop
+							break;
+						}
+					}
+
+					this.modelPersonalRydes.update({"email": driverEmail}, {"rydesPostedAsDriver": doc.rydesPostedAsDriver}, (doc) => {
+
+						this.modelPersonalRydes.query({"email": memberRemoved}, (doc) => {
+
+							for (let i = 0; i < doc.rydesAcceptedToAsPassenger.length; ++i) {
+								if (doc.rydesAcceptedToAsPassenger[i].rydeId === rydeId) {
+									// the ryde is removed from the member that got kicked out
+									doc.rydesAcceptedToAsPassenger.splice(i, 1)
+									// we are done with the for loop
+									break;
+								}
+							}
+
+							this.modelPersonalRydes.update({"email": memberRemoved}, {"rydesAcceptedToAsPassenger": doc.rydesAcceptedToAsPassenger}, () => {
+
+								let successIndicator = true;
+
+								let members = rydeToModify.members;
+
+								// now looping over the members in the array and modfying their rydesAcceptedToAsPassenger's ryde object
+								for (let i = 0; i < members.length; ++i) {
+
+									this.modelPersonalRydes.query({"email": members[i].email}, (doc) => {
+
+										for (let j = 0; j < doc.rydesAcceptedToAsPassenger.length; ++j) {
+											if (doc.rydesAcceptedToAsPassenger[j].rydeId === rydeId) {
+												doc.rydesAcceptedToAsPassenger[j] = rydeToModify;
+												break;
+											}
+										}
+
+										this.modelPersonalRydes.update({"email": members[i].email}, {"rydesAcceptedToAsPassenger": doc.rydesAcceptedToAsPassenger}, (doc) => {}, () => {
+											successIndicator = false;
+										})
+
+									}, () => {
+										successIndicator = false;
+									});
+								}
+
+								if (!successIndicator) {
+									// on error send the 404 code
+									res.sendStatus(404);
+								} else {
+									// on success send the 200 code
+									res.sendStatus(200);
+								}
+
+							}, () => {
+								// on failure the 404 code is sent
+								res.sendStatus(404);
+							});
+						}, () => {
+							// send the 404 code on failure
+							res.sendStatus(404);
+						});
+
+					}, () => {
+						// on error send the 404 code
+						res.sendStatus(404);
+					});
+				}, () => {
+					res.sendStatus(404);
+				});
+
+			}, () => {
+				// on error the 404 code is sent
+				res.sendStatus(404);
+			})
+
+		}, () => {
+			// on error the 404 code is sent
+			res.sendStatus(404);
+		});
+
+	}
+
+
+
+	//used by PassengerAvailableRideProfile to get drievrdata
+		getDriverData(req,res){
+			this.modelUsers.query({"email": req.params.email}, (doc) => {
+					let resObj = {};
+					resObj.firstName = doc.firstName;
+					resObj.lastName = doc.lastName;
+					resObj.totalRating = doc.totalRating;
+					resObj.numRating = doc.numRating;
+
+					res.status(200).send(resObj);
+			}, () => {
+				res.sendStatus(404);
+			})
+		}
+
+		//used by PassengerPendingRideProfile to get getDriverData
+		getDriverDataPending(req,res){
+			this.modelUsers.query({"email": req.params.email}, (doc) => {
+					let resObj = {};
+					resObj.firstName = doc.firstName;
+					resObj.lastName = doc.lastName;
+					resObj.totalRating = doc.totalRating;
+					resObj.numRating = doc.numRating;
+
+					res.status(200).send(resObj);
+			}, () => {
+				res.sendStatus(404);
+			})
+		}
+
+		//used by PassengerSearchProfile to get drievr data
+		getDriverDataSearch(req,res){
+			this.modelUsers.query({"email": req.params.email}, (doc) => {
+					let resObj = {};
+					resObj.firstName = doc.firstName;
+					resObj.lastName = doc.lastName;
+					resObj.totalRating = doc.totalRating;
+					resObj.numRating = doc.numRating;
+
+					res.status(200).send(resObj);
+			}, () => {
+				res.sendStatus(404);
+			})
+		}
+
+
+
   	//used when you request to join a ride as a passenger. this is related to the passengersearchprofile.js
 	//use updatePush for the request for passengers.
 	//update the ryde collection, requests [] with the passenger info
 	//update the personalrydes collection, rydespostedasdriver, requests with the passenger info
 	//update the personalrydes collection, rydesAppliedToAsPassenger with the ride info
-
-
-
 	passengerSearch(req,res) {
 		this.modelRydes.query({"rydeId": req.body.driverRes.rydeId}, (doc) => {
 			//doesn't let user request twice
@@ -817,7 +1121,6 @@ class Controller {
 											res.sendStatus(404);
 										});
 									}
-									console.log('About to send notification to driver');
 									this.sendRydeRequestNotification(req);
 									res.sendStatus(200);
 								}, () => {
@@ -843,8 +1146,6 @@ class Controller {
 	getRydeID(req, res){
 
 		this.rydeID.query({"queryField": req.body.query}, (doc) => {
-
-			console.log("Ryde ID retrieved and sent");
 			res.status(200).send(doc);
 		}, () => {
 
@@ -857,8 +1158,6 @@ class Controller {
 
 		// Update object in DB with the incremented Ryde ID
 		this.rydeID.update({"queryField": req.body.query}, {rydeID: req.body.rydeID + 1}, () => {
-
-			console.log("Ryde ID has been incremented to " + (req.body.rydeID + 1));
 			res.sendStatus(200);
 		}, () => {
 			console.log("Ryde ID has not been incremented");

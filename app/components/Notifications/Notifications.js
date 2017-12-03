@@ -11,7 +11,6 @@ import config from "./../../config";
 class Notifications extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
     this.baseUrl = config();
     this.openDrawer = this.openDrawer.bind(this);
     this.onReceived = this.onReceived.bind(this);
@@ -43,7 +42,6 @@ class Notifications extends Component {
 
 
   componentWillMount() {
-    console.log('componentDidMount in in notifications');
     this._isMounted = true;
     this.retrieveNotifications();
     OneSignal.addEventListener('received', this.onReceived);
@@ -51,7 +49,6 @@ class Notifications extends Component {
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount in notifications');
     this._isMounted = false;
     OneSignal.removeEventListener('received', this.onReceived);
     OneSignal.removeEventListener('opened', this.onOpened);
@@ -59,10 +56,8 @@ class Notifications extends Component {
 
 
   onReceived(notification) {
-    console.log("Notification received: ", notification);
 
     if(notification.isAppInFocus) {
-      console.log('app in focus');
       Toast.show({
         text: notification.payload.body,
         position: 'top',
@@ -71,7 +66,6 @@ class Notifications extends Component {
       });
       if(notification.payload.additionalData !== undefined) {
         if(notification.payload.additionalData.type === 'endTrip'){
-          console.log('type: ' + notification.payload.additionalData.type);
           // Actions.rateTrip();
           Actions.register();
         }
@@ -82,12 +76,9 @@ class Notifications extends Component {
 
 
   onOpened(openResult) {
-    console.log('openResult: ', openResult);
     if(!notification.isAppInFocus) {
-      console.log('app not in focus');
       if(notification.payload.additionalData !== undefined) {
         if(notification.payload.additionalData.type === 'endTrip'){
-          console.log('type: ' + notification.payload.additionalData.type);
           // Actions.rateTrip();
           Actions.register();
         }
@@ -114,9 +105,14 @@ class Notifications extends Component {
     }).then((response) => {
       if(response.status === 200) {
         let passengerNotifications = this.state.notifications;
-        let updatedPassengerNotifications = passengerNotifications.splice(rydeIndex, 1);
-        if(this._isMounted){ // pass trigger prop in object
-          this.setState({notifications: updatedPassengerNotifications});
+        for (let i = 0; i < this.state.notifications.length; i++) {
+          if(this.state.notifications[i].props.id === rydeIndex) {
+            passengerNotifications.splice(i, 1);
+            break;
+          }
+        }
+        if(this._isMounted){
+          this.setState({notifications: passengerNotifications});
         }
         Actions.availableProfile({isPassenger, resO, myRes, driverFilledObj});
       } else {
@@ -158,15 +154,14 @@ class Notifications extends Component {
         let driverNotifications = this.state.notifications;
         for (let i = 0; i < this.state.notifications.length; i++) {
           if(this.state.notifications[i].props.id === passengerIndex) {
+            // console.log('notification.id: ' + this.state.notifications[i].props.id);
             driverNotifications.splice(i, 1);
             break;
           }
         }
-        // driverNotifications.splice(passengerIndex, 1);
         if(this._isMounted){
           this.setState({notifications: driverNotifications});
         }
-        // let triggerObj = {triggerBool: true};
         Actions.requestedRides({isPassenger, resObjUser, resObjRyde, driverFilledObj});
       } else {
         Toast.show({

@@ -74,7 +74,6 @@ class RequestedRides extends Component {
 
 	componentWillMount() {
 		this._isMounted = true;
-		console.log('componentDidMount in requestedRides');
 		this.getPassengerRequests();
 		BackHandler.addEventListener('hardwareBackPress', this.popBack);
 	}
@@ -86,7 +85,6 @@ class RequestedRides extends Component {
 
 
 	popBack() {
-		console.log('popBack');
 		// let resObj = this.props.resObjUser
 		// let {isPassenger, driverFilledObj} = this.props;
 		// Actions.driverView({trigger: true, resObj, isPassenger, driverFilledObj});

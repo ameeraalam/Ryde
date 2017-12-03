@@ -1,0 +1,21 @@
+Week 8
+======
+
+
+
+Duties
+—————-
+1. Continuation of debugging and complete the merge process
+
+
+
+Achievements
+———————————-
+1. Group had a meeting to strategize plan to finish the rest of the project.
+2. Code was complete and merged to master branch 
+ 
+
+
+Time Spent
+——————————
+I spent approximately 15 hours this week

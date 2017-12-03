@@ -41,12 +41,7 @@ import { Container, Header, Title, Left, Icon, Text, Right, Button, Center, Foot
       const {resObj, driverFilledObj} = this.props;
       if (this.props.isPassenger !== undefined) {
         if (this.props.isPassenger) {
-          // first check if this.props.driverFilledObj.isDriverInfoFilled === true, if not true, replace
-            // current screen (i.e passengerview) with driverInfo and pass the
-            // driverFilledObj to driverInfo where the function in it can be called
-            // if driver fills all info. if function is called, it will then be triggered in choice page
-            // setting the allDriverInfoFilled boolean to true
-          // if this.props.driverFilledObj.isDriverInfoFilled is true then you can replace passengerview with driverview page
+
           if(!this.props.driverFilledObj.isDriverInfoFilled){
             Actions.driverInfo({type: 'replace', resObj, driverFilledObj});
           } else {
